@@ -36,4 +36,3 @@ jobs:
           tag: latest
           overwrite: true
           body: "Latest version"
-          file_glob: true

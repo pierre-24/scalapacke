@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    name: Tests generate headers and build
+    name: Tests generate header and build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -38,5 +38,11 @@ jobs:
         run: |
           cd tests
           ln -s ../cblacs.h
-          mpicc -o test_ccall test_cblacs_ccall.c $(pkg-config scalapack-openmpi --libs --cflags)
-          mpiexec -n 2 ./test_ccall
+          mpicc -o test_ccalls test_cblacs_ccalls.c $(pkg-config scalapack-openmpi --libs --cflags)
+          mpiexec -n 2 ./test_ccalls
+
+      - name: test // build and run (Fortran calls)
+        run: |
+          cd tests
+          mpicc -o test_fcalls test_cblacs_fcalls.c $(pkg-config scalapack-openmpi --libs --cflags)
+          mpiexec -n 2 ./test_fcalls

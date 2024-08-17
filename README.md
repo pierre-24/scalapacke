@@ -8,10 +8,10 @@ If you just want the header, download the header here: [`cblacs.h`](https://gith
 
 You can use two convention:
 
-| Convention                                                                                               | Example                                              |
-|----------------------------------------------------------------------------------------------------------|------------------------------------------------------|
-| C call convention (functions are of the form `Cxxx()`, and inputs are passed by value).                  | [`test_cblacs_ccall.h`](./tests/test_cblacs_ccall.c) |
-| Fortran call convention (functions are of the form `xxx_()`, and all arguments are passed via pointers). | [`test_cblacs_fcall.h`](./tests/test_cblacs_fcall.c) |
+| Convention                                                                                               | Example                                                |
+|----------------------------------------------------------------------------------------------------------|--------------------------------------------------------|
+| C call convention (functions are of the form `Cxxx()`, and inputs are passed by value).                  | [`test_cblacs_ccalls.h`](./tests/test_cblacs_ccalls.c) |
+| Fortran call convention (functions are of the form `xxx_()`, and all arguments are passed via pointers). | [`test_cblacs_fcalls.h`](./tests/test_cblacs_fcalls.c) |
 
 ## Install & use
 
