@@ -13,7 +13,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.10'
+          python-version: '3.12'
       - name: Install dependencies
         run: |
           make install
@@ -26,11 +26,11 @@ jobs:
           git clone https://github.com/Reference-ScaLAPACK/scalapack.git
       - name: Build header (C call)
         run: |
-          python ./cblacs-header scalapack/ -o cblacs_ccall.h
+          python ./cblacs-header.py scalapack/ -o cblacs_ccall.h
 
       - name: Build header (fotran call)
         run: |
-          python ./cblacs-header scalapack/ -f -o cblacs_fcall.h
+          python ./cblacs-header.py scalapack/ -f -o cblacs_fcall.h
 
       - name: Upload latest version of headers
         uses: svenstaro/upload-release-action@v2
