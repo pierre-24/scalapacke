@@ -1,7 +1,7 @@
 install:
 	python -m pip install .
 
-install-dev: install
+install-dev:
 	pip install -e .[dev]
 
 all: install
