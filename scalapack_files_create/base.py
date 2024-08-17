@@ -7,20 +7,9 @@ from jinja2 import Environment, FileSystemLoader
 
 from typing import List, Tuple, Self
 
-SELF_NAME = pathlib.Path(__file__).parent.name
-
 # pattern
 PATTERN_FUNC = re.compile(r'(?P<rtype>\w+) (?P<name>\w+)\((?P<params>.*)\)')
-PATTERN_PARAM = re.compile(r'(?P<type>\w+) (?P<ptr>\*)?(?P<name>\w+)')
-
-# things to define in header
-DEFINES = [
-    ('Int', 'int'),
-    ('F_VOID_FUNC', 'void'),
-    ('F_INT_FUNC', 'Int'),
-    ('F_DOUBLE_FUNC', 'double'),
-    ('F_CHAR', 'char*')
-]
+PATTERN_PARAM = re.compile(r'(?P<type>\w+) ?(?P<ptr>\*)? ?(?P<name>\w+)')
 
 # jinja templates env
 jinja_env = Environment(loader=FileSystemLoader(pathlib.Path(__file__).parent / 'templates'))
@@ -50,8 +39,8 @@ class Declaration:
 
         return cls(match_func.group('name'), match_func.group('rtype'), params_list)
 
-    def __str__(self):
-        return '{} {}({})'.format(
+    def to_extern_decl(self) -> str:
+        return 'extern {} {}({});'.format(
             self.return_type,
             self.name,
             ', '.join('{} {}'.format(*p) for p in self.params)

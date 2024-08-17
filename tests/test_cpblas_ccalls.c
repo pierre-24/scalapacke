@@ -2,30 +2,29 @@
 #include <stdlib.h>
 
 #include "cblacs.h"
-
-int ZERO = 0, ONE = 1;
+#include "cpblas.h"
 
 int main() {
     int iam, nprocs, ctx_sys, ctx_all, nrows, ncols, myrow, mycol;
 
     // initialize MPI (via BLACS) & get context
-    blacs_pinfo_(&iam, &nprocs);
-    blacs_get_(&ZERO, &ZERO, &ctx_sys);
+    Cblacs_pinfo(&iam, &nprocs);
+    Cblacs_get(0, 0, &ctx_sys);
 
     // set a grid for all processes
     // https://www.netlib.org/scalapack/slug/node71.html#secblacscontext
     ctx_all = ctx_sys;
-    blacs_gridinit_(&ctx_all, "R", &ONE, &nprocs);
+    Cblacs_gridinit(&ctx_all, "R", 1, nprocs);
 
     // check grid
-    blacs_gridinfo_(&ctx_all, &nrows, &ncols, &myrow, &mycol);
+    Cblacs_gridinfo(ctx_all, &nrows, &ncols, &myrow, &mycol);
     printf("process %d :: on context #%d, I'm (%d, %d)\n", iam, ctx_all, myrow, mycol);
 
     // exit grids
-    blacs_gridexit_(&ctx_all);
+    Cblacs_gridexit(ctx_all);
 
     // exit
-    blacs_exit_(&ZERO);
+    Cblacs_exit(0);
 
     return EXIT_SUCCESS;
 }
