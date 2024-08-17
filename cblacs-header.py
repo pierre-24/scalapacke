@@ -22,7 +22,8 @@ DEFINES = [
     ('Int', 'int'),
     ('F_VOID_FUNC', 'void'),
     ('F_INT_FUNC', 'Int'),
-    ('F_DOUBLE_FUNC', 'double')
+    ('F_DOUBLE_FUNC', 'double'),
+    ('F_CHAR', 'char*')
 ]
 
 

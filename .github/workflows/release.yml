@@ -1,4 +1,4 @@
-name: Test & publish
+name: Release
 
 permissions:
   contents: write
@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    name: Test
+    name: Release latest version
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -20,9 +20,6 @@ jobs:
       - name: Install dependencies
         run: |
           make install
-      - name: lint
-        run: |
-          make lint
 
       - name: Clone scalapack
         run: |
@@ -31,7 +28,7 @@ jobs:
         run: |
           python ./cblacs-header.py scalapack/ -o cblacs_ccall.h
 
-      - name: Build header (fotran call)
+      - name: Build header (fortran call)
         run: |
           python ./cblacs-header.py scalapack/ -f -o cblacs_fcall.h
 
