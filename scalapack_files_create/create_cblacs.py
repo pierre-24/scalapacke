@@ -146,7 +146,8 @@ def create_cblacs_header(repo: pathlib.Path, output: TextIO):
     decls_c, decls_f = find_decls(root)
 
     # out
-    jinja_env = Environment(loader=PackageLoader('scalapack_files_create'))
+    jinja_env = Environment(
+        loader=PackageLoader('scalapack_files_create', package_path=pathlib.Path(__file__).parent.parent))
     template = jinja_env.get_template('cblacs.h')
 
     output.write(template.render(
