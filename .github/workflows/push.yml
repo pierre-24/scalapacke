@@ -1,5 +1,8 @@
 name: Test & publish
 
+permissions:
+  contents: write
+
 on:
   push:
     branches: [ main ]
@@ -36,7 +39,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: clbacs*.h
+          file: cblacs*.h
           tag: latest
           overwrite: true
           body: "Latest version"
