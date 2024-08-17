@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "cblacs_fcall.h"
+#include "cblacs.h"
 
 int zero = 0, one = 1;
 
@@ -19,7 +19,7 @@ int main() {
 
     // check grid
     blacs_gridinfo_(&ctx_all, &nrows, &ncols, &myrow, &mycol);
-    printf("%lld :: On context %lld, I'm (%lld, %lld)\n", iam, ctx_all, myrow, mycol);
+    printf("%lld :: On context #%d, I'm (%d, %d)\n", iam, ctx_all, myrow, mycol);
 
     // exit grids
     blacs_gridexit_(&ctx_all);

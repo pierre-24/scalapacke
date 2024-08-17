@@ -67,7 +67,7 @@ class Declaration:
         )
 
 
-def find_decl(path: pathlib.Path, c_call: bool = True) -> Declaration:
+def find_decl(path: pathlib.Path) -> Tuple[Declaration, Declaration]:
     """Find declaration in file"""
 
     with path.open() as f:
@@ -88,22 +88,25 @@ def find_decl(path: pathlib.Path, c_call: bool = True) -> Declaration:
         if c_call_beg < 0:
             raise Exception('Could not find declaration in {}?!?'.format(path))
 
-        if c_call:
-            return Declaration.from_str(' '.join(line.strip() for line in lines[c_call_beg:c_call_end]))
-        else:
-            return Declaration.from_str(' '.join(line.strip() for line in lines[c_call_end + 1:f_call_end]))
+        return (
+            Declaration.from_str(' '.join(line.strip() for line in lines[c_call_beg:c_call_end])),
+            Declaration.from_str(' '.join(line.strip() for line in lines[c_call_end + 1:f_call_end]))
+        )
 
 
-def find_decls(root: pathlib.Path, c_call: bool = True) -> List[Declaration]:
+def find_decls(root: pathlib.Path) -> Tuple[List[Declaration], List[Declaration]]:
     """Find all declarations, which are found in all `*_.c` files of the `BLACS/SRC` folder.
     """
 
-    declarations = []
+    declarations_c = []
+    declarations_f = []
 
     for path in root.glob('*_.c'):
-        declarations.append(find_decl(path, c_call=c_call))
+        c_call, f_call = find_decl(path)
+        declarations_c.append(c_call)
+        declarations_f.append(f_call)
 
-    return declarations
+    return declarations_c, declarations_f
 
 
 def get_current_commit(repo: pathlib.Path, limit: int = 8) -> str:
@@ -136,7 +139,6 @@ def main():
     parser.add_argument('repo', type=get_dir, help='Scalapack repository directory')
     parser.add_argument('-t', '--template', type=get_existing_file, help='template', default='cblacs.h.j2')
     parser.add_argument('-o', '--output', type=argparse.FileType('w'), help='output header', default='cblacs.h')
-    parser.add_argument('-f', '--fortran', action='store_true', help='use fortran calls')
 
     args = parser.parse_args()
 
@@ -145,14 +147,15 @@ def main():
     if not root.is_dir():
         raise Exception('{} is not a directory, did you clone {}?'.format(root, SCALAPACK_REPO_URL))
 
-    decls = find_decls(root, c_call=not args.fortran)
+    decls_c, decls_f = find_decls(root)
 
     # out
     jinja_env = Environment(loader=FileSystemLoader(args.template.parent))
     template = jinja_env.get_template(args.template.name)
 
     args.output.write(template.render(
-        declarations=decls,
+        declarations_c=decls_c,
+        declarations_f=decls_f,
         defines=DEFINES,
         self_name=SELF_NAME,
         self_repo_url=SELF_REPO_URL,

@@ -13,8 +13,6 @@ jobs:
   build:
     name: Tests generate headers and build
     runs-on: ubuntu-latest
-    env:
-      BUILD_OPTIONS: "-lscalapack -llapack -lblas"
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
@@ -32,16 +30,13 @@ jobs:
         run: |
           git clone https://github.com/Reference-ScaLAPACK/scalapack.git
 
-      - name: Build header (C call)
+      - name: Build header
         run: |
-          python ./cblacs-header.py scalapack/ -o cblacs_ccall.h
-      - name: test // build and run ccall
+          python ./cblacs-header.py scalapack/ -o cblacs.h
+
+      - name: test // build and run (C calls)
         run: |
           cd tests
-          ln -s ../cblacs_ccall.h
-          mpicc -o test_ccall test_cblacs_ccall.c ${{ env.BUILD_OPTIONS }}
+          ln -s ../cblacs.h
+          mpicc -o test_ccall test_cblacs_ccall.c $(pkg-config scalapack-openmpi --libs --cflags)
           mpiexec -n 4 ./test_ccall
-
-      - name: Build header (fortran call)
-        run: |
-          python ./cblacs-header.py scalapack/ -f -o cblacs_fcall.h
