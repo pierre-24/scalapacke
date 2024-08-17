@@ -1,4 +1,4 @@
-name: Test & publish
+name: Release
 
 permissions:
   contents: write
@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    name: Test
+    name: Release latest version
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -20,27 +20,19 @@ jobs:
       - name: Install dependencies
         run: |
           make install
-      - name: lint
-        run: |
-          make lint
 
       - name: Clone scalapack
         run: |
           git clone https://github.com/Reference-ScaLAPACK/scalapack.git
       - name: Build header (C call)
         run: |
-          python ./cblacs-header.py scalapack/ -o cblacs_ccall.h
-
-      - name: Build header (fotran call)
-        run: |
-          python ./cblacs-header.py scalapack/ -f -o cblacs_fcall.h
+          python ./cblacs-header.py scalapack/ -o cblacs.h
 
       - name: Upload latest version of headers
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: cblacs*.h
+          file: cblacs.h
           tag: latest
           overwrite: true
           body: "Latest version"
-          file_glob: true

@@ -1,0 +1,48 @@
+name: Tests
+
+permissions:
+  contents: write
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Tests generate header and build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          sudo apt install libopenmpi-dev libscalapack-openmpi-dev
+          make install
+      - name: lint
+        run: |
+          make lint
+      - name: Clone scalapack
+        run: |
+          git clone https://github.com/Reference-ScaLAPACK/scalapack.git
+
+      - name: Build header
+        run: |
+          python ./cblacs-header.py scalapack/ -o cblacs.h
+
+      - name: test // build and run (C calls)
+        run: |
+          cd tests
+          ln -s ../cblacs.h
+          mpicc -o test_ccalls test_cblacs_ccalls.c $(pkg-config scalapack-openmpi --libs --cflags)
+          mpiexec -n 2 ./test_ccalls
+
+      - name: test // build and run (Fortran calls)
+        run: |
+          cd tests
+          mpicc -o test_fcalls test_cblacs_fcalls.c $(pkg-config scalapack-openmpi --libs --cflags)
+          mpiexec -n 2 ./test_fcalls

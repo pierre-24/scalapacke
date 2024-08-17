@@ -20,11 +20,13 @@
 
 /* Declarations
  */
-{% for declaration in declarations -%}
+{% for declarations in [declarations_c, declarations_f] -%}
+{% for declaration in declarations %}
 extern {{ declaration.return_type }} {{ declaration.name }}(
     {%- for vtype, vname in declaration.params -%}
         {{ vtype }} {{ vname }}{% if not loop.last %}, {% endif %}
     {%- endfor -%}
     );
+    {% endfor %}
 {% endfor %}
 #endif // HEADER_CBLACS_H
