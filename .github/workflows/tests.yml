@@ -23,7 +23,7 @@ jobs:
           python-version: '3.12'
       - name: Install dependencies
         run: |
-          sudo apt install libscalapack-openmpi-dev
+          sudo apt install libopenmpi-dev libscalapack-openmpi-dev
           make install
       - name: lint
         run: |
