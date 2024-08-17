@@ -32,13 +32,12 @@ jobs:
 
       - name: Build headers and wrappers
         run: |
-          scaLAPACK_create --all scalapack/
+          cd tests
+          scaLAPACK_create --all ../scalapack
 
       - name: test // build and run (C calls)
         run: |
           cd tests
-          ln -s ../cblacs.h
-          ln -s ../cpblas.h
           mpicc -o test_ccalls test_cpblas_ccalls.c $(pkg-config scalapack-openmpi --libs --cflags)
           mpiexec -n 2 ./test_ccalls
 
