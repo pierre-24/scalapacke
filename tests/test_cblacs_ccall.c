@@ -17,7 +17,7 @@ int main() {
 
     // check grid
     Cblacs_gridinfo(ctx_all, &nrows, &ncols, &myrow, &mycol);
-    printf("%lld :: On context #%d, I'm (%d, %d)\n", iam, ctx_all, myrow, mycol);
+    printf("process %d :: on context #%d, I'm (%d, %d)\n", iam, ctx_all, myrow, mycol);
 
     // exit grids
     Cblacs_gridexit(ctx_all);

@@ -39,4 +39,4 @@ jobs:
           cd tests
           ln -s ../cblacs.h
           mpicc -o test_ccall test_cblacs_ccall.c $(pkg-config scalapack-openmpi --libs --cflags)
-          mpiexec -n 4 ./test_ccall
+          mpiexec -n 2 ./test_ccall

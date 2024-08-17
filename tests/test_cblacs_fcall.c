@@ -19,7 +19,7 @@ int main() {
 
     // check grid
     blacs_gridinfo_(&ctx_all, &nrows, &ncols, &myrow, &mycol);
-    printf("%lld :: On context #%d, I'm (%d, %d)\n", iam, ctx_all, myrow, mycol);
+    printf("process %d :: on context #%d, I'm (%d, %d)\n", iam, ctx_all, myrow, mycol);
 
     // exit grids
     blacs_gridexit_(&ctx_all);
