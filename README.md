@@ -14,7 +14,7 @@ You can use one of the two APIs:
 | C API: functions are of the form `Cxxx()`, and inputs are passed by value.                  | [`test_cblacs_ccalls.h`](./tests/test_cblacs_ccalls.c) |
 | Fortran API: functions are of the form `xxx_()`, and all arguments are passed via pointers. | [`test_cblacs_fcalls.h`](./tests/test_cblacs_fcalls.c) |
 
-Note: in [oneMKL](https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl.html), there is a corresponding header, `mkl_cblas.h`, which use the "Fotran API" (*i.e.*, everything as a pointer) but without `_` at the end of the function name. 
+Note: in [oneMKL](https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl.html), there is a corresponding header, `mkl_blacs.h`, which use the "Fotran API" (*i.e.*, everything as a pointer) but without `_` at the end of the function name. 
 
 ## Install & use
 
