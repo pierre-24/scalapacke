@@ -4,14 +4,14 @@ Create the missing "cblacs.h" header to use BLACS in C.
 
 ## Quickstart
 
-If you just want the header, download the header here: [`cblacs.h`](https://github.com/pierre-24/cblacs-header/releases/download/latest/cblacs.h).
+If you just want the header, download it from here: [`cblacs.h`](https://github.com/pierre-24/cblacs-header/releases/download/latest/cblacs.h).
 
-You can use two convention:
+You can use one of the two API:
 
-| Convention                                                                                               | Example                                                |
-|----------------------------------------------------------------------------------------------------------|--------------------------------------------------------|
-| C call convention (functions are of the form `Cxxx()`, and inputs are passed by value).                  | [`test_cblacs_ccalls.h`](./tests/test_cblacs_ccalls.c) |
-| Fortran call convention (functions are of the form `xxx_()`, and all arguments are passed via pointers). | [`test_cblacs_fcalls.h`](./tests/test_cblacs_fcalls.c) |
+| API                                                                                         | Example                                                |
+|---------------------------------------------------------------------------------------------|--------------------------------------------------------|
+| C API: functions are of the form `Cxxx()`, and inputs are passed by value.                  | [`test_cblacs_ccalls.h`](./tests/test_cblacs_ccalls.c) |
+| Fortran API: functions are of the form `xxx_()`, and all arguments are passed via pointers. | [`test_cblacs_fcalls.h`](./tests/test_cblacs_fcalls.c) |
 
 ## Install & use
 
