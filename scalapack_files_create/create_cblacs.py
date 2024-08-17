@@ -8,7 +8,7 @@ import re
 import datetime
 import subprocess
 
-from jinja2 import Environment, PackageLoader
+from jinja2 import Environment, FileSystemLoader
 
 from typing import List, Tuple, Self, TextIO
 
@@ -146,8 +146,7 @@ def create_cblacs_header(repo: pathlib.Path, output: TextIO):
     decls_c, decls_f = find_decls(root)
 
     # out
-    jinja_env = Environment(
-        loader=PackageLoader('scalapack_files_create', package_path=pathlib.Path(__file__).parent.parent))
+    jinja_env = Environment(loader=FileSystemLoader(pathlib.Path(__file__).parent / 'templates'))
     template = jinja_env.get_template('cblacs.h')
 
     output.write(template.render(
