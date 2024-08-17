@@ -11,8 +11,10 @@ on:
 
 jobs:
   build:
-    name: Tests
+    name: Tests generate headers and build
     runs-on: ubuntu-latest
+    env:
+      BUILD_OPTIONS: "-lscalapack -llapack -lblas"
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
@@ -37,7 +39,7 @@ jobs:
         run: |
           cd tests
           ln -s ../cblacs_ccall.h
-          mpicc -o test_ccall test_cblacs_ccall.c $(pkg-config scalapack --libs --cflags)
+          mpicc -o test_ccall test_cblacs_ccall.c ${{ env.BUILD_OPTIONS }}
           mpiexec -n 4 ./test_ccall
 
       - name: Build header (fortran call)
