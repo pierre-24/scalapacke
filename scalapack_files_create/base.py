@@ -1,14 +1,11 @@
 import argparse
 import pathlib
 import re
-import datetime
 import subprocess
 
 from jinja2 import Environment, FileSystemLoader
 
-from typing import List, Tuple, Self, TextIO
-
-from scalapack_files_create import SCALAPACK_REPO_URL, SELF_REPO_URL
+from typing import List, Tuple, Self
 
 SELF_NAME = pathlib.Path(__file__).parent.name
 
@@ -25,6 +22,9 @@ DEFINES = [
     ('F_CHAR', 'char*')
 ]
 
+# jinja templates env
+jinja_env = Environment(loader=FileSystemLoader(pathlib.Path(__file__).parent / 'templates'))
+
 
 class Declaration:
     def __init__(self, name: str, return_type: str, params: List[Tuple[str, str]]):
@@ -33,7 +33,7 @@ class Declaration:
         self.params = params
 
     @classmethod
-    def from_str(cls, inp: str) -> Self:
+    def from_c_decl(cls, inp: str) -> Self:
         match_func = PATTERN_FUNC.match(inp)
         if not match_func:
             raise Exception('unable to parse function from `{}`'.format(inp))
@@ -66,48 +66,6 @@ class Declaration:
         )
 
 
-def find_decl(path: pathlib.Path) -> Tuple[Declaration, Declaration]:
-    """Find declaration in file"""
-
-    with path.open() as f:
-        lines = f.readlines()
-        c_call_beg = -1
-        c_call_end = -1
-        f_call_end = -1
-
-        for i, line in enumerate(lines):
-            if '#if (INTFACE == C_CALL)' in line:
-                c_call_beg = i + 1
-            elif '#else' in line and c_call_beg > 0:
-                c_call_end = i
-            elif '#endif' in line and c_call_end > 0:
-                f_call_end = i
-                break
-
-        if c_call_beg < 0:
-            raise Exception('Could not find declaration in {}?!?'.format(path))
-
-        return (
-            Declaration.from_str(' '.join(line.strip() for line in lines[c_call_beg:c_call_end])),
-            Declaration.from_str(' '.join(line.strip() for line in lines[c_call_end + 1:f_call_end]))
-        )
-
-
-def find_decls(root: pathlib.Path) -> Tuple[List[Declaration], List[Declaration]]:
-    """Find all declarations, which are found in all `*_.c` files of the `BLACS/SRC` folder.
-    """
-
-    declarations_c = []
-    declarations_f = []
-
-    for path in root.glob('*_.c'):
-        c_call, f_call = find_decl(path)
-        declarations_c.append(c_call)
-        declarations_f.append(f_call)
-
-    return declarations_c, declarations_f
-
-
 def get_current_commit(repo: pathlib.Path, limit: int = 8) -> str:
     """Get the current commit"""
 
@@ -122,28 +80,3 @@ def get_dir(inp: str) -> pathlib.Path:
         raise argparse.ArgumentTypeError('{} is not a directory'.format(inp))
 
     return path
-
-
-def create_cblacs_header(repo: pathlib.Path, output: TextIO):
-    # find declarations
-    root = repo / 'BLACS' / 'SRC'
-    if not root.is_dir():
-        raise Exception('{} is not a directory, did you clone {}?'.format(root, SCALAPACK_REPO_URL))
-
-    decls_c, decls_f = find_decls(root)
-
-    # out
-    jinja_env = Environment(loader=FileSystemLoader(pathlib.Path(__file__).parent / 'templates'))
-    template = jinja_env.get_template('cblacs.h.j2')
-
-    output.write(template.render(
-        declarations_c=decls_c,
-        declarations_f=decls_f,
-        defines=DEFINES,
-        self_name=SELF_NAME,
-        self_repo_url=SELF_REPO_URL,
-        self_commit=get_current_commit(pathlib.Path('.')),
-        scalapack_repo_url=SCALAPACK_REPO_URL,
-        scalapack_commit=get_current_commit(repo),
-        current_time=datetime.datetime.now()
-    ))

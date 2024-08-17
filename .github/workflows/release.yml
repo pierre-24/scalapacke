@@ -26,7 +26,7 @@ jobs:
           git clone https://github.com/Reference-ScaLAPACK/scalapack.git
       - name: Build BLACS header
         run: |
-          scaLAPACK_create_cblacs scalapack/ -o cblacs.h
+          scaLAPACK_create --blacs scalapack/
 
       - name: Upload latest version of headers
         uses: svenstaro/upload-release-action@v2
