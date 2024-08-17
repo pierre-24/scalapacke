@@ -24,9 +24,9 @@ jobs:
       - name: Clone scalapack
         run: |
           git clone https://github.com/Reference-ScaLAPACK/scalapack.git
-      - name: Build header (C call)
+      - name: Build BLACS header
         run: |
-          python ./cblacs-header.py scalapack/ -o cblacs.h
+          scaLAPACK_create_cblacs scalapack/ -o cblacs.h
 
       - name: Upload latest version of headers
         uses: svenstaro/upload-release-action@v2

@@ -1,17 +1,20 @@
+"""
+Create the `cblacs.h` header file
+"""
+
 import argparse
 import pathlib
 import re
 import datetime
 import subprocess
 
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, PackageLoader
 
-from typing import List, Tuple, Self
+from typing import List, Tuple, Self, TextIO
 
+from scalapack_files_create import SCALAPACK_REPO_URL, SELF_REPO_URL
 
-SCALAPACK_REPO_URL = 'https://github.com/Reference-ScaLAPACK/scalapack/'
 SELF_NAME = pathlib.Path(__file__).name
-SELF_REPO_URL = 'https://github.com/pierre-24/cblacs-header/'
 
 # pattern
 PATTERN_FUNC = re.compile(r'(?P<rtype>\w+) (?P<name>\w+)\((?P<params>.*)\)')
@@ -134,26 +137,19 @@ def get_existing_file(inp: str) -> pathlib.Path:
     return path
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('repo', type=get_dir, help='Scalapack repository directory')
-    parser.add_argument('-t', '--template', type=get_existing_file, help='template', default='cblacs.h.j2')
-    parser.add_argument('-o', '--output', type=argparse.FileType('w'), help='output header', default='cblacs.h')
-
-    args = parser.parse_args()
-
+def create_cblacs_header(repo: pathlib.Path, output: TextIO):
     # find declarations
-    root = args.repo / 'BLACS' / 'SRC'
+    root = repo / 'BLACS' / 'SRC'
     if not root.is_dir():
         raise Exception('{} is not a directory, did you clone {}?'.format(root, SCALAPACK_REPO_URL))
 
     decls_c, decls_f = find_decls(root)
 
     # out
-    jinja_env = Environment(loader=FileSystemLoader(args.template.parent))
-    template = jinja_env.get_template(args.template.name)
+    jinja_env = Environment(loader=PackageLoader('scalapack_files_create'))
+    template = jinja_env.get_template('cblacs.h')
 
-    args.output.write(template.render(
+    output.write(template.render(
         declarations_c=decls_c,
         declarations_f=decls_f,
         defines=DEFINES,
@@ -161,9 +157,19 @@ def main():
         self_repo_url=SELF_REPO_URL,
         self_commit=get_current_commit(pathlib.Path('.')),
         scalapack_repo_url=SCALAPACK_REPO_URL,
-        scalapack_commit=get_current_commit(args.repo),
+        scalapack_commit=get_current_commit(repo),
         current_time=datetime.datetime.now()
     ))
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('repo', type=get_dir, help='Scalapack repository directory')
+    parser.add_argument('-o', '--output', type=argparse.FileType('w'), help='output header', default='cblacs.h')
+
+    args = parser.parse_args()
+
+    create_cblacs_header(args.repo, args.output)
 
 
 if __name__ == '__main__':

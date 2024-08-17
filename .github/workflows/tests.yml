@@ -32,7 +32,7 @@ jobs:
 
       - name: Build header
         run: |
-          python ./cblacs-header.py scalapack/ -o cblacs.h
+          scaLAPACK_create_cblacs scalapack/ -o cblacs.h
 
       - name: test // build and run (C calls)
         run: |

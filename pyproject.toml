@@ -1,0 +1,39 @@
+[project]
+name = "scalapack-files-create"
+dynamic = ["version"]
+authors = [
+    {name = "Pierre Beaujean", email = "pierre.beaujean@unamur.be"},
+]
+description = "Create a set of headers and wrappers for ScaLAPACK in C"
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.11"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+    "Jinja2"
+]
+
+[project.optional-dependencies]
+dev = [
+    "flake8",
+    "flake8-quotes",
+    "autopep8",
+]
+
+[project.scripts]
+scaLAPACK_create_cblacs = "scalapack_files_create.create_cblacs:main"
+
+[tool.setuptools]
+packages = ['scalapack_files_create']
+
+[tool.setuptools.dynamic]
+version = {attr = "scalapack_files_create.__version__"}
+
