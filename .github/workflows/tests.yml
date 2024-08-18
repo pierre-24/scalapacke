@@ -9,6 +9,9 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  NPROCS: 2
+
 jobs:
   build:
     name: Tests generate header and build
@@ -35,14 +38,8 @@ jobs:
           cd tests
           scaLAPACK_create --all ../scalapack
 
-      - name: test // build and run (C calls)
+      - name: test cblacs
         run: |
           cd tests
-          mpicc -o test_ccalls test_cpblas_ccalls.c $(pkg-config scalapack-openmpi --libs --cflags)
-          mpiexec -n 2 ./test_ccalls
-
-      - name: test // build and run (Fortran calls)
-        run: |
-          cd tests
-          mpicc -o test_fcalls test_cpblas_fcalls.c $(pkg-config scalapack-openmpi --libs --cflags)
-          mpiexec -n 2 ./test_fcalls
+          mpicc -o test test_cblacs.c $(pkg-config scalapack-openmpi --libs --cflags) -lm -DFCALLS && mpiexec -n ${{ env.NPROCS }} ./test
+          mpicc -o test test_cblacs.c $(pkg-config scalapack-openmpi --libs --cflags) -lm -DCCALLS && mpiexec -n ${{ env.NPROCS }} ./test
