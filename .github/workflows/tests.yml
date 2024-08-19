@@ -43,3 +43,6 @@ jobs:
           cd tests
           mpicc -o test test_cblacs.c $(pkg-config scalapack-openmpi --libs --cflags) -lm -DFCALLS && mpiexec -n ${{ env.NPROCS }} ./test
           mpicc -o test test_cblacs.c $(pkg-config scalapack-openmpi --libs --cflags) -lm -DCCALLS && mpiexec -n ${{ env.NPROCS }} ./test
+          
+          mpicc -o test test_pblas.c $(pkg-config scalapack-openmpi --libs --cflags) -lm -DFCALLS && mpiexec -n ${{ env.NPROCS }} ./test
+          mpicc -o test test_pblas.c $(pkg-config scalapack-openmpi --libs --cflags) -lm -DCCALLS && mpiexec -n ${{ env.NPROCS }} ./test
