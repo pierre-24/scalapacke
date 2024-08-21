@@ -32,9 +32,21 @@ def sreflex_n(N: int) -> NDArray:
     return R
 
 
-Qp = sreflex_n(4)
+def symm(N: int) -> NDArray:
+    R = numpy.zeros((N, N))
 
-print(Qp)
+    for i in range(N):
+        for j in range(N):
+            R[i, j] = 1 / (1+.5*abs(i-j))
 
-print(numpy.linalg.norm(numpy.linalg.inv(Qp)-Qp.T))
-print(Qp @ Qp.T)
+    return R
+
+A = symm(4)
+
+print(A)
+
+eige, eigv = numpy.linalg.eig(A)
+
+print(eige[3])
+print(eigv[:,3])
+print((A @ (-eigv[:,3])) - eige[3] * eigv[:, 3])
