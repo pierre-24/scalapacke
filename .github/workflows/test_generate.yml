@@ -9,9 +9,13 @@ on:
   pull_request:
     branches: [ main ]
 
+env:
+  NPROCS: 2
+  SCALAPACK_REF: v2.2.0
+
 jobs:
   build:
-    name: Tests generate header and build
+    name: generate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -26,23 +30,14 @@ jobs:
       - name: lint
         run: |
           make lint
-      - name: Clone scalapack
+      - name: Clone scalapack and checkout
         run: |
           git clone https://github.com/Reference-ScaLAPACK/scalapack.git
+          cd scalapack
+          git checkout ${{ env.SCALAPACK_REF }}
 
-      - name: Build headers
+      - name: Test generate headers and wrappers
         run: |
-          scaLAPACK_create --blacs scalapack/
-
-      - name: test // build and run (C calls)
-        run: |
-          cd tests
-          ln -s ../cblacs.h
-          mpicc -o test_ccalls test_cblacs_ccalls.c $(pkg-config scalapack-openmpi --libs --cflags)
-          mpiexec -n 2 ./test_ccalls
-
-      - name: test // build and run (Fortran calls)
-        run: |
-          cd tests
-          mpicc -o test_fcalls test_cblacs_fcalls.c $(pkg-config scalapack-openmpi --libs --cflags)
-          mpiexec -n 2 ./test_fcalls
+          mkdir test_generate
+          cd test_generate
+          scaLAPACK_create --all ../scalapack

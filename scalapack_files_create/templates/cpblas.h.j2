@@ -1,5 +1,5 @@
-#ifndef HEADER_CBLACS_H
-#define HEADER_CBLACS_H
+#ifndef HEADER_CPBLAS_H
+#define HEADER_CPBLAS_H
 
 /* Header by {{ self_name }}
  * Generated: {{ current_time }}
@@ -7,10 +7,8 @@
  * Version scalapack: {{ scalapack_repo_url }}tree/{{ scalapack_commit }}
  */
 
-#include <mpi.h>
-
 /* Macros defined in reference scalapack.
- * See https://github.com/Reference-ScaLAPACK/scalapack/blob/master/BLACS/SRC/Bdef.h
+ * See https://github.com/Reference-ScaLAPACK/scalapack/blob/master/PBLAS/SRC/pblas.h
  */
 {%- for i, f in defines %}
 #ifndef {{ i }}
@@ -20,9 +18,8 @@
 
 /* Declarations
  */
-{% for declarations in [declarations_c, declarations_f] -%}
-{% for declaration in declarations %}
+{% for declaration in declarations_f %}
 {{ declaration.to_extern_decl() }}
 {%- endfor %}
-{% endfor %}
-#endif // HEADER_CBLACS_H
+
+#endif // HEADER_CPBLAS_H
