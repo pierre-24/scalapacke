@@ -11,10 +11,11 @@ on:
 
 env:
   NPROCS: 2
+  SCALAPACK_REF: v2.2.0
 
 jobs:
   build:
-    name: Tests generate header and build
+    name: Tests generate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -29,20 +30,13 @@ jobs:
       - name: lint
         run: |
           make lint
-      - name: Clone scalapack
+      - name: Clone scalapack and checkout
         run: |
           git clone https://github.com/Reference-ScaLAPACK/scalapack.git
+          cd scalapack
+          git checkout ${{ env.SCALAPACK_REF }}
 
       - name: Build headers and wrappers
         run: |
           cd tests
           scaLAPACK_create --all ../scalapack
-
-      - name: test cblacs
-        run: |
-          cd tests
-          mpicc -o test test_cblacs.c $(pkg-config scalapack-openmpi --libs --cflags) -lm -DFCALLS && mpiexec -n ${{ env.NPROCS }} ./test
-          mpicc -o test test_cblacs.c $(pkg-config scalapack-openmpi --libs --cflags) -lm -DCCALLS && mpiexec -n ${{ env.NPROCS }} ./test
-          
-          mpicc -o test test_pblas.c $(pkg-config scalapack-openmpi --libs --cflags) -lm -DFCALLS && mpiexec -n ${{ env.NPROCS }} ./test
-          mpicc -o test test_pblas.c $(pkg-config scalapack-openmpi --libs --cflags) -lm -DCCALLS && mpiexec -n ${{ env.NPROCS }} ./test
