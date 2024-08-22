@@ -163,3 +163,4 @@ cython_debug/
 
 scalapack/
 *.h
+test_generate/

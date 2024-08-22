@@ -1,11 +1,12 @@
 import argparse
+import enum
 import pathlib
 import re
 import subprocess
 
 from jinja2 import Environment, FileSystemLoader
 
-from typing import List, Tuple, Self
+from typing import List, Tuple, Self, Dict, Optional
 
 # pattern
 PATTERN_FUNC = re.compile(r'(?P<rtype>\w+) (?P<name>\w+)\((?P<params>.*)\)')
@@ -15,14 +16,22 @@ PATTERN_PARAM = re.compile(r'(?P<type>\w+) ?(?P<ptr>\*)? ?(?P<name>\w+)')
 jinja_env = Environment(loader=FileSystemLoader(pathlib.Path(__file__).parent / 'templates'))
 
 
+class Intent(enum.Enum):
+    INPUT = enum.auto()
+    OUTPUT = enum.auto()
+
+
 class Declaration:
-    def __init__(self, name: str, return_type: str, params: List[Tuple[str, str]]):
+    def __init__(self, name: str, return_type: str, params: List[Tuple[str, str, Intent]]):
         self.name = name
         self.return_type = return_type
         self.params = params
 
     @classmethod
-    def from_c_decl(cls, inp: str) -> Self:
+    def from_c_decl(cls, inp: str, intents: Optional[Dict[str, Intent]] = None) -> Self:
+        if intents is None:
+            intents = dict()
+
         match_func = PATTERN_FUNC.match(inp)
         if not match_func:
             raise Exception('unable to parse function from `{}`'.format(inp))
@@ -34,7 +43,8 @@ class Declaration:
                 match_param = PATTERN_PARAM.match(param.strip())
                 params_list.append((
                     match_param.group('type') + ('*' if match_param.group('ptr') else ''),
-                    match_param.group('name')
+                    match_param.group('name'),
+                    Intent.OUTPUT if match_param.group('name') not in intents else intents[match_param.group('name')]
                 ))
 
         return cls(match_func.group('name'), match_func.group('rtype'), params_list)

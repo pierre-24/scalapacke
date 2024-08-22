@@ -54,7 +54,9 @@ def create_cpblas_header_and_wrapper(repo: pathlib.Path, output_header: pathlib.
         raise Exception('{} is not a directory, did you clone {}?'.format(root, SCALAPACK_REPO_URL))
 
     decls_f = find_decls(root)
-    template = jinja_env.get_template('cpblas.h.j2')
+    decls_f.sort(key=lambda x: x.name[2:] + x.name[1])
+
+    template = jinja_env.get_template('pblas.h.j2')
 
     # out
     with output_header.open('w') as f:
