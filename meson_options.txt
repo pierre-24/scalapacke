@@ -1,0 +1,13 @@
+option(
+    'la_backend',
+    type: 'combo',
+    value: 'netlib',
+    choices: ['netlib', 'mkl', 'custom'],
+    description : 'linear algebra backend'
+)
+
+option(
+    'la_libraries',
+    type: 'array',
+    description : 'Custom libraries to be used if `la_backend=custom`'
+)

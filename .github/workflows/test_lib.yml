@@ -1,0 +1,43 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  BUILD_DIR: _build
+
+jobs:
+  build:
+    name: run
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.12'
+      - uses: mpi4py/setup-mpi@v1
+        with:
+          mpi: openmpi
+
+      - name: Install dependencies
+        run: |
+          sudo apt install libscalapack-openmpi-dev meson ninja-build
+          make install
+      - name: setup (use netlib)
+        run: >-
+          meson setup ${{ env.BUILD_DIR }} 
+          -Dla_backend=netlib 
+          --buildtype=debug
+      - name: Compile
+        run: >-
+          meson compile
+          -C ${{ env.BUILD_DIR }}
+      - name: Run unit tests
+        run: >-
+          meson test
+          --print-errorlogs
+          -C ${{ env.BUILD_DIR }}
