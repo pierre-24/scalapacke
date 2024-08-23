@@ -7,7 +7,7 @@
  * Version scalapack: https://github.com/Reference-ScaLAPACK/scalapack/tree/0128dc24
  */
 
-#include "blacs.h"
+#include <blacs.h>
 
 /* Declarations
  */

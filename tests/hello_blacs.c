@@ -5,9 +5,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "scalapacke_blacs.h"
-
-int I_ZERO = 0, I_ONE = 1;
+#include <scalapacke_blacs.h>
 
 int main(int argc, char* argv[]) {
     int iam, nprocs, ctx_sys, nrows, ncols, myrow, mycol, icaller, itscol, itsrow;

@@ -11,3 +11,17 @@ option(
     type: 'array',
     description : 'Custom libraries to be used if `la_backend=custom`'
 )
+
+option(
+    'tests',
+    type: 'boolean',
+    value: true,
+    description: 'Include tests',
+)
+
+option(
+    'tests_nprocs',
+    type: 'integer',
+    value: 2,
+    description: 'Number of MPI instance while running test',
+)

@@ -13,8 +13,6 @@ build_args = [
   '-DPROJECT_VERSION="' + meson.project_version() + '"',
 ]
 
-project_dep += dependency('mpi', language: 'c')
-
 # linear algebra backend
 la_backend = get_option('la_backend')
 if la_backend == 'netlib'
@@ -28,7 +26,8 @@ if la_backend == 'netlib'
         netlib_libraries = [
             'blas',
             'lapack',
-            'scalapack'
+            'scalapack',
+            'mpi',
         ]
 
         foreach name: netlib_libraries
@@ -45,6 +44,7 @@ elif la_backend == 'mkl'
         'mkl_core',
         'mkl_sequential',
         'mkl_blacs_intelmpi_lp64',
+        'iomp5',
     ]
 
     foreach name: mkl_libraries
@@ -81,4 +81,6 @@ scalapacke_dep = declare_dependency(
 )
 
 # tests
-subdir('tests')
+if get_option('tests')
+    subdir('tests')
+endif

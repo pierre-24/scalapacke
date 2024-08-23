@@ -5,9 +5,11 @@ tests_dep += cc.find_library('m', required: true)
 # list of tests
 tests_to_run = [
     'hello_blacs',
+	# 'pdgemm',
 ]
 
 mpiexec = find_program('mpiexec', required : true)
+nprocs = get_option('tests_nprocs')
 
 foreach f: tests_to_run
 	src_file = files(f +  '.c')
@@ -24,7 +26,7 @@ foreach f: tests_to_run
 	test(
 		'test_' + f,
 		mpiexec,
-		args : ['-n', '2', test_exe],
+		args : ['-n', nprocs.to_string(), test_exe],
         suite: 'lib',
         is_parallel : false
 	)
