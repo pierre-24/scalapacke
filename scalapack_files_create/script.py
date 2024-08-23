@@ -10,11 +10,14 @@ from scalapack_files_create.create_cpblas import create_cpblas_header_and_wrappe
 
 OUTPUTS = {
     'blacs': {
-        'output_header': 'blacs.h'
+        'output_header': 'blacs.h',
+        'output_ml_header': 'scalapacke_blacs.h',
+        'output_ml_wrapper': 'scalapacke_blacs.c'
     },
     'pblas': {
         'output_header': 'pblas.h',
-        'output_wrapper': 'cblacs.c'
+        'output_ml_header': 'scalapacke_pblas.h',
+        'output_ml_wrapper': 'scalapacke_pblas.c'
     }
 }
 

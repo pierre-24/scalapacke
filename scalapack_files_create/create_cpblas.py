@@ -14,7 +14,9 @@ DEFINES = [
 ]
 
 FIND_INTENTS = re.compile(
-    r'\* *(?P<name>\w*) *\((local|global).*(?P<intent>\w+put)\)(?P<isarray>.+array)?', flags=re.MULTILINE)
+    r'\* *(?P<name>\w*) *\((local|global).*(?P<intent>\w+put)\)(?P<iscomplex>.+COMPLEX)?(?P<isarray>.+array)?',
+    flags=re.MULTILINE
+)
 
 
 def find_decl(path: pathlib.Path) -> Declaration:
@@ -50,7 +52,8 @@ def find_decl(path: pathlib.Path) -> Declaration:
 
         for match in FIND_INTENTS.finditer('\n'.join(lines[f_args_beg:f_args_end])):
             intent = match.group('intent').lower()
-            is_array = match.group('isarray') is not None
+            is_array = match.group('iscomplex') is not None
+            is_complex = match.group('isarray') is not None
             param_name = match.group('name').upper()
 
             # fix error in PBLAS/SRC/*trsm_.c and PBLAS/SRC/*trmm_.c: `TRANSA` (doc) → `TRANS` (param)
@@ -58,7 +61,7 @@ def find_decl(path: pathlib.Path) -> Declaration:
                 param_name = 'TRANS'
 
             intents[param_name] = Intent.OUTPUT if intent == 'output' else (
-                Intent.INPUT_ARRAY if is_array else Intent.INPUT
+                Intent.INPUT_ARRAY if is_array else (Intent.INPUT_COMPLEX if is_complex else Intent.INPUT)
             )
 
         return Declaration.from_c_decl(' '.join(line.strip() for line in lines[f_call_beg:f_call_end]), intents)
@@ -76,7 +79,12 @@ def find_decls(root: pathlib.Path) -> List[Declaration]:
     return declarations_f
 
 
-def create_cpblas_header_and_wrapper(repo: pathlib.Path, output_header: pathlib.Path, output_wrapper: pathlib.Path):
+def create_cpblas_header_and_wrapper(
+        repo: pathlib.Path,
+        output_header: pathlib.Path,
+        output_ml_header: pathlib.Path,
+        output_ml_wrapper: pathlib.Path
+):
     # find declarations
     root = repo / 'PBLAS' / 'SRC'
     if not root.is_dir():
@@ -85,13 +93,37 @@ def create_cpblas_header_and_wrapper(repo: pathlib.Path, output_header: pathlib.
     decls_f = find_decls(root)
     decls_f.sort(key=lambda x: x.name[2:] + x.name[1])
 
-    template = jinja_env.get_template('pblas.h.j2')
+    template_header = jinja_env.get_template('pblas.h.j2')
+    template_ml_header = jinja_env.get_template('scalapacke_pblas.h.j2')
+    template_ml_wrapper = jinja_env.get_template('scalapacke_pblas.c.j2')
 
     # out
     with output_header.open('w') as f:
-        f.write(template.render(
+        f.write(template_header.render(
             declarations_f=decls_f,
             defines=DEFINES,
+            self_name=SELF_NAME,
+            self_repo_url=SELF_REPO_URL,
+            self_commit=get_current_commit(pathlib.Path('.')),
+            scalapack_repo_url=SCALAPACK_REPO_URL,
+            scalapack_commit=get_current_commit(repo),
+            current_time=datetime.datetime.now()
+        ))
+
+    with output_ml_header.open('w') as f:
+        f.write(template_ml_header.render(
+            declarations_f=decls_f,
+            self_name=SELF_NAME,
+            self_repo_url=SELF_REPO_URL,
+            self_commit=get_current_commit(pathlib.Path('.')),
+            scalapack_repo_url=SCALAPACK_REPO_URL,
+            scalapack_commit=get_current_commit(repo),
+            current_time=datetime.datetime.now()
+        ))
+
+    with output_ml_wrapper.open('w') as f:
+        f.write(template_ml_wrapper.render(
+            declarations_f=decls_f,
             self_name=SELF_NAME,
             self_repo_url=SELF_REPO_URL,
             self_commit=get_current_commit(pathlib.Path('.')),

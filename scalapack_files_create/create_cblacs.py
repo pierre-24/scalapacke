@@ -34,14 +34,14 @@ def _p(inp: str, r: int = 0) -> Tuple[str, str, Intent]:
 
 
 BLACS_DECLS = [
-    # blacs*() function do not come with a documentation, so manually handle them
+    # blacs*() functions do not come with a documentation, so manually handle them
     Declaration('blacs_abort_', 'F_VOID_FUNC', [_p('Int* ConTxt'), _p('Int* ErrNo')]),
     Declaration('blacs_barrier_', 'F_VOID_FUNC', [_p('Int* ConTxt'), _p('F_CHAR scope')]),
     Declaration('blacs_exit_', 'F_VOID_FUNC', [_p('Int* NotDone')]),
     Declaration('blacs_freebuff_', 'F_VOID_FUNC', [_p('Int* ConTxt'), _p('Int* wait')]),
     Declaration('blacs_get_', 'F_VOID_FUNC', [
-        _p('Int* ConTxt'),
-        _p('Int* what'),
+        _p('Int* ConTxt', 1),
+        _p('Int* what', 1),
         _p('Int* val', 1)
     ]),
     Declaration('blacs_gridexit_', 'F_VOID_FUNC', [_p('Int* ConTxt')]),
@@ -55,7 +55,7 @@ BLACS_DECLS = [
     Declaration('blacs_gridinit_', 'F_VOID_FUNC', [
         _p('Int* ConTxt', 1),
         _p('F_CHAR order'),
-        _p('Int* nprow'),
+        _p('Int* nprow',),
         _p('Int* npcol'),
     ]),
     Declaration('blacs_gridmap_', 'F_VOID_FUNC', [
@@ -67,11 +67,11 @@ BLACS_DECLS = [
     ]),
     Declaration('blacs_pcoord_', 'F_VOID_FUNC', [
         _p('Int* ConTxt'),
-        _p(' Int* nodenum'),
+        _p('Int* nodenum'),
         _p('Int* prow', 1),
         _p('Int* pcol', 1)
     ]),
-    Declaration('blacs_info_', 'F_VOID_FUNC', [
+    Declaration('blacs_pinfo_', 'F_VOID_FUNC', [
         _p('Int* mypnum', 1),
         _p('Int* nprocs', 1),
     ]),
@@ -87,7 +87,7 @@ BLACS_DECLS = [
     ]),
     Declaration('blacs_setup_', 'F_VOID_FUNC', [
         _p('Int* mypnum', 1),
-        _p(' Int* nprocs', 1),
+        _p('Int* nprocs', 1),
     ]),
     Declaration('blacs2sys_handle_', 'MPI_Comm', [
         _p('Int* BlacsCtxt')
@@ -166,7 +166,12 @@ def key_c_decls(d: Declaration):
     return d.name[2:]
 
 
-def create_cblacs_header(repo: pathlib.Path, output_header: pathlib.Path):
+def create_cblacs_header(
+        repo: pathlib.Path,
+        output_header: pathlib.Path,
+        output_ml_header: pathlib.Path,
+        output_ml_wrapper: pathlib.Path
+):
     # find declarations
     root = repo / 'BLACS' / 'SRC'
     if not root.is_dir():
@@ -175,13 +180,37 @@ def create_cblacs_header(repo: pathlib.Path, output_header: pathlib.Path):
     decls_f = find_decls(root)
     decls_f.sort(key=lambda x: ('a' if 'blacs' in x.name else '') + x.name[1:] + x.name[0])
 
-    template = jinja_env.get_template('blacs.h.j2')
+    template_header = jinja_env.get_template('blacs.h.j2')
+    template_ml_header = jinja_env.get_template('scalapacke_blacs.h.j2')
+    template_ml_wrapper = jinja_env.get_template('scalapacke_blacs.c.j2')
 
     # out
     with output_header.open('w') as f:
-        f.write(template.render(
+        f.write(template_header.render(
             declarations_f=decls_f + BLACS_DECLS,
             defines=DEFINES,
+            self_name=SELF_NAME,
+            self_repo_url=SELF_REPO_URL,
+            self_commit=get_current_commit(pathlib.Path('.')),
+            scalapack_repo_url=SCALAPACK_REPO_URL,
+            scalapack_commit=get_current_commit(repo),
+            current_time=datetime.datetime.now()
+        ))
+
+    with output_ml_header.open('w') as f:
+        f.write(template_ml_header.render(
+            declarations_f=decls_f + BLACS_DECLS,
+            self_name=SELF_NAME,
+            self_repo_url=SELF_REPO_URL,
+            self_commit=get_current_commit(pathlib.Path('.')),
+            scalapack_repo_url=SCALAPACK_REPO_URL,
+            scalapack_commit=get_current_commit(repo),
+            current_time=datetime.datetime.now()
+        ))
+
+    with output_ml_wrapper.open('w') as f:
+        f.write(template_ml_wrapper.render(
+            declarations_f=decls_f + BLACS_DECLS,
             self_name=SELF_NAME,
             self_repo_url=SELF_REPO_URL,
             self_commit=get_current_commit(pathlib.Path('.')),

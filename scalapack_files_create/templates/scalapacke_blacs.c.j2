@@ -1,0 +1,5 @@
+#include "scalapacke_blacs.h"
+
+{% for declaration in declarations_f %}
+{{ declaration.to_aliased_wrapper() }}
+{% endfor %}

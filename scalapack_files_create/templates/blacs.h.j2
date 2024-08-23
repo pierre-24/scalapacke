@@ -20,7 +20,8 @@
 
 /* Declarations
  */
-{% for declaration in declarations_f %}
+{%- for declaration in declarations_f %}
 {{ declaration.to_extern_decl() }}
 {%- endfor %}
+
 #endif // HEADER_BLACS_H
