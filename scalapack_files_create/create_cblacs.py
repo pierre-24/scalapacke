@@ -35,57 +35,57 @@ def _p(inp: str, r: int = 0) -> Tuple[str, str, Intent]:
 
 BLACS_DECLS = [
     # blacs*() functions do not come with a documentation, so manually handle them
-    Declaration('blacs_abort_', 'F_VOID_FUNC', [_p('Int* ConTxt'), _p('Int* ErrNo')]),
-    Declaration('blacs_barrier_', 'F_VOID_FUNC', [_p('Int* ConTxt'), _p('F_CHAR scope')]),
-    Declaration('blacs_exit_', 'F_VOID_FUNC', [_p('Int* NotDone')]),
-    Declaration('blacs_freebuff_', 'F_VOID_FUNC', [_p('Int* ConTxt'), _p('Int* wait')]),
-    Declaration('blacs_get_', 'F_VOID_FUNC', [
-        _p('Int* ConTxt', 1),
-        _p('Int* what', 1),
+    Declaration('blacs_abort_', 'void', [_p('Int* ConTxt'), _p('Int* ErrNo')]),
+    Declaration('blacs_barrier_', 'void', [_p('Int* ConTxt'), _p('F_CHAR scope')]),
+    Declaration('blacs_exit_', 'void', [_p('Int* NotDone')]),
+    Declaration('blacs_freebuff_', 'void', [_p('Int* ConTxt'), _p('Int* wait')]),
+    Declaration('blacs_get_', 'void', [
+        _p('Int* ConTxt', ),
+        _p('Int* what'),
         _p('Int* val', 1)
     ]),
-    Declaration('blacs_gridexit_', 'F_VOID_FUNC', [_p('Int* ConTxt')]),
-    Declaration('blacs_gridinfo_', 'F_VOID_FUNC', [
+    Declaration('blacs_gridexit_', 'void', [_p('Int* ConTxt')]),
+    Declaration('blacs_gridinfo_', 'void', [
         _p('Int* ConTxt'),
         _p('Int* nprow', 1),
         _p('Int* npcol', 1),
         _p('Int* myrow', 1),
         _p('Int* mycol', 1)
     ]),
-    Declaration('blacs_gridinit_', 'F_VOID_FUNC', [
+    Declaration('blacs_gridinit_', 'void', [
         _p('Int* ConTxt', 1),
         _p('F_CHAR order'),
         _p('Int* nprow',),
         _p('Int* npcol'),
     ]),
-    Declaration('blacs_gridmap_', 'F_VOID_FUNC', [
+    Declaration('blacs_gridmap_', 'void', [
         _p('Int* ConTxt', 1),
         _p('Int* usermap', 1),
         _p('Int* ldup'),
         _p('Int* nprow0'),
         _p('Int* npcol0'),
     ]),
-    Declaration('blacs_pcoord_', 'F_VOID_FUNC', [
+    Declaration('blacs_pcoord_', 'void', [
         _p('Int* ConTxt'),
         _p('Int* nodenum'),
         _p('Int* prow', 1),
         _p('Int* pcol', 1)
     ]),
-    Declaration('blacs_pinfo_', 'F_VOID_FUNC', [
+    Declaration('blacs_pinfo_', 'void', [
         _p('Int* mypnum', 1),
         _p('Int* nprocs', 1),
     ]),
-    Declaration('blacs_pnum_', 'F_VOID_FUNC', [
+    Declaration('blacs_pnum_', 'Int', [
         _p('Int* ConTxt'),
         _p('Int* prow'),
         _p('Int* pcol')
     ]),
-    Declaration('blacs_set_', 'F_VOID_FUNC', [
+    Declaration('blacs_set_', 'void', [
         _p('Int* ConTxt'),
         _p('Int* what'),
         _p('Int* val', 1)
     ]),
-    Declaration('blacs_setup_', 'F_VOID_FUNC', [
+    Declaration('blacs_setup_', 'void', [
         _p('Int* mypnum', 1),
         _p('Int* nprocs', 1),
     ]),
