@@ -34,7 +34,7 @@ def _p(inp: str, r: int = 0) -> Tuple[str, str, Intent]:
 
 
 BLACS_DECLS = [
-    # blacs*() function do not come with a documentation, so manually do them
+    # blacs*() function do not come with a documentation, so manually handle them
     Declaration('blacs_abort_', 'F_VOID_FUNC', [_p('Int* ConTxt'), _p('Int* ErrNo')]),
     Declaration('blacs_barrier_', 'F_VOID_FUNC', [_p('Int* ConTxt'), _p('F_CHAR scope')]),
     Declaration('blacs_exit_', 'F_VOID_FUNC', [_p('Int* NotDone')]),
@@ -92,10 +92,14 @@ BLACS_DECLS = [
     Declaration('blacs2sys_handle_', 'MPI_Comm', [
         _p('Int* BlacsCtxt')
     ]),
+    Declaration('sys2blacs_handle_', 'Int', [
+        _p('MPI_Comm* SysCtxt')
+    ]),
 ]
 
 
-FIND_INTENTS = re.compile(r'\* *(?P<name>\w*) *\((?P<intent>\w*put)\)')
+FIND_INTENTS = re.compile(
+    r'\* *(?P<name>\w*) *\((?P<intent>\w*put)\)(?P<isarray>.+array)?', flags=re.MULTILINE)
 
 
 def find_decl(path: pathlib.Path) -> Declaration:
@@ -133,6 +137,13 @@ def find_decl(path: pathlib.Path) -> Declaration:
 
         # analyse argument list to find intents
         intents = {}
+
+        for match in FIND_INTENTS.finditer('\n'.join(lines[f_args_beg:f_args_end])):
+            intent = match.group('intent').lower()
+            is_array = match.group('isarray') is not None
+            intents[match.group('name').upper()] = Intent.OUTPUT if intent == 'output' else (
+                Intent.INPUT_ARRAY if is_array else Intent.INPUT
+            )
 
         return Declaration.from_c_decl(' '.join(line.strip() for line in lines[c_call_end + 1:f_call_end]), intents)
 

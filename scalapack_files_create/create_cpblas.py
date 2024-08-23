@@ -1,9 +1,10 @@
 import datetime
 import pathlib
+import re
 from typing import List
 
 from scalapack_files_create import SCALAPACK_REPO_URL, SELF_REPO_URL
-from scalapack_files_create.base import Declaration, get_current_commit, jinja_env
+from scalapack_files_create.base import Declaration, get_current_commit, jinja_env, Intent
 
 SELF_NAME = __name__
 
@@ -11,6 +12,9 @@ DEFINES = [
     ('Int', 'int'),
     ('F_CHAR_T', 'char*')
 ]
+
+FIND_INTENTS = re.compile(
+    r'\* *(?P<name>\w*) *\((local|global).*(?P<intent>\w+put)\)(?P<isarray>.+array)?', flags=re.MULTILINE)
 
 
 def find_decl(path: pathlib.Path) -> Declaration:
@@ -21,18 +25,43 @@ def find_decl(path: pathlib.Path) -> Declaration:
         lines = f.readlines()
         f_call_beg = -1
         f_call_end = -1
+        f_args_beg = -1
+        f_args_end = -1
 
         for i, line in enumerate(lines):
             if '#ifdef __STDC__' in line:
                 f_call_beg = i + 1
             elif '#else' in line and f_call_beg > 0:
                 f_call_end = i
+            elif '*  Arguments' in line and f_call_end > 0:
+                f_args_beg = i
+            elif '----------' in line and f_args_beg > 0:
+                f_args_end = i
                 break
 
         if f_call_beg < 0:
             raise Exception('Could not find declaration in {}?!?'.format(path))
 
-        return Declaration.from_c_decl(' '.join(line.strip() for line in lines[f_call_beg:f_call_end]))
+        if f_args_end < 0:
+            raise Exception('could not find arguments list in {}?!?'.format(path))
+
+        # analyse argument list to find intents
+        intents = {}
+
+        for match in FIND_INTENTS.finditer('\n'.join(lines[f_args_beg:f_args_end])):
+            intent = match.group('intent').lower()
+            is_array = match.group('isarray') is not None
+            param_name = match.group('name').upper()
+
+            # fix error in PBLAS/SRC/*trsm_.c and PBLAS/SRC/*trmm_.c: `TRANSA` (doc) → `TRANS` (param)
+            if path.name[2:] in ['trsm_.c', 'trmm_.c'] and param_name == 'TRANSA':
+                param_name = 'TRANS'
+
+            intents[param_name] = Intent.OUTPUT if intent == 'output' else (
+                Intent.INPUT_ARRAY if is_array else Intent.INPUT
+            )
+
+        return Declaration.from_c_decl(' '.join(line.strip() for line in lines[f_call_beg:f_call_end]), intents)
 
 
 def find_decls(root: pathlib.Path) -> List[Declaration]:

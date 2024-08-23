@@ -18,6 +18,7 @@ jinja_env = Environment(loader=FileSystemLoader(pathlib.Path(__file__).parent / 
 
 class Intent(enum.Enum):
     INPUT = enum.auto()
+    INPUT_ARRAY = enum.auto()
     OUTPUT = enum.auto()
 
 
@@ -41,10 +42,11 @@ class Declaration:
         if params != 'void':
             for param in params.split(','):
                 match_param = PATTERN_PARAM.match(param.strip())
+                param_name = match_param.group('name')
                 params_list.append((
                     match_param.group('type') + ('*' if match_param.group('ptr') else ''),
-                    match_param.group('name'),
-                    Intent.OUTPUT if match_param.group('name') not in intents else intents[match_param.group('name')]
+                    param_name,
+                    intents[param_name.upper()]
                 ))
 
         return cls(match_func.group('name'), match_func.group('rtype'), params_list)
