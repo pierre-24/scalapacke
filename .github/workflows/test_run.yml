@@ -21,10 +21,13 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: '3.12'
+      - uses: mpi4py/setup-mpi@v1
+        with:
+          mpi: openmpi
 
       - name: Install dependencies
         run: |
-          sudo apt install libopenmpi-dev libscalapack-openmpi-dev
+          sudo apt install libscalapack-openmpi-dev
           make install
 
       - name: Clone scalapack and checkout

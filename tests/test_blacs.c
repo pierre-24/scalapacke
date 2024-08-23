@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
     nrows = (int) sqrt((double) nprocs);
     ncols = nprocs / nrows;
     if(iam == 0)
-        printf("0 :: rectangular grid with %lld procs is %lldx%lld\n", nprocs, nrows, ncols);
+        printf("0 :: rectangular grid with %d procs is %dx%d\n", nprocs, nrows, ncols);
 
     // create a grid and check where I am
     SCALAPACKE_blacs_gridinit(&ctx_sys, "R", nrows, ncols);
@@ -49,9 +49,9 @@ int main(int argc, char* argv[]) {
                         SCALAPACKE_blacs_pcoord(ctx_sys, icaller, &itsrow, &itscol);
 
                         if(i != itsrow || j != itscol)
-                            printf("%lld :: imposter answered, %lld is not at its correct position on the grid :(\n", iam, icaller);
+                            printf("%d :: imposter answered, %d is not at its correct position on the grid :(\n", iam, icaller);
                         else
-                            printf("%lld :: process %lld answered correctly\n", iam, icaller);
+                            printf("%d :: process %d answered correctly\n", iam, icaller);
                     }
                 }
             }
@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
         // exit grids
         SCALAPACKE_blacs_gridexit(ctx_sys);
     } else
-        printf("%lld :: I'm out of grid\n", iam);
+        printf("%d :: I'm out of grid\n", iam);
 
     // finalize BLACS
     SCALAPACKE_blacs_exit(0);
