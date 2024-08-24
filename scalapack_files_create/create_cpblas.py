@@ -81,7 +81,7 @@ def find_decls(root: pathlib.Path) -> List[Declaration]:
     return declarations_f
 
 
-def create_cpblas_header_and_wrapper(
+def create_cpblas_headers_and_wrapper(
         repo: pathlib.Path,
         output_header: pathlib.Path,
         output_ml_header: pathlib.Path,

@@ -1,0 +1,9 @@
+#ifndef HEADER_SCALAPACK_H
+#define HEADER_SCALAPACK_H
+
+/* Declarations
+ */
+{%- for declaration in declarations_f %}
+{{ declaration.to_extern_decl() }}
+{%- endfor %}
+#endif // HEADER_SCALAPACK_H

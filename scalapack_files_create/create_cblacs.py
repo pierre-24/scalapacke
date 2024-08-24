@@ -166,7 +166,7 @@ def key_c_decls(d: Declaration):
     return d.name[2:]
 
 
-def create_cblacs_header(
+def create_cblacs_headers_and_wrapper(
         repo: pathlib.Path,
         output_header: pathlib.Path,
         output_ml_header: pathlib.Path,

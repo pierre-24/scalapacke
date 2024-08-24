@@ -8,12 +8,14 @@ from jinja2 import Environment, FileSystemLoader
 
 from typing import List, Tuple, Self, Dict, Optional
 
+from scalapack_files_create.fortran import Parser as FParser
+
 
 PREFIX = 'SCALAPACKE_'
 
 # pattern
-PATTERN_FUNC = re.compile(r'(?P<rtype>\w+) (?P<name>\w+)\((?P<params>.*)\)')
-PATTERN_PARAM = re.compile(r'(?P<type>\w+) ?(?P<ptr>\*)? ?(?P<name>\w+)')
+PATTERN_C_FUNC = re.compile(r'(?P<rtype>\w+) (?P<name>\w+)\((?P<params>.*)\)')
+PATTERN_C_PARAM = re.compile(r'(?P<type>\w+) ?(?P<ptr>\*)? ?(?P<name>\w+)')
 
 # jinja templates env
 jinja_env = Environment(loader=FileSystemLoader(pathlib.Path(__file__).parent / 'templates'))
@@ -37,7 +39,7 @@ class Declaration:
         if intents is None:
             intents = dict()
 
-        match_func = PATTERN_FUNC.match(inp)
+        match_func = PATTERN_C_FUNC.match(inp)
         if not match_func:
             raise Exception('unable to parse function from `{}`'.format(inp))
 
@@ -45,7 +47,7 @@ class Declaration:
         params_list = []
         if params != 'void':
             for param in params.split(','):
-                match_param = PATTERN_PARAM.match(param.strip())
+                match_param = PATTERN_C_PARAM.match(param.strip())
                 param_name = match_param.group('name')
                 params_list.append((
                     match_param.group('type') + ('*' if match_param.group('ptr') else ''),
@@ -54,6 +56,19 @@ class Declaration:
                 ))
 
         return cls(match_func.group('name'), match_func.group('rtype'), params_list)
+
+    @classmethod
+    def from_f_decl(cls, lines: List[str], intents: Optional[Dict[str, Intent]] = None) -> Self:
+        if intents is None:
+            intents = dict()
+
+        name, rtype, params_list = FParser(lines).decl()
+
+        params_with_intent_list = []
+        for typ, name in params_list:
+            params_with_intent_list.append((typ, name, intents[name]))
+
+        return cls(name, rtype, params_with_intent_list)
 
     def to_extern_decl(self) -> str:
         return 'extern {} {}({});'.format(
