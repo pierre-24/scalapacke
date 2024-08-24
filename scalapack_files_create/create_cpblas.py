@@ -14,7 +14,7 @@ DEFINES = [
 ]
 
 FIND_INTENTS = re.compile(
-    r'\* *(?P<name>\w*) *\((local|global).*(?P<intent>\w+put)\)(?P<iscomplex>.+COMPLEX)?(?P<isarray>.+array)?',
+    r'\* *(?P<name>\w*) *\((local|global).*(?P<intent>((in)|(out))put)\)(?P<iscomplex>.+COMPLEX)?(?P<isarray>.+array)?',
     flags=re.MULTILINE
 )
 
@@ -60,7 +60,9 @@ def find_decl(path: pathlib.Path) -> Declaration:
             if path.name[2:] in ['trsm_.c', 'trmm_.c'] and param_name == 'TRANSA':
                 param_name = 'TRANS'
 
-            intents[param_name] = Intent.OUTPUT if intent == 'output' else (
+            intents[param_name] = Intent.OUTPUT if (
+                    intent == 'output'
+            ) else (
                 Intent.INPUT_ARRAY if is_array else (Intent.INPUT_COMPLEX if is_complex else Intent.INPUT)
             )
 

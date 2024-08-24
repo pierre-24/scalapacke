@@ -1,494 +1,494 @@
 #include "scalapacke_pblas.h"
 
 
-void SCALAPACKE_pcagemv(F_CHAR_T TRANS, Int M, Int N, float ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float BETA, float* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pcagemv(const F_CHAR_T TRANS, const Int M, const Int N, const float ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const float BETA, float* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pcagemv_(TRANS, &M, &N, &ALPHA, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX, &BETA, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pdagemv(F_CHAR_T TRANS, Int M, Int N, double ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double BETA, double* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pdagemv(const F_CHAR_T TRANS, const Int M, const Int N, const double ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const double BETA, double* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pdagemv_(TRANS, &M, &N, &ALPHA, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX, &BETA, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_psagemv(F_CHAR_T TRANS, Int M, Int N, float ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float BETA, float* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_psagemv(const F_CHAR_T TRANS, const Int M, const Int N, const float ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const float BETA, float* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     psagemv_(TRANS, &M, &N, &ALPHA, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX, &BETA, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pzagemv(F_CHAR_T TRANS, Int M, Int N, double ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double BETA, double* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pzagemv(const F_CHAR_T TRANS, const Int M, const Int N, const double ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const double BETA, double* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pzagemv_(TRANS, &M, &N, &ALPHA, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX, &BETA, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pcahemv(F_CHAR_T UPLO, Int N, float ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float BETA, float* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pcahemv(const F_CHAR_T UPLO, const Int N, const float ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const float BETA, float* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pcahemv_(UPLO, &N, &ALPHA, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX, &BETA, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pzahemv(F_CHAR_T UPLO, Int N, double ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double BETA, double* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pzahemv(const F_CHAR_T UPLO, const Int N, const double ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const double BETA, double* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pzahemv_(UPLO, &N, &ALPHA, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX, &BETA, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pcamax(Int N, float* AMAX, Int INDX, float* X, Int IX, Int JX, Int* DESCX, Int INCX) {
-    pcamax_(&N, AMAX, &INDX, X, &IX, &JX, DESCX, &INCX);
+void SCALAPACKE_pcamax(const Int N, float* AMAX, Int* INDX, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
+    pcamax_(&N, AMAX, INDX, X, &IX, &JX, DESCX, &INCX);
 }
 
-void SCALAPACKE_pdamax(Int N, double* AMAX, Int INDX, double* X, Int IX, Int JX, Int* DESCX, Int INCX) {
-    pdamax_(&N, AMAX, &INDX, X, &IX, &JX, DESCX, &INCX);
+void SCALAPACKE_pdamax(const Int N, double* AMAX, Int* INDX, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
+    pdamax_(&N, AMAX, INDX, X, &IX, &JX, DESCX, &INCX);
 }
 
-void SCALAPACKE_psamax(Int N, float* AMAX, Int INDX, float* X, Int IX, Int JX, Int* DESCX, Int INCX) {
-    psamax_(&N, AMAX, &INDX, X, &IX, &JX, DESCX, &INCX);
+void SCALAPACKE_psamax(const Int N, float* AMAX, Int* INDX, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
+    psamax_(&N, AMAX, INDX, X, &IX, &JX, DESCX, &INCX);
 }
 
-void SCALAPACKE_pzamax(Int N, double* AMAX, Int INDX, double* X, Int IX, Int JX, Int* DESCX, Int INCX) {
-    pzamax_(&N, AMAX, &INDX, X, &IX, &JX, DESCX, &INCX);
+void SCALAPACKE_pzamax(const Int N, double* AMAX, Int* INDX, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
+    pzamax_(&N, AMAX, INDX, X, &IX, &JX, DESCX, &INCX);
 }
 
-void SCALAPACKE_pdasum(Int N, double ASUM, double* X, Int IX, Int JX, Int* DESCX, Int INCX) {
-    pdasum_(&N, &ASUM, X, &IX, &JX, DESCX, &INCX);
+void SCALAPACKE_pdasum(const Int N, double* ASUM, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
+    pdasum_(&N, ASUM, X, &IX, &JX, DESCX, &INCX);
 }
 
-void SCALAPACKE_psasum(Int N, float ASUM, float* X, Int IX, Int JX, Int* DESCX, Int INCX) {
-    psasum_(&N, &ASUM, X, &IX, &JX, DESCX, &INCX);
+void SCALAPACKE_psasum(const Int N, float* ASUM, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
+    psasum_(&N, ASUM, X, &IX, &JX, DESCX, &INCX);
 }
 
-void SCALAPACKE_pdasymv(F_CHAR_T UPLO, Int N, double ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double BETA, double* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pdasymv(const F_CHAR_T UPLO, const Int N, const double ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const double BETA, double* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pdasymv_(UPLO, &N, &ALPHA, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX, &BETA, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_psasymv(F_CHAR_T UPLO, Int N, float ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float BETA, float* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_psasymv(const F_CHAR_T UPLO, const Int N, const float ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const float BETA, float* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     psasymv_(UPLO, &N, &ALPHA, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX, &BETA, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pcatrmv(F_CHAR_T UPLO, F_CHAR_T TRANS, F_CHAR_T DIAG, Int N, float ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float BETA, float* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pcatrmv(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const F_CHAR_T DIAG, const Int N, const float ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const float BETA, float* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pcatrmv_(UPLO, TRANS, DIAG, &N, &ALPHA, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX, &BETA, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pdatrmv(F_CHAR_T UPLO, F_CHAR_T TRANS, F_CHAR_T DIAG, Int N, double ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double BETA, double* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pdatrmv(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const F_CHAR_T DIAG, const Int N, const double ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const double BETA, double* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pdatrmv_(UPLO, TRANS, DIAG, &N, &ALPHA, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX, &BETA, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_psatrmv(F_CHAR_T UPLO, F_CHAR_T TRANS, F_CHAR_T DIAG, Int N, float ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float BETA, float* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_psatrmv(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const F_CHAR_T DIAG, const Int N, const float ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const float BETA, float* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     psatrmv_(UPLO, TRANS, DIAG, &N, &ALPHA, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX, &BETA, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pzatrmv(F_CHAR_T UPLO, F_CHAR_T TRANS, F_CHAR_T DIAG, Int N, double ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double BETA, double* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pzatrmv(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const F_CHAR_T DIAG, const Int N, const double ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const double BETA, double* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pzatrmv_(UPLO, TRANS, DIAG, &N, &ALPHA, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX, &BETA, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pcaxpy(Int N, float* ALPHA, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pcaxpy(const Int N, const float* ALPHA, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, float* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pcaxpy_(&N, ALPHA, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pdaxpy(Int N, double ALPHA, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pdaxpy(const Int N, const double ALPHA, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, double* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pdaxpy_(&N, &ALPHA, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_psaxpy(Int N, float ALPHA, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_psaxpy(const Int N, const float ALPHA, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, float* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     psaxpy_(&N, &ALPHA, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pzaxpy(Int N, double* ALPHA, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pzaxpy(const Int N, const double* ALPHA, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, double* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pzaxpy_(&N, ALPHA, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pscasum(Int N, float ASUM, float* X, Int IX, Int JX, Int* DESCX, Int INCX) {
-    pscasum_(&N, &ASUM, X, &IX, &JX, DESCX, &INCX);
+void SCALAPACKE_pscasum(const Int N, float* ASUM, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
+    pscasum_(&N, ASUM, X, &IX, &JX, DESCX, &INCX);
 }
 
-void SCALAPACKE_pscnrm2(Int N, float NORM2, float* X, Int IX, Int JX, Int* DESCX, Int INCX) {
-    pscnrm2_(&N, &NORM2, X, &IX, &JX, DESCX, &INCX);
+void SCALAPACKE_pscnrm2(const Int N, float* NORM2, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
+    pscnrm2_(&N, NORM2, X, &IX, &JX, DESCX, &INCX);
 }
 
-void SCALAPACKE_pccopy(Int N, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pccopy(const Int N, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, float* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pccopy_(&N, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pdcopy(Int N, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pdcopy(const Int N, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, double* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pdcopy_(&N, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_picopy(Int N, Int* X, Int IX, Int JX, Int* DESCX, Int INCX, Int* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_picopy(const Int N, const Int* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, Int* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     picopy_(&N, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pscopy(Int N, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pscopy(const Int N, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, float* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pscopy_(&N, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pzcopy(Int N, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pzcopy(const Int N, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, double* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pzcopy_(&N, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pddot(Int N, double* DOT, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pddot(const Int N, double* DOT, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const double* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pddot_(&N, DOT, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_psdot(Int N, float* DOT, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_psdot(const Int N, float* DOT, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const float* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     psdot_(&N, DOT, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pcdotc(Int N, float* DOT, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pcdotc(const Int N, float* DOT, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const float* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pcdotc_(&N, DOT, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pzdotc(Int N, double* DOT, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pzdotc(const Int N, double* DOT, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const double* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pzdotc_(&N, DOT, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pcdotu(Int N, float* DOT, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pcdotu(const Int N, float* DOT, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const float* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pcdotu_(&N, DOT, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pzdotu(Int N, double* DOT, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pzdotu(const Int N, double* DOT, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const double* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pzdotu_(&N, DOT, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pzdscal(Int N, double ALPHA, double* X, Int IX, Int JX, Int* DESCX, Int INCX) {
+void SCALAPACKE_pzdscal(const Int N, const double ALPHA, double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
     pzdscal_(&N, &ALPHA, X, &IX, &JX, DESCX, &INCX);
 }
 
-void SCALAPACKE_pcgeadd(F_CHAR_T TRANS, Int M, Int N, float* ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* BETA, float* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pcgeadd(const F_CHAR_T TRANS, const Int M, const Int N, const float* ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float* BETA, float* C, const Int IC, const Int JC, const Int* DESCC) {
     pcgeadd_(TRANS, &M, &N, ALPHA, A, &IA, &JA, DESCA, BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pdgeadd(F_CHAR_T TRANS, Int M, Int N, double ALPHA, double* A, Int IA, Int JA, Int* DESCA, double BETA, double* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pdgeadd(const F_CHAR_T TRANS, const Int M, const Int N, const double ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double BETA, double* C, const Int IC, const Int JC, const Int* DESCC) {
     pdgeadd_(TRANS, &M, &N, &ALPHA, A, &IA, &JA, DESCA, &BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_psgeadd(F_CHAR_T TRANS, Int M, Int N, float ALPHA, float* A, Int IA, Int JA, Int* DESCA, float BETA, float* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_psgeadd(const F_CHAR_T TRANS, const Int M, const Int N, const float ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float BETA, float* C, const Int IC, const Int JC, const Int* DESCC) {
     psgeadd_(TRANS, &M, &N, &ALPHA, A, &IA, &JA, DESCA, &BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pzgeadd(F_CHAR_T TRANS, Int M, Int N, double* ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* BETA, double* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pzgeadd(const F_CHAR_T TRANS, const Int M, const Int N, const double* ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double* BETA, double* C, const Int IC, const Int JC, const Int* DESCC) {
     pzgeadd_(TRANS, &M, &N, ALPHA, A, &IA, &JA, DESCA, BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pcgemm(F_CHAR_T TRANSA, F_CHAR_T TRANSB, Int M, Int N, Int K, float* ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* B, Int IB, Int JB, Int* DESCB, float* BETA, float* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pcgemm(const F_CHAR_T TRANSA, const F_CHAR_T TRANSB, const Int M, const Int N, const Int K, const float* ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float* B, const Int IB, const Int JB, const Int* DESCB, const float* BETA, float* C, const Int IC, const Int JC, const Int* DESCC) {
     pcgemm_(TRANSA, TRANSB, &M, &N, &K, ALPHA, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB, BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pdgemm(F_CHAR_T TRANSA, F_CHAR_T TRANSB, Int M, Int N, Int K, double ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* B, Int IB, Int JB, Int* DESCB, double BETA, double* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pdgemm(const F_CHAR_T TRANSA, const F_CHAR_T TRANSB, const Int M, const Int N, const Int K, const double ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double* B, const Int IB, const Int JB, const Int* DESCB, const double BETA, double* C, const Int IC, const Int JC, const Int* DESCC) {
     pdgemm_(TRANSA, TRANSB, &M, &N, &K, &ALPHA, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB, &BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_psgemm(F_CHAR_T TRANSA, F_CHAR_T TRANSB, Int M, Int N, Int K, float ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* B, Int IB, Int JB, Int* DESCB, float BETA, float* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_psgemm(const F_CHAR_T TRANSA, const F_CHAR_T TRANSB, const Int M, const Int N, const Int K, const float ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float* B, const Int IB, const Int JB, const Int* DESCB, const float BETA, float* C, const Int IC, const Int JC, const Int* DESCC) {
     psgemm_(TRANSA, TRANSB, &M, &N, &K, &ALPHA, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB, &BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pzgemm(F_CHAR_T TRANSA, F_CHAR_T TRANSB, Int M, Int N, Int K, double* ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* B, Int IB, Int JB, Int* DESCB, double* BETA, double* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pzgemm(const F_CHAR_T TRANSA, const F_CHAR_T TRANSB, const Int M, const Int N, const Int K, const double* ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double* B, const Int IB, const Int JB, const Int* DESCB, const double* BETA, double* C, const Int IC, const Int JC, const Int* DESCC) {
     pzgemm_(TRANSA, TRANSB, &M, &N, &K, ALPHA, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB, BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pcgemv(F_CHAR_T TRANS, Int M, Int N, float* ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float* BETA, float* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pcgemv(const F_CHAR_T TRANS, const Int M, const Int N, const float* ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const float* BETA, float* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pcgemv_(TRANS, &M, &N, ALPHA, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX, BETA, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pdgemv(F_CHAR_T TRANS, Int M, Int N, double ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double BETA, double* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pdgemv(const F_CHAR_T TRANS, const Int M, const Int N, const double ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const double BETA, double* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pdgemv_(TRANS, &M, &N, &ALPHA, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX, &BETA, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_psgemv(F_CHAR_T TRANS, Int M, Int N, float ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float BETA, float* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_psgemv(const F_CHAR_T TRANS, const Int M, const Int N, const float ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const float BETA, float* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     psgemv_(TRANS, &M, &N, &ALPHA, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX, &BETA, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pzgemv(F_CHAR_T TRANS, Int M, Int N, double* ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double* BETA, double* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pzgemv(const F_CHAR_T TRANS, const Int M, const Int N, const double* ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const double* BETA, double* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pzgemv_(TRANS, &M, &N, ALPHA, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX, BETA, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pdger(Int M, Int N, double ALPHA, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double* Y, Int IY, Int JY, Int* DESCY, Int INCY, double* A, Int IA, Int JA, Int* DESCA) {
+void SCALAPACKE_pdger(const Int M, const Int N, const double ALPHA, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const double* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY, double* A, const Int IA, const Int JA, const Int* DESCA) {
     pdger_(&M, &N, &ALPHA, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY, A, &IA, &JA, DESCA);
 }
 
-void SCALAPACKE_psger(Int M, Int N, float ALPHA, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float* Y, Int IY, Int JY, Int* DESCY, Int INCY, float* A, Int IA, Int JA, Int* DESCA) {
+void SCALAPACKE_psger(const Int M, const Int N, const float ALPHA, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const float* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY, float* A, const Int IA, const Int JA, const Int* DESCA) {
     psger_(&M, &N, &ALPHA, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY, A, &IA, &JA, DESCA);
 }
 
-void SCALAPACKE_pcgerc(Int M, Int N, float* ALPHA, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float* Y, Int IY, Int JY, Int* DESCY, Int INCY, float* A, Int IA, Int JA, Int* DESCA) {
+void SCALAPACKE_pcgerc(const Int M, const Int N, const float* ALPHA, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const float* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY, float* A, const Int IA, const Int JA, const Int* DESCA) {
     pcgerc_(&M, &N, ALPHA, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY, A, &IA, &JA, DESCA);
 }
 
-void SCALAPACKE_pzgerc(Int M, Int N, double* ALPHA, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double* Y, Int IY, Int JY, Int* DESCY, Int INCY, double* A, Int IA, Int JA, Int* DESCA) {
+void SCALAPACKE_pzgerc(const Int M, const Int N, const double* ALPHA, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const double* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY, double* A, const Int IA, const Int JA, const Int* DESCA) {
     pzgerc_(&M, &N, ALPHA, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY, A, &IA, &JA, DESCA);
 }
 
-void SCALAPACKE_pcgeru(Int M, Int N, float* ALPHA, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float* Y, Int IY, Int JY, Int* DESCY, Int INCY, float* A, Int IA, Int JA, Int* DESCA) {
+void SCALAPACKE_pcgeru(const Int M, const Int N, const float* ALPHA, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const float* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY, float* A, const Int IA, const Int JA, const Int* DESCA) {
     pcgeru_(&M, &N, ALPHA, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY, A, &IA, &JA, DESCA);
 }
 
-void SCALAPACKE_pzgeru(Int M, Int N, double* ALPHA, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double* Y, Int IY, Int JY, Int* DESCY, Int INCY, double* A, Int IA, Int JA, Int* DESCA) {
+void SCALAPACKE_pzgeru(const Int M, const Int N, const double* ALPHA, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const double* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY, double* A, const Int IA, const Int JA, const Int* DESCA) {
     pzgeru_(&M, &N, ALPHA, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY, A, &IA, &JA, DESCA);
 }
 
-void SCALAPACKE_pchemm(F_CHAR_T SIDE, F_CHAR_T UPLO, Int M, Int N, float* ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* B, Int IB, Int JB, Int* DESCB, float* BETA, float* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pchemm(const F_CHAR_T SIDE, const F_CHAR_T UPLO, const Int M, const Int N, const float* ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float* B, const Int IB, const Int JB, const Int* DESCB, const float* BETA, float* C, const Int IC, const Int JC, const Int* DESCC) {
     pchemm_(SIDE, UPLO, &M, &N, ALPHA, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB, BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pzhemm(F_CHAR_T SIDE, F_CHAR_T UPLO, Int M, Int N, double* ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* B, Int IB, Int JB, Int* DESCB, double* BETA, double* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pzhemm(const F_CHAR_T SIDE, const F_CHAR_T UPLO, const Int M, const Int N, const double* ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double* B, const Int IB, const Int JB, const Int* DESCB, const double* BETA, double* C, const Int IC, const Int JC, const Int* DESCC) {
     pzhemm_(SIDE, UPLO, &M, &N, ALPHA, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB, BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pchemv(F_CHAR_T UPLO, Int N, float* ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float* BETA, float* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pchemv(const F_CHAR_T UPLO, const Int N, const float* ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const float* BETA, float* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pchemv_(UPLO, &N, ALPHA, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX, BETA, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pzhemv(F_CHAR_T UPLO, Int N, double* ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double* BETA, double* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pzhemv(const F_CHAR_T UPLO, const Int N, const double* ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const double* BETA, double* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pzhemv_(UPLO, &N, ALPHA, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX, BETA, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pcher2(F_CHAR_T UPLO, Int N, float* ALPHA, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float* Y, Int IY, Int JY, Int* DESCY, Int INCY, float* A, Int IA, Int JA, Int* DESCA) {
+void SCALAPACKE_pcher2(const F_CHAR_T UPLO, const Int N, const float* ALPHA, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const float* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY, float* A, const Int IA, const Int JA, const Int* DESCA) {
     pcher2_(UPLO, &N, ALPHA, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY, A, &IA, &JA, DESCA);
 }
 
-void SCALAPACKE_pzher2(F_CHAR_T UPLO, Int N, double* ALPHA, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double* Y, Int IY, Int JY, Int* DESCY, Int INCY, double* A, Int IA, Int JA, Int* DESCA) {
+void SCALAPACKE_pzher2(const F_CHAR_T UPLO, const Int N, const double* ALPHA, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const double* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY, double* A, const Int IA, const Int JA, const Int* DESCA) {
     pzher2_(UPLO, &N, ALPHA, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY, A, &IA, &JA, DESCA);
 }
 
-void SCALAPACKE_pcher2k(F_CHAR_T UPLO, F_CHAR_T TRANS, Int N, Int K, float* ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* B, Int IB, Int JB, Int* DESCB, float BETA, float* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pcher2k(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const Int N, const Int K, const float* ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float* B, const Int IB, const Int JB, const Int* DESCB, const float BETA, float* C, const Int IC, const Int JC, const Int* DESCC) {
     pcher2k_(UPLO, TRANS, &N, &K, ALPHA, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB, &BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pzher2k(F_CHAR_T UPLO, F_CHAR_T TRANS, Int N, Int K, double* ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* B, Int IB, Int JB, Int* DESCB, double BETA, double* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pzher2k(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const Int N, const Int K, const double* ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double* B, const Int IB, const Int JB, const Int* DESCB, const double BETA, double* C, const Int IC, const Int JC, const Int* DESCC) {
     pzher2k_(UPLO, TRANS, &N, &K, ALPHA, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB, &BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pcher(F_CHAR_T UPLO, Int N, float ALPHA, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float* A, Int IA, Int JA, Int* DESCA) {
+void SCALAPACKE_pcher(const F_CHAR_T UPLO, const Int N, const float ALPHA, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, float* A, const Int IA, const Int JA, const Int* DESCA) {
     pcher_(UPLO, &N, &ALPHA, X, &IX, &JX, DESCX, &INCX, A, &IA, &JA, DESCA);
 }
 
-void SCALAPACKE_pzher(F_CHAR_T UPLO, Int N, double ALPHA, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double* A, Int IA, Int JA, Int* DESCA) {
+void SCALAPACKE_pzher(const F_CHAR_T UPLO, const Int N, const double ALPHA, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, double* A, const Int IA, const Int JA, const Int* DESCA) {
     pzher_(UPLO, &N, &ALPHA, X, &IX, &JX, DESCX, &INCX, A, &IA, &JA, DESCA);
 }
 
-void SCALAPACKE_pcherk(F_CHAR_T UPLO, F_CHAR_T TRANS, Int N, Int K, float ALPHA, float* A, Int IA, Int JA, Int* DESCA, float BETA, float* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pcherk(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const Int N, const Int K, const float ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float BETA, float* C, const Int IC, const Int JC, const Int* DESCC) {
     pcherk_(UPLO, TRANS, &N, &K, &ALPHA, A, &IA, &JA, DESCA, &BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pzherk(F_CHAR_T UPLO, F_CHAR_T TRANS, Int N, Int K, double ALPHA, double* A, Int IA, Int JA, Int* DESCA, double BETA, double* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pzherk(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const Int N, const Int K, const double ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double BETA, double* C, const Int IC, const Int JC, const Int* DESCC) {
     pzherk_(UPLO, TRANS, &N, &K, &ALPHA, A, &IA, &JA, DESCA, &BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pdnrm2(Int N, double NORM2, double* X, Int IX, Int JX, Int* DESCX, Int INCX) {
-    pdnrm2_(&N, &NORM2, X, &IX, &JX, DESCX, &INCX);
+void SCALAPACKE_pdnrm2(const Int N, double* NORM2, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
+    pdnrm2_(&N, NORM2, X, &IX, &JX, DESCX, &INCX);
 }
 
-void SCALAPACKE_psnrm2(Int N, float NORM2, float* X, Int IX, Int JX, Int* DESCX, Int INCX) {
-    psnrm2_(&N, &NORM2, X, &IX, &JX, DESCX, &INCX);
+void SCALAPACKE_psnrm2(const Int N, float* NORM2, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
+    psnrm2_(&N, NORM2, X, &IX, &JX, DESCX, &INCX);
 }
 
-void SCALAPACKE_pcscal(Int N, float* ALPHA, float* X, Int IX, Int JX, Int* DESCX, Int INCX) {
+void SCALAPACKE_pcscal(const Int N, const float* ALPHA, float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
     pcscal_(&N, ALPHA, X, &IX, &JX, DESCX, &INCX);
 }
 
-void SCALAPACKE_pdscal(Int N, double ALPHA, double* X, Int IX, Int JX, Int* DESCX, Int INCX) {
+void SCALAPACKE_pdscal(const Int N, const double ALPHA, double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
     pdscal_(&N, &ALPHA, X, &IX, &JX, DESCX, &INCX);
 }
 
-void SCALAPACKE_psscal(Int N, float ALPHA, float* X, Int IX, Int JX, Int* DESCX, Int INCX) {
+void SCALAPACKE_psscal(const Int N, const float ALPHA, float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
     psscal_(&N, &ALPHA, X, &IX, &JX, DESCX, &INCX);
 }
 
-void SCALAPACKE_pzscal(Int N, double* ALPHA, double* X, Int IX, Int JX, Int* DESCX, Int INCX) {
+void SCALAPACKE_pzscal(const Int N, const double* ALPHA, double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
     pzscal_(&N, ALPHA, X, &IX, &JX, DESCX, &INCX);
 }
 
-void SCALAPACKE_pcsscal(Int N, float ALPHA, float* X, Int IX, Int JX, Int* DESCX, Int INCX) {
+void SCALAPACKE_pcsscal(const Int N, const float ALPHA, float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
     pcsscal_(&N, &ALPHA, X, &IX, &JX, DESCX, &INCX);
 }
 
-void SCALAPACKE_pcswap(Int N, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pcswap(const Int N, float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, float* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pcswap_(&N, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pdswap(Int N, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pdswap(const Int N, double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, double* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pdswap_(&N, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_psswap(Int N, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_psswap(const Int N, float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, float* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     psswap_(&N, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pzswap(Int N, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pzswap(const Int N, double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, double* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pzswap_(&N, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pcsymm(F_CHAR_T SIDE, F_CHAR_T UPLO, Int M, Int N, float* ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* B, Int IB, Int JB, Int* DESCB, float* BETA, float* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pcsymm(const F_CHAR_T SIDE, const F_CHAR_T UPLO, const Int M, const Int N, const float* ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float* B, const Int IB, const Int JB, const Int* DESCB, const float* BETA, float* C, const Int IC, const Int JC, const Int* DESCC) {
     pcsymm_(SIDE, UPLO, &M, &N, ALPHA, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB, BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pdsymm(F_CHAR_T SIDE, F_CHAR_T UPLO, Int M, Int N, double ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* B, Int IB, Int JB, Int* DESCB, double BETA, double* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pdsymm(const F_CHAR_T SIDE, const F_CHAR_T UPLO, const Int M, const Int N, const double ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double* B, const Int IB, const Int JB, const Int* DESCB, const double BETA, double* C, const Int IC, const Int JC, const Int* DESCC) {
     pdsymm_(SIDE, UPLO, &M, &N, &ALPHA, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB, &BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pssymm(F_CHAR_T SIDE, F_CHAR_T UPLO, Int M, Int N, float ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* B, Int IB, Int JB, Int* DESCB, float BETA, float* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pssymm(const F_CHAR_T SIDE, const F_CHAR_T UPLO, const Int M, const Int N, const float ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float* B, const Int IB, const Int JB, const Int* DESCB, const float BETA, float* C, const Int IC, const Int JC, const Int* DESCC) {
     pssymm_(SIDE, UPLO, &M, &N, &ALPHA, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB, &BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pzsymm(F_CHAR_T SIDE, F_CHAR_T UPLO, Int M, Int N, double* ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* B, Int IB, Int JB, Int* DESCB, double* BETA, double* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pzsymm(const F_CHAR_T SIDE, const F_CHAR_T UPLO, const Int M, const Int N, const double* ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double* B, const Int IB, const Int JB, const Int* DESCB, const double* BETA, double* C, const Int IC, const Int JC, const Int* DESCC) {
     pzsymm_(SIDE, UPLO, &M, &N, ALPHA, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB, BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pdsymv(F_CHAR_T UPLO, Int N, double ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double BETA, double* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pdsymv(const F_CHAR_T UPLO, const Int N, const double ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const double BETA, double* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pdsymv_(UPLO, &N, &ALPHA, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX, &BETA, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pssymv(F_CHAR_T UPLO, Int N, float ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float BETA, float* Y, Int IY, Int JY, Int* DESCY, Int INCY) {
+void SCALAPACKE_pssymv(const F_CHAR_T UPLO, const Int N, const float ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const float BETA, float* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY) {
     pssymv_(UPLO, &N, &ALPHA, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX, &BETA, Y, &IY, &JY, DESCY, &INCY);
 }
 
-void SCALAPACKE_pdsyr2(F_CHAR_T UPLO, Int N, double ALPHA, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double* Y, Int IY, Int JY, Int* DESCY, Int INCY, double* A, Int IA, Int JA, Int* DESCA) {
+void SCALAPACKE_pdsyr2(const F_CHAR_T UPLO, const Int N, const double ALPHA, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const double* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY, double* A, const Int IA, const Int JA, const Int* DESCA) {
     pdsyr2_(UPLO, &N, &ALPHA, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY, A, &IA, &JA, DESCA);
 }
 
-void SCALAPACKE_pssyr2(F_CHAR_T UPLO, Int N, float ALPHA, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float* Y, Int IY, Int JY, Int* DESCY, Int INCY, float* A, Int IA, Int JA, Int* DESCA) {
+void SCALAPACKE_pssyr2(const F_CHAR_T UPLO, const Int N, const float ALPHA, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, const float* Y, const Int IY, const Int JY, const Int* DESCY, const Int INCY, float* A, const Int IA, const Int JA, const Int* DESCA) {
     pssyr2_(UPLO, &N, &ALPHA, X, &IX, &JX, DESCX, &INCX, Y, &IY, &JY, DESCY, &INCY, A, &IA, &JA, DESCA);
 }
 
-void SCALAPACKE_pcsyr2k(F_CHAR_T UPLO, F_CHAR_T TRANS, Int N, Int K, float* ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* B, Int IB, Int JB, Int* DESCB, float* BETA, float* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pcsyr2k(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const Int N, const Int K, const float* ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float* B, const Int IB, const Int JB, const Int* DESCB, const float* BETA, float* C, const Int IC, const Int JC, const Int* DESCC) {
     pcsyr2k_(UPLO, TRANS, &N, &K, ALPHA, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB, BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pdsyr2k(F_CHAR_T UPLO, F_CHAR_T TRANS, Int N, Int K, double ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* B, Int IB, Int JB, Int* DESCB, double BETA, double* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pdsyr2k(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const Int N, const Int K, const double ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double* B, const Int IB, const Int JB, const Int* DESCB, const double BETA, double* C, const Int IC, const Int JC, const Int* DESCC) {
     pdsyr2k_(UPLO, TRANS, &N, &K, &ALPHA, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB, &BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pssyr2k(F_CHAR_T UPLO, F_CHAR_T TRANS, Int N, Int K, float ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* B, Int IB, Int JB, Int* DESCB, float BETA, float* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pssyr2k(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const Int N, const Int K, const float ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float* B, const Int IB, const Int JB, const Int* DESCB, const float BETA, float* C, const Int IC, const Int JC, const Int* DESCC) {
     pssyr2k_(UPLO, TRANS, &N, &K, &ALPHA, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB, &BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pzsyr2k(F_CHAR_T UPLO, F_CHAR_T TRANS, Int N, Int K, double* ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* B, Int IB, Int JB, Int* DESCB, double* BETA, double* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pzsyr2k(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const Int N, const Int K, const double* ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double* B, const Int IB, const Int JB, const Int* DESCB, const double* BETA, double* C, const Int IC, const Int JC, const Int* DESCC) {
     pzsyr2k_(UPLO, TRANS, &N, &K, ALPHA, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB, BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pdsyr(F_CHAR_T UPLO, Int N, double ALPHA, double* X, Int IX, Int JX, Int* DESCX, Int INCX, double* A, Int IA, Int JA, Int* DESCA) {
+void SCALAPACKE_pdsyr(const F_CHAR_T UPLO, const Int N, const double ALPHA, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, double* A, const Int IA, const Int JA, const Int* DESCA) {
     pdsyr_(UPLO, &N, &ALPHA, X, &IX, &JX, DESCX, &INCX, A, &IA, &JA, DESCA);
 }
 
-void SCALAPACKE_pssyr(F_CHAR_T UPLO, Int N, float ALPHA, float* X, Int IX, Int JX, Int* DESCX, Int INCX, float* A, Int IA, Int JA, Int* DESCA) {
+void SCALAPACKE_pssyr(const F_CHAR_T UPLO, const Int N, const float ALPHA, const float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX, float* A, const Int IA, const Int JA, const Int* DESCA) {
     pssyr_(UPLO, &N, &ALPHA, X, &IX, &JX, DESCX, &INCX, A, &IA, &JA, DESCA);
 }
 
-void SCALAPACKE_pcsyrk(F_CHAR_T UPLO, F_CHAR_T TRANS, Int N, Int K, float* ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* BETA, float* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pcsyrk(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const Int N, const Int K, const float* ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float* BETA, float* C, const Int IC, const Int JC, const Int* DESCC) {
     pcsyrk_(UPLO, TRANS, &N, &K, ALPHA, A, &IA, &JA, DESCA, BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pdsyrk(F_CHAR_T UPLO, F_CHAR_T TRANS, Int N, Int K, double ALPHA, double* A, Int IA, Int JA, Int* DESCA, double BETA, double* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pdsyrk(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const Int N, const Int K, const double ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double BETA, double* C, const Int IC, const Int JC, const Int* DESCC) {
     pdsyrk_(UPLO, TRANS, &N, &K, &ALPHA, A, &IA, &JA, DESCA, &BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pssyrk(F_CHAR_T UPLO, F_CHAR_T TRANS, Int N, Int K, float ALPHA, float* A, Int IA, Int JA, Int* DESCA, float BETA, float* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pssyrk(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const Int N, const Int K, const float ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float BETA, float* C, const Int IC, const Int JC, const Int* DESCC) {
     pssyrk_(UPLO, TRANS, &N, &K, &ALPHA, A, &IA, &JA, DESCA, &BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pzsyrk(F_CHAR_T UPLO, F_CHAR_T TRANS, Int N, Int K, double* ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* BETA, double* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pzsyrk(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const Int N, const Int K, const double* ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double* BETA, double* C, const Int IC, const Int JC, const Int* DESCC) {
     pzsyrk_(UPLO, TRANS, &N, &K, ALPHA, A, &IA, &JA, DESCA, BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pctradd(F_CHAR_T UPLO, F_CHAR_T TRANS, Int M, Int N, float* ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* BETA, float* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pctradd(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const Int M, const Int N, const float* ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float* BETA, float* C, const Int IC, const Int JC, const Int* DESCC) {
     pctradd_(UPLO, TRANS, &M, &N, ALPHA, A, &IA, &JA, DESCA, BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pdtradd(F_CHAR_T UPLO, F_CHAR_T TRANS, Int M, Int N, double ALPHA, double* A, Int IA, Int JA, Int* DESCA, double BETA, double* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pdtradd(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const Int M, const Int N, const double ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double BETA, double* C, const Int IC, const Int JC, const Int* DESCC) {
     pdtradd_(UPLO, TRANS, &M, &N, &ALPHA, A, &IA, &JA, DESCA, &BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pstradd(F_CHAR_T UPLO, F_CHAR_T TRANS, Int M, Int N, float ALPHA, float* A, Int IA, Int JA, Int* DESCA, float BETA, float* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pstradd(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const Int M, const Int N, const float ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float BETA, float* C, const Int IC, const Int JC, const Int* DESCC) {
     pstradd_(UPLO, TRANS, &M, &N, &ALPHA, A, &IA, &JA, DESCA, &BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pztradd(F_CHAR_T UPLO, F_CHAR_T TRANS, Int M, Int N, double* ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* BETA, double* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pztradd(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const Int M, const Int N, const double* ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double* BETA, double* C, const Int IC, const Int JC, const Int* DESCC) {
     pztradd_(UPLO, TRANS, &M, &N, ALPHA, A, &IA, &JA, DESCA, BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pdtran(Int M, Int N, double ALPHA, double* A, Int IA, Int JA, Int* DESCA, double BETA, double* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pdtran(const Int M, const Int N, const double ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double BETA, double* C, const Int IC, const Int JC, const Int* DESCC) {
     pdtran_(&M, &N, &ALPHA, A, &IA, &JA, DESCA, &BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pstran(Int M, Int N, float ALPHA, float* A, Int IA, Int JA, Int* DESCA, float BETA, float* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pstran(const Int M, const Int N, const float ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float BETA, float* C, const Int IC, const Int JC, const Int* DESCC) {
     pstran_(&M, &N, &ALPHA, A, &IA, &JA, DESCA, &BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pctranc(Int M, Int N, float* ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* BETA, float* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pctranc(const Int M, const Int N, const float* ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float* BETA, float* C, const Int IC, const Int JC, const Int* DESCC) {
     pctranc_(&M, &N, ALPHA, A, &IA, &JA, DESCA, BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pztranc(Int M, Int N, double* ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* BETA, double* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pztranc(const Int M, const Int N, const double* ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double* BETA, double* C, const Int IC, const Int JC, const Int* DESCC) {
     pztranc_(&M, &N, ALPHA, A, &IA, &JA, DESCA, BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pctranu(Int M, Int N, float* ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* BETA, float* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pctranu(const Int M, const Int N, const float* ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, const float* BETA, float* C, const Int IC, const Int JC, const Int* DESCC) {
     pctranu_(&M, &N, ALPHA, A, &IA, &JA, DESCA, BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pztranu(Int M, Int N, double* ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* BETA, double* C, Int IC, Int JC, Int* DESCC) {
+void SCALAPACKE_pztranu(const Int M, const Int N, const double* ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, const double* BETA, double* C, const Int IC, const Int JC, const Int* DESCC) {
     pztranu_(&M, &N, ALPHA, A, &IA, &JA, DESCA, BETA, C, &IC, &JC, DESCC);
 }
 
-void SCALAPACKE_pctrmm(F_CHAR_T SIDE, F_CHAR_T UPLO, F_CHAR_T TRANS, F_CHAR_T DIAG, Int M, Int N, float* ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* B, Int IB, Int JB, Int* DESCB) {
+void SCALAPACKE_pctrmm(const F_CHAR_T SIDE, const F_CHAR_T UPLO, const F_CHAR_T TRANS, const F_CHAR_T DIAG, const Int M, const Int N, const float* ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, float* B, const Int IB, const Int JB, const Int* DESCB) {
     pctrmm_(SIDE, UPLO, TRANS, DIAG, &M, &N, ALPHA, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB);
 }
 
-void SCALAPACKE_pdtrmm(F_CHAR_T SIDE, F_CHAR_T UPLO, F_CHAR_T TRANS, F_CHAR_T DIAG, Int M, Int N, double ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* B, Int IB, Int JB, Int* DESCB) {
+void SCALAPACKE_pdtrmm(const F_CHAR_T SIDE, const F_CHAR_T UPLO, const F_CHAR_T TRANS, const F_CHAR_T DIAG, const Int M, const Int N, const double ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, double* B, const Int IB, const Int JB, const Int* DESCB) {
     pdtrmm_(SIDE, UPLO, TRANS, DIAG, &M, &N, &ALPHA, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB);
 }
 
-void SCALAPACKE_pstrmm(F_CHAR_T SIDE, F_CHAR_T UPLO, F_CHAR_T TRANS, F_CHAR_T DIAG, Int M, Int N, float ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* B, Int IB, Int JB, Int* DESCB) {
+void SCALAPACKE_pstrmm(const F_CHAR_T SIDE, const F_CHAR_T UPLO, const F_CHAR_T TRANS, const F_CHAR_T DIAG, const Int M, const Int N, const float ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, float* B, const Int IB, const Int JB, const Int* DESCB) {
     pstrmm_(SIDE, UPLO, TRANS, DIAG, &M, &N, &ALPHA, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB);
 }
 
-void SCALAPACKE_pztrmm(F_CHAR_T SIDE, F_CHAR_T UPLO, F_CHAR_T TRANS, F_CHAR_T DIAG, Int M, Int N, double* ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* B, Int IB, Int JB, Int* DESCB) {
+void SCALAPACKE_pztrmm(const F_CHAR_T SIDE, const F_CHAR_T UPLO, const F_CHAR_T TRANS, const F_CHAR_T DIAG, const Int M, const Int N, const double* ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, double* B, const Int IB, const Int JB, const Int* DESCB) {
     pztrmm_(SIDE, UPLO, TRANS, DIAG, &M, &N, ALPHA, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB);
 }
 
-void SCALAPACKE_pctrmv(F_CHAR_T UPLO, F_CHAR_T TRANS, F_CHAR_T DIAG, Int N, float* A, Int IA, Int JA, Int* DESCA, float* X, Int IX, Int JX, Int* DESCX, Int INCX) {
+void SCALAPACKE_pctrmv(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const F_CHAR_T DIAG, const Int N, const float* A, const Int IA, const Int JA, const Int* DESCA, float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
     pctrmv_(UPLO, TRANS, DIAG, &N, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX);
 }
 
-void SCALAPACKE_pdtrmv(F_CHAR_T UPLO, F_CHAR_T TRANS, F_CHAR_T DIAG, Int N, double* A, Int IA, Int JA, Int* DESCA, double* X, Int IX, Int JX, Int* DESCX, Int INCX) {
+void SCALAPACKE_pdtrmv(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const F_CHAR_T DIAG, const Int N, const double* A, const Int IA, const Int JA, const Int* DESCA, double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
     pdtrmv_(UPLO, TRANS, DIAG, &N, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX);
 }
 
-void SCALAPACKE_pstrmv(F_CHAR_T UPLO, F_CHAR_T TRANS, F_CHAR_T DIAG, Int N, float* A, Int IA, Int JA, Int* DESCA, float* X, Int IX, Int JX, Int* DESCX, Int INCX) {
+void SCALAPACKE_pstrmv(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const F_CHAR_T DIAG, const Int N, const float* A, const Int IA, const Int JA, const Int* DESCA, float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
     pstrmv_(UPLO, TRANS, DIAG, &N, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX);
 }
 
-void SCALAPACKE_pztrmv(F_CHAR_T UPLO, F_CHAR_T TRANS, F_CHAR_T DIAG, Int N, double* A, Int IA, Int JA, Int* DESCA, double* X, Int IX, Int JX, Int* DESCX, Int INCX) {
+void SCALAPACKE_pztrmv(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const F_CHAR_T DIAG, const Int N, const double* A, const Int IA, const Int JA, const Int* DESCA, double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
     pztrmv_(UPLO, TRANS, DIAG, &N, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX);
 }
 
-void SCALAPACKE_pctrsm(F_CHAR_T SIDE, F_CHAR_T UPLO, F_CHAR_T TRANS, F_CHAR_T DIAG, Int M, Int N, float* ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* B, Int IB, Int JB, Int* DESCB) {
+void SCALAPACKE_pctrsm(const F_CHAR_T SIDE, const F_CHAR_T UPLO, const F_CHAR_T TRANS, const F_CHAR_T DIAG, const Int M, const Int N, const float* ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, float* B, const Int IB, const Int JB, const Int* DESCB) {
     pctrsm_(SIDE, UPLO, TRANS, DIAG, &M, &N, ALPHA, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB);
 }
 
-void SCALAPACKE_pdtrsm(F_CHAR_T SIDE, F_CHAR_T UPLO, F_CHAR_T TRANS, F_CHAR_T DIAG, Int M, Int N, double ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* B, Int IB, Int JB, Int* DESCB) {
+void SCALAPACKE_pdtrsm(const F_CHAR_T SIDE, const F_CHAR_T UPLO, const F_CHAR_T TRANS, const F_CHAR_T DIAG, const Int M, const Int N, const double ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, double* B, const Int IB, const Int JB, const Int* DESCB) {
     pdtrsm_(SIDE, UPLO, TRANS, DIAG, &M, &N, &ALPHA, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB);
 }
 
-void SCALAPACKE_pstrsm(F_CHAR_T SIDE, F_CHAR_T UPLO, F_CHAR_T TRANS, F_CHAR_T DIAG, Int M, Int N, float ALPHA, float* A, Int IA, Int JA, Int* DESCA, float* B, Int IB, Int JB, Int* DESCB) {
+void SCALAPACKE_pstrsm(const F_CHAR_T SIDE, const F_CHAR_T UPLO, const F_CHAR_T TRANS, const F_CHAR_T DIAG, const Int M, const Int N, const float ALPHA, const float* A, const Int IA, const Int JA, const Int* DESCA, float* B, const Int IB, const Int JB, const Int* DESCB) {
     pstrsm_(SIDE, UPLO, TRANS, DIAG, &M, &N, &ALPHA, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB);
 }
 
-void SCALAPACKE_pztrsm(F_CHAR_T SIDE, F_CHAR_T UPLO, F_CHAR_T TRANS, F_CHAR_T DIAG, Int M, Int N, double* ALPHA, double* A, Int IA, Int JA, Int* DESCA, double* B, Int IB, Int JB, Int* DESCB) {
+void SCALAPACKE_pztrsm(const F_CHAR_T SIDE, const F_CHAR_T UPLO, const F_CHAR_T TRANS, const F_CHAR_T DIAG, const Int M, const Int N, const double* ALPHA, const double* A, const Int IA, const Int JA, const Int* DESCA, double* B, const Int IB, const Int JB, const Int* DESCB) {
     pztrsm_(SIDE, UPLO, TRANS, DIAG, &M, &N, ALPHA, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB);
 }
 
-void SCALAPACKE_pctrsv(F_CHAR_T UPLO, F_CHAR_T TRANS, F_CHAR_T DIAG, Int N, float* A, Int IA, Int JA, Int* DESCA, float* X, Int IX, Int JX, Int* DESCX, Int INCX) {
+void SCALAPACKE_pctrsv(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const F_CHAR_T DIAG, const Int N, const float* A, const Int IA, const Int JA, const Int* DESCA, float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
     pctrsv_(UPLO, TRANS, DIAG, &N, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX);
 }
 
-void SCALAPACKE_pdtrsv(F_CHAR_T UPLO, F_CHAR_T TRANS, F_CHAR_T DIAG, Int N, double* A, Int IA, Int JA, Int* DESCA, double* X, Int IX, Int JX, Int* DESCX, Int INCX) {
+void SCALAPACKE_pdtrsv(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const F_CHAR_T DIAG, const Int N, const double* A, const Int IA, const Int JA, const Int* DESCA, double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
     pdtrsv_(UPLO, TRANS, DIAG, &N, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX);
 }
 
-void SCALAPACKE_pstrsv(F_CHAR_T UPLO, F_CHAR_T TRANS, F_CHAR_T DIAG, Int N, float* A, Int IA, Int JA, Int* DESCA, float* X, Int IX, Int JX, Int* DESCX, Int INCX) {
+void SCALAPACKE_pstrsv(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const F_CHAR_T DIAG, const Int N, const float* A, const Int IA, const Int JA, const Int* DESCA, float* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
     pstrsv_(UPLO, TRANS, DIAG, &N, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX);
 }
 
-void SCALAPACKE_pztrsv(F_CHAR_T UPLO, F_CHAR_T TRANS, F_CHAR_T DIAG, Int N, double* A, Int IA, Int JA, Int* DESCA, double* X, Int IX, Int JX, Int* DESCX, Int INCX) {
+void SCALAPACKE_pztrsv(const F_CHAR_T UPLO, const F_CHAR_T TRANS, const F_CHAR_T DIAG, const Int N, const double* A, const Int IA, const Int JA, const Int* DESCA, double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
     pztrsv_(UPLO, TRANS, DIAG, &N, A, &IA, &JA, DESCA, X, &IX, &JX, DESCX, &INCX);
 }
 
-void SCALAPACKE_pdzasum(Int N, double ASUM, double* X, Int IX, Int JX, Int* DESCX, Int INCX) {
-    pdzasum_(&N, &ASUM, X, &IX, &JX, DESCX, &INCX);
+void SCALAPACKE_pdzasum(const Int N, double* ASUM, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
+    pdzasum_(&N, ASUM, X, &IX, &JX, DESCX, &INCX);
 }
 
-void SCALAPACKE_pdznrm2(Int N, double NORM2, double* X, Int IX, Int JX, Int* DESCX, Int INCX) {
-    pdznrm2_(&N, &NORM2, X, &IX, &JX, DESCX, &INCX);
+void SCALAPACKE_pdznrm2(const Int N, double* NORM2, const double* X, const Int IX, const Int JX, const Int* DESCX, const Int INCX) {
+    pdznrm2_(&N, NORM2, X, &IX, &JX, DESCX, &INCX);
 }

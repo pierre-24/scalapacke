@@ -59,11 +59,11 @@ class Declaration:
         return 'extern {} {}({});'.format(
             self.return_type,
             self.name,
-            ', '.join('{} {}'.format(*p) for p in self.params)
+            ', '.join('{}{} {}'.format('const ' if p[2] != Intent.OUTPUT else '', p[0], p[1]) for p in self.params)
         )
 
     @staticmethod
-    def _aliase(typ: str, name: str, intent: Intent) -> Tuple[str, str]:
+    def _aliase(typ: str, name: str, intent: Intent) -> Tuple[str, str, Intent]:
         """Aliase inputs if authorized"""
 
         if intent == Intent.INPUT:
@@ -74,18 +74,21 @@ class Declaration:
             elif typ == 'double*':
                 typ = 'double'
 
-        return typ, name
+        return typ, name, intent
 
     def to_aliased_decl(self) -> str:
         return_type = self.return_type
         if return_type == 'F_VOID_FUNC':
             return_type = 'void'
 
+        aliased_params = [self._aliase(*x) for x in self.params]
+
         return '{} {}{}({});'.format(
             return_type,
             PREFIX,
             self.name[:-1],
-            ', '.join('{} {}'.format(*self._aliase(*x)) for x in self.params)
+            ', '.join('{}{} {}'.format(
+                'const ' if x[2] != Intent.OUTPUT else '', x[0], x[1]) for x in aliased_params)
         )
 
     def to_aliased_wrapper(self) -> str:
@@ -99,7 +102,8 @@ class Declaration:
             return_type,
             PREFIX,
             name[:-1],
-            ', '.join('{} {}'.format(*x) for x in aliased_params),
+            ', '.join('{}{} {}'.format(
+                'const ' if x[2] != Intent.OUTPUT else '', x[0], x[1]) for x in aliased_params),
             'return ' if return_type != 'void' else '',
             name,
             ', '.join('{}{}'.format('&' if x[0] != y[0] else '', x[1]) for x, y in zip(self.params, aliased_params))
