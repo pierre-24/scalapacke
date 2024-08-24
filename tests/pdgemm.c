@@ -1,4 +1,4 @@
-/* Inspired by https://github.com/cjf00000/tests/blob/master/mkl/pblas3_d_example.c.
+/* Test inspired by https://github.com/cjf00000/tests/blob/master/mkl/pblas3_d_example.c.
  *
  * Compute product of two NxN matrices, `C = A * B`,
  * and then check the residual `r = |B - inv(A) * C|`, where `inv(A)` is the inverse of `A`.
@@ -10,10 +10,10 @@
  *   `A[i,j] = (N-j-1 == i ? 1:0) - 2 * (N-j-1) * i / M`, where `M = N * (N-1) * (2 * N - 1) / 6`.
  *
  *   Therefore `inv(A) = tr(A)`, where `tr(A)` is the transpose of `A`.
+ *   And thus, the residual becomes `r = |B - tr(A) * C|`.
  *
  * - `B` is a random matrix. Here, `B[i,j] = j * N + j`.
- *
- * Thus, the residual becomes `r = |B - tr(A) * C|`.
+ * T
  */
 
 #include <stdio.h>
@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
 
     // local
     int  iam, loc_row, loc_col, loc_nrows, loc_ncols, loc_lld, info;
-    int desc_A[9];
+    int desc_distributed[9];
     double *A, *B, *C, *work;
 
     // initialize BLACS & system context
@@ -80,7 +80,6 @@ int main(int argc, char* argv[]) {
         // fill arrays locally
         for(int loc_j=1; loc_j <= loc_ncols; loc_j++) { /* FORTRAN STARTS AT ONE !!!!!!!!! */
             // translate local j to global j
-            // see https://netlib.org/scalapack/explore-html/d4/deb/indxl2g_8f_source.html
             glob_j = indxl2g_(&loc_j, &blk_size, &loc_col, &I_ZERO, &glob_ncols) - 1;
             for(int loc_i=1; loc_i <= loc_nrows; loc_i++) {
                 glob_i = indxl2g_(&loc_i, &blk_size, &loc_row, &I_ZERO, &glob_nrows) - 1;
@@ -92,29 +91,29 @@ int main(int argc, char* argv[]) {
         }
 
         // create descriptor for A, B and C
-        descinit_(desc_A, &N, &N, &blk_size, &blk_size, &I_ZERO, &I_ZERO, &ctx_sys, &loc_lld, &info);
+        descinit_(desc_distributed, &N, &N, &blk_size, &blk_size, &I_ZERO, &I_ZERO, &ctx_sys, &loc_lld, &info);
 
         // compute norm of A and B
         work = (double*) calloc(loc_nrows, sizeof(double));
-        norm_A = pdlange_( "F", &N, &N, A, &I_ONE, &I_ONE, desc_A, work);
-        norm_B = pdlange_( "F", &N, &N, B, &I_ONE, &I_ONE, desc_A, work);
+        norm_A = pdlange_("F", &N, &N, A, &I_ONE, &I_ONE, desc_distributed, work);
+        norm_B = pdlange_("F", &N, &N, B, &I_ONE, &I_ONE, desc_distributed, work);
 
         // compute C = A * B
         SCALAPACKE_pdgemm("N", "N", N, N, N,
-               1., A, 1, 1, desc_A,
-               B, 1, 1, desc_A,
-               .0, C, 1, 1, desc_A
+                          1., A, 1, 1, desc_distributed,
+                          B, 1, 1, desc_distributed,
+                          .0, C, 1, 1, desc_distributed
         );
 
         // compute B = tr(A) * C - B
         SCALAPACKE_pdgemm("T", "N", N, N, N,
-               1.0, A, 1, 1, desc_A,
-               C, 1, 1, desc_A,
-              -1., B, 1, 1, desc_A
+                          1.0, A, 1, 1, desc_distributed,
+                          C, 1, 1, desc_distributed,
+                          -1., B, 1, 1, desc_distributed
         );
 
         // compute the norm of B & residual
-        norm_res = pdlange_( "F", &N, &N, B, &I_ONE, &I_ONE, desc_A, work);
+        norm_res = pdlange_("F", &N, &N, B, &I_ONE, &I_ONE, desc_distributed, work);
         double eps = pdlamch_(&ctx_sys, "e");
         double residual = norm_res / (2 * norm_A * norm_B * eps);
 

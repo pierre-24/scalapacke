@@ -1,4 +1,7 @@
-/* This is a (adapted) translation of https://netlib.org/blacs/BLACS/Examples.html#HELLO.
+/* Test inspired by https://netlib.org/blacs/BLACS/Examples.html#HELLO.
+ *
+ * Use `?gerv2d` and `?gesd2d` to communicate between processes.
+ * Process at (0,0) requests all others on the grid to give them their process id, and checks that everyone answers the call.
  */
 
 #include <stdio.h>
@@ -26,7 +29,6 @@ int main(int argc, char* argv[]) {
 
     if(myrow >= 0) { // if I'm in grid
         // get process id (equivalent to `iam`)
-        // see https://netlib.org/blacs/BLACS/QRef.html#BLACS_PNUM
         icaller = SCALAPACKE_blacs_pnum(ctx_sys, myrow, mycol);
 
         if(iam == 0) { // parent process receive message from others
@@ -34,7 +36,6 @@ int main(int argc, char* argv[]) {
                 for(int j=0; j < ncols; j++) {
                     if(i != 0 || j != 0) {
                         // receive a 1x1 (general) matrix
-                        // See https://netlib.org/blacs/BLACS/QRef.html#RV
                         SCALAPACKE_igerv2d(ctx_sys,
                                  1, 1, /* 1x1 array */
                                  &icaller, /* start of the array*/
@@ -43,7 +44,6 @@ int main(int argc, char* argv[]) {
                                  );
 
                         // is it really the right process who answered? Compute its coordinate on the grid and check it matches
-                        // see https://netlib.org/blacs/BLACS/QRef.html#BLACS_PCOORD
                         SCALAPACKE_blacs_pcoord(ctx_sys, icaller, &itsrow, &itscol);
 
                         if(i != itsrow || j != itscol)
@@ -56,7 +56,6 @@ int main(int argc, char* argv[]) {
 
         } else {
             // send process id as a 1x1 (general) matrix
-            // See https://netlib.org/blacs/BLACS/QRef.html#SD
             SCALAPACKE_igesd2d(ctx_sys,
                      1, 1, /* 1x1 array */
                      &icaller, /* start of the array */

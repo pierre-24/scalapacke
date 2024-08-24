@@ -14,6 +14,7 @@ nprocs = get_option('tests_nprocs')
 foreach f: tests_to_run
 	src_file = files(f +  '.c')
 
+	# make executable
 	test_exe = executable(
 		'test_' + f,
 		sources: src_file,
@@ -23,6 +24,7 @@ foreach f: tests_to_run
 		c_args : build_args,
 	)
 
+	# and run it through mpiexec
 	test(
 		'test_' + f,
 		mpiexec,
