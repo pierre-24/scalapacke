@@ -20,8 +20,6 @@ def find_decl(path: pathlib.Path) -> Declaration:
     """Find declarations in file and return a tuple `(decl_c, decl_f)`
     """
 
-    print(path)
-
     with path.open() as f:
         lines = f.readlines()
         f_call_beg = -1
@@ -69,7 +67,6 @@ def find_decl(path: pathlib.Path) -> Declaration:
                     if 'input' in match_arg_doc['intent'].lower():
                         arg.is_input = True
                     if 'output' in match_arg_doc['intent'].lower():
-                        print('{} is output'.format(arg_name))
                         arg.is_output = True
                     if match_arg_doc['extra'] is not None:
                         if 'array' in match_arg_doc['extra'].lower():

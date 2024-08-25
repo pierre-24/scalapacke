@@ -132,7 +132,7 @@ class Parser:
             return 'double'
         elif inp[0] in ['INTEGER', 'LOGICAL']:
             assert len(inp) == 1
-            return 'int'
+            return 'Int'
         elif inp[0] == 'CHARACTER':
             return 'char*'
         elif inp[0] == 'COMPLEX':
@@ -146,7 +146,7 @@ class Parser:
     def decl(self) -> Tuple[str, str, List[Tuple[str, str]]]:
         name = ''
         rtype = 'void'
-        param_list = []
+        args_def_list = []
 
         self.skip()
         self.expect(TokenType.WORD)
@@ -181,7 +181,7 @@ class Parser:
 
         self.eat(TokenType.RPAR)
 
-        # now, the type for each param
+        # now, the type for each arg
         param_types = {}
         while self.current_token.type != TokenType.EOS:
             self.eat(TokenType.NEWL)
@@ -230,6 +230,6 @@ class Parser:
             if p not in param_types:
                 raise Exception('{} do not have a type?!?'.format(p))
 
-            param_list.append((param_types[p], p))
+            args_def_list.append((param_types[p], p))
 
-        return name, rtype, param_list
+        return name, rtype, args_def_list

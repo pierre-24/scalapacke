@@ -1,14 +1,11 @@
 import argparse
-import enum
 import pathlib
 import re
 import subprocess
 
 from jinja2 import Environment, FileSystemLoader
 
-from typing import List, Self, Dict, Optional
-
-from scalapack_files_create.fortran import Parser as FParser
+from typing import List
 
 
 PREFIX = 'SCALAPACKE_'
@@ -19,13 +16,6 @@ PATTERN_C_PARAM = re.compile(r'(?P<type>\w+) ?(?P<ptr>\*)? ?(?P<name>\w+)')
 
 # jinja templates env
 jinja_env = Environment(loader=FileSystemLoader(pathlib.Path(__file__).parent / 'templates'))
-
-
-class Intent(enum.Enum):
-    INPUT = enum.auto()
-    INPUT_ARRAY = enum.auto()
-    INPUT_COMPLEX = enum.auto()
-    OUTPUT = enum.auto()
 
 
 class DeclArgument:
@@ -61,19 +51,6 @@ class Declaration:
         self.name = name
         self.return_type = return_type
         self.arguments = arguments
-
-    @classmethod
-    def from_f_decl(cls, lines: List[str], intents: Optional[Dict[str, Intent]] = None) -> Self:
-        if intents is None:
-            intents = dict()
-
-        name, rtype, params_list = FParser(lines).decl()
-
-        params_with_intent_list = []
-        for typ, name in params_list:
-            params_with_intent_list.append((typ, name, intents[name]))
-
-        return cls(name, rtype, params_with_intent_list)
 
     def to_extern_c_decl(self) -> str:
         return 'extern {} {}({});'.format(

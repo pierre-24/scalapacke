@@ -6,6 +6,7 @@ import argparse
 from scalapack_files_create.base import get_dir
 from scalapack_files_create.create_cblacs import create_cblacs_headers_and_wrapper
 from scalapack_files_create.create_cpblas import create_cpblas_headers_and_wrapper
+from scalapack_files_create.create_scalapack import create_scalapack_headers_and_wrapper
 
 
 OUTPUTS = {
@@ -46,11 +47,10 @@ def main():
             args.repo, **dict((a, args.output / b) for a, b in OUTPUTS['pblas'].items())
         )
 
-    """
     if args.pblas or args.all:
         create_scalapack_headers_and_wrapper(
             args.repo, **dict((a, args.output / b) for a, b in OUTPUTS['scalapack'].items())
-        )"""
+        )
 
 
 if __name__ == '__main__':

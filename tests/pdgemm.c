@@ -23,15 +23,9 @@
 
 #include <scalapacke_blacs.h>
 #include <scalapacke_pblas.h>
+#include <scalapack.h>
 
 int I_ZERO = 0, I_ONE = 1;
-
-// stolen from scalapack, will be replaced latter
-extern int indxl2g_(int* INDXGLOB, int* NB, int* IPROC, int* ISRCPROC, int* NPROCS);
-extern double pdlange_(const char* norm, const int* m, const int* n, const double* a, const int* ia, const int* ja, const int* desca, double* work);
-extern int numroc_(const int* n, const int* nb, const int* iproc, const int* isrcproc, const int* nprocs);
-extern void descinit_(int* desc, const int* m, const int* n, const int* mb, const int* nb, const int* irsrc, const int* icsrc, const int* ictxt, const int* lld, int* info);
-extern double pdlamch_(const int* ictxt, const char* cmach);
 
 
 int main(int argc, char* argv[]) {

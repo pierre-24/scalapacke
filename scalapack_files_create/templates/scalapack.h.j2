@@ -1,6 +1,12 @@
 #ifndef HEADER_SCALAPACK_H
 #define HEADER_SCALAPACK_H
 
+/* Header by {{ self_name }}
+ * Generated: {{ current_time }}
+ * Version {{ self_name }}: {{ self_repo_url }}tree/{{ self_commit }}
+ * Version scalapack: {{ scalapack_repo_url }}tree/{{ scalapack_commit }}
+ */
+
 /* defines
  */
 {%- for i, f in defines %}
@@ -14,4 +20,5 @@
 {%- for declaration in declarations_f %}
 {{ declaration.to_extern_c_decl() }}
 {%- endfor %}
+
 #endif // HEADER_SCALAPACK_H
