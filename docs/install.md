@@ -54,8 +54,11 @@ project_dep += scalapacke_dep
 
 **Note:** Don't forget to set `CC=mpicc` (or others) before any `meson` command, otherwise it will not use MPI.
 
-You can check out the options in the [`meson_options.txt`](../meson_options.txt).
-The most easy way to use scaLAPACKe is to set `la_backend` to a [`pkg-config`](https://en.wikipedia.org/wiki/Pkg-config) file, if your OS supports it.
+### Configuring the build
+
+You can check out the options of the project in the [`meson_options.txt`](../meson_options.txt).
+
+The most easy way to use scaLAPACKe is to set `la_backend` to a [`pkg-config`](https://en.wikipedia.org/wiki/Pkg-config) file, if your OS supports it (if not, see below).
 Check for valid options with:
 
 ```bash
@@ -69,7 +72,11 @@ If you want to use oneMKL, intel developers are nice enough to provide some `pkg
 However, those files do not contain scaLAPACK, so our `meson.build` tries to be clever about it, and needs an extra option, `mkl_mpi` which can be either `openmpi` or `intelmpi` (equivalent to MPICH).
 For example, a choice could be `default_options: ['la_backend=mkl-static-lp64-seq', 'mkl_mpi=openmpi']`.
 
-Finally, if you want to use 64-bits integers (**if and only if** your scaLAPACK implementation supports it), add `ilp64=true`.
+If you want to use custom or exotic libraries, you can set `la_backend=custom` and provide a list of libraries with `la_libraries=lib1,lib2,...`.
+Meson will try its best to find them.
+Note that Meson looks for libraries in `LIBRARY_PATH` (actually [following `gcc`](https://stackoverflow.com/questions/4250624/ld-library-path-vs-library-path) by doing so), so don't forget to `export LIBRARY_PATH=$LIBRARY_PATH:/path/to/your/library/`.
+
+If you want to use 64-bits integers (**if and only if** your scaLAPACK implementation supports it), add `ilp64=true`.
 
 ## With meson, in your system
 
