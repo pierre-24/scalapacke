@@ -1,0 +1,44 @@
+name: Publish archive
+
+on:
+  push:
+    branches: [ dev ]
+    tags: [ 'v*' ]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Patch and publish
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+    env:
+      REF: 'latest'
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: change ref (tag)
+        if: contains(github.ref, 'tags')
+        run: |
+          echo "REF=${{ github.ref_name }}" >> "$GITHUB_ENV"
+      - name: Generate
+        run: |
+          ./scripts/package_it.sh "${{ env.REF }}"
+      - name: Upload archive
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: scalapacke.tar.gz
+          asset_name: scalapacke_${{ env.REF }}.tar.gz
+          tag: ${{ env.REF }}
+          overwrite: true
+      - name: Upload wrap
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: libcint.wrap
+          asset_name: libcint_${{ env.REF }}.wrap
+          tag: ${{ env.REF }}
+          overwrite: true

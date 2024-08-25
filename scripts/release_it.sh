@@ -1,7 +1,9 @@
+#!/bin/env bash
+
 # check parameters
 if [ "$#" -ne 1 ]; then
     >&2 echo "Illegal number of parameters"
-    >&2 echo "usage: ./release_it.sh [major|minor|patch]"
+    >&2 echo "usage: ./scripts/release_it.sh [major|minor|patch]"
     exit 1
 fi
 

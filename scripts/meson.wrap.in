@@ -1,0 +1,9 @@
+[wrap-file]
+source_url = https://github.com/pierre-24/scalapacke/releases/download/#REF#/scalapacke_#REF#.tar.gz
+source_filename = scalapacke_#REF#.tar.gz
+source_hash = #HASH#
+
+lead_directory_missing = scalapacke
+
+[provide]
+scalapacke = scalapacke_dep
