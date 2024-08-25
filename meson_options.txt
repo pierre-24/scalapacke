@@ -1,17 +1,31 @@
 option(
     'la_backend',
-    type: 'combo',
-    value: 'netlib',
-    choices: ['netlib', 'mkl', 'custom'],
+    type: 'string',
+    value: 'scalapack',
     description : 'linear algebra backend'
+)
+
+option(
+    'mkl_mpi',
+    type: 'combo',
+    value: 'openmpi',
+    choices: ['intelmpi', 'openmpi'],
+    description : 'MPI implementation to be used with MKL'
 )
 
 option(
     'la_libraries',
     type: 'array',
-    description : 'Custom libraries to be used if `la_backend=custom`'
+    description : 'libraries to loaded if `la_backend=custom`'
 )
 
+option(
+    'ilp64',
+    type: 'boolean',
+    description : 'use 64-bit integers'
+)
+
+# tests
 option(
     'tests',
     type: 'boolean',

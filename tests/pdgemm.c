@@ -25,20 +25,18 @@
 #include <scalapacke_pblas.h>
 #include <scalapacke.h>
 
-int I_ZERO = 0, I_ONE = 1;
-
 
 int main(int argc, char* argv[]) {
     // constants
-    int N = 256, blk_size = 32, M  = N * (N-1) * (2 * N - 1) / 6;
+    Int N = 256, blk_size = 32, M  = N * (N-1) * (2 * N - 1) / 6;
 
     // global
-    int nprocs, ctx_sys, glob_nrows, glob_ncols, glob_i, glob_j;
+    Int nprocs, ctx_sys, glob_nrows, glob_ncols, glob_i, glob_j;
     double norm_A, norm_B, norm_res;
 
     // local
-    int  iam, loc_row, loc_col, loc_nrows, loc_ncols, loc_lld;
-    int desc_distributed[9];
+    Int  iam, loc_row, loc_col, loc_nrows, loc_ncols, loc_lld;
+    Int desc_distributed[9];
     double *A, *B, *C, *work;
 
     // initialize BLACS & system context
@@ -46,7 +44,7 @@ int main(int argc, char* argv[]) {
     SCALAPACKE_blacs_get(0, 0, &ctx_sys);
 
     // create the grid
-    glob_nrows = (int) sqrt((double) nprocs);
+    glob_nrows = (Int) sqrt((double) nprocs);
     glob_ncols = nprocs / glob_nrows;
 
     SCALAPACKE_blacs_gridinit(&ctx_sys, "R", glob_nrows, glob_ncols);
@@ -72,11 +70,11 @@ int main(int argc, char* argv[]) {
         }
 
         // fill arrays locally
-        for(int loc_j=0; loc_j < loc_ncols; loc_j++) {
+        for(Int loc_j=0; loc_j < loc_ncols; loc_j++) {
             // translate local j to global j
-            glob_j = SCALAPACKE_indxl2g(loc_j + 1 /* fortran starts at one */, blk_size, loc_col, I_ZERO, glob_ncols) - 1;
-            for(int loc_i=0; loc_i < loc_nrows; loc_i++) {
-                glob_i = SCALAPACKE_indxl2g(loc_i + 1, blk_size, loc_row, I_ZERO, glob_nrows) - 1;
+            glob_j = SCALAPACKE_indxl2g(loc_j + 1 /* fortran starts at one */, blk_size, loc_col, 0, glob_ncols) - 1;
+            for(Int loc_i=0; loc_i < loc_nrows; loc_i++) {
+                glob_i = SCALAPACKE_indxl2g(loc_i + 1, blk_size, loc_row, 0, glob_nrows) - 1;
 
                 // set A[i,j] and B[i,j]
                 A[loc_j * loc_nrows + loc_i] = ((N - glob_j - 1) == glob_i ? 1.0 : 0.0) - (double) (2 * glob_i * (N - glob_j - 1)) / ((double) M);

@@ -12,8 +12,8 @@ Requirements:
 git clone https://github.com/Reference-ScaLAPACK/scalapack.git
 
 # clone this repository
-git clone https://github.com/pierre-24/scalapack-c-headers.git
-cd scalapack-c-headers
+git clone https://github.com/pierre-24/scalapacke.git
+cd scalapacke
 
 # virtualenv
 python -m venv venv

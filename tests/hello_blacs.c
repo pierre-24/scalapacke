@@ -11,14 +11,14 @@
 #include <scalapacke_blacs.h>
 
 int main(int argc, char* argv[]) {
-    int iam, nprocs, ctx_sys, nrows, ncols, myrow, mycol, icaller, itscol, itsrow;
+    Int iam, nprocs, ctx_sys, nrows, ncols, myrow, mycol, icaller, itscol, itsrow;
 
     // initialize BLACS & get default context
     SCALAPACKE_blacs_pinfo(&iam, &nprocs);
     SCALAPACKE_blacs_get(0, 0, &ctx_sys);
 
     // create a rectangular grid
-    nrows = (int) sqrt((double) nprocs);
+    nrows = (Int) sqrt((double) nprocs);
     ncols = nprocs / nrows;
     if(iam == 0)
         printf("0 :: rectangular grid with %d procs is %dx%d\n", nprocs, nrows, ncols);
@@ -32,8 +32,8 @@ int main(int argc, char* argv[]) {
         icaller = SCALAPACKE_blacs_pnum(ctx_sys, myrow, mycol);
 
         if(iam == 0) { // parent process receive message from others
-            for(int i=0; i < nrows; i++) {
-                for(int j=0; j < ncols; j++) {
+            for(Int i=0; i < nrows; i++) {
+                for(Int j=0; j < ncols; j++) {
                     if(i != 0 || j != 0) {
                         // receive a 1x1 (general) matrix
                         SCALAPACKE_igerv2d(ctx_sys,

@@ -30,7 +30,7 @@ jobs:
       - name: setup (use netlib)
         run: >-
           meson setup ${{ env.BUILD_DIR }} 
-          -Dla_backend=netlib 
+          -Dla_backend=scalapack-openmpi 
           -Dtests=true
           --buildtype=debug
       - name: Compile
