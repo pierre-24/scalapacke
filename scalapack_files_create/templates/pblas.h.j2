@@ -7,8 +7,7 @@
  * Version scalapack: {{ scalapack_repo_url }}tree/{{ scalapack_commit }}
  */
 
-/* Macros defined in reference scalapack.
- * See https://github.com/Reference-ScaLAPACK/scalapack/blob/master/PBLAS/SRC/pblas.h
+/* defines
  */
 {%- for i, f in defines %}
 #ifndef {{ i }}
@@ -19,7 +18,7 @@
 /* Declarations
  */
 {%- for declaration in declarations_f %}
-{{ declaration.to_extern_decl() }}
+{{ declaration.to_extern_c_decl() }}
 {%- endfor %}
 
 #endif // HEADER_PBLAS_H

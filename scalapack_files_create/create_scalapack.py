@@ -9,7 +9,7 @@ from scalapack_files_create.base import Declaration, get_current_commit, jinja_e
 SELF_NAME = __name__
 
 FIND_INTENTS = re.compile(
-    r'\* *(?P<name>\w*) *\(((local|global).*)?(?P<intent>((in)|(out))put|workspace)\)(?P<iscomplex>.+COMPLEX)?(?P<isarray>.+array)?',
+    r'\* *(?P<name>\w*) *\(((local|global).*)?(?P<intent>((in)|(out))put|workspace)\)',
     flags=re.MULTILINE
 )
 
@@ -18,11 +18,6 @@ EXCLUDE = [
     'pilaver.f',
     'pslaedz.f',
     'pdlaedz.f',
-    # documentation do not follow established format
-    'slaqr6.f',
-    'dlaqr6.f',
-    'pslaqr5.f',
-    'pdlaqr5.f',
     # not finished
     'pslatrs.f',
     'pdlatrs.f',

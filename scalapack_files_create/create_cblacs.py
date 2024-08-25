@@ -1,23 +1,27 @@
 import datetime
 import pathlib
-from typing import Tuple, List
+from typing import List
 import re
 
 from scalapack_files_create import SCALAPACK_REPO_URL, SELF_REPO_URL
-from scalapack_files_create.base import Declaration, get_current_commit, jinja_env, Intent
+from scalapack_files_create.base import Declaration, get_current_commit, jinja_env, DeclArgument
 
 SELF_NAME = __name__
 
-DEFINES = [
+TO_DEFINE = [
     ('Int', 'int'),
-    ('F_VOID_FUNC', 'void'),
-    ('F_INT_FUNC', 'Int'),
-    ('F_DOUBLE_FUNC', 'double'),
-    ('F_CHAR', 'char*')
 ]
 
-EXCLUDE = [
-    # exclude some files that defines function not in the standard
+TO_REPLACE = {
+    'F_VOID_FUNC': 'void',
+    'F_INT_FUNC': 'Int',
+    'F_DOUBLE_FUNC': 'double',
+    'F_CHAR': 'char*',
+    'F_CHAR_T': 'char*'
+}
+
+TO_EXCLUDE = [
+    # exclude some files that defines functions that are not in the standard
     'dwalltime00_.c',
     'free_handle_.c',
     'dcputime00_.c',
@@ -27,16 +31,21 @@ EXCLUDE = [
     'ksendid_.c'
 ]
 
+# pattern
+PATTERN_C_FUNC = re.compile(r'(?P<rtype>\w+) (?P<name>\w+)\((?P<args>.*)\)')
+PATTERN_C_ARG = re.compile(r'(?P<type>\w+) ?(?P<ptr>\*)? ?(?P<name>\w+)')
+PATTERN_ARG_DOC = re.compile(r'\s{1,3}\*\s{1,3}(?P<name>\w*)\s+\((?P<intent>.*)\)(?P<extra>.*)?')
 
-def _p(inp: str, r: int = 0) -> Tuple[str, str, Intent]:
+
+def _p(inp: str, r: int = 0) -> DeclArgument:
     chunks = inp.split(' ')
-    return chunks[0], chunks[1], Intent.INPUT if r == 0 else Intent.OUTPUT
+    return DeclArgument(chunks[1], chunks[0], is_input=r == 0, is_output=r == 1)
 
 
 BLACS_DECLS = [
     # blacs*() functions do not come with a documentation, so manually handle them
     Declaration('blacs_abort_', 'void', [_p('Int* ConTxt'), _p('Int* ErrNo')]),
-    Declaration('blacs_barrier_', 'void', [_p('Int* ConTxt'), _p('F_CHAR scope')]),
+    Declaration('blacs_barrier_', 'void', [_p('Int* ConTxt'), _p('char* scope')]),
     Declaration('blacs_exit_', 'void', [_p('Int* NotDone')]),
     Declaration('blacs_freebuff_', 'void', [_p('Int* ConTxt'), _p('Int* wait')]),
     Declaration('blacs_get_', 'void', [
@@ -54,7 +63,7 @@ BLACS_DECLS = [
     ]),
     Declaration('blacs_gridinit_', 'void', [
         _p('Int* ConTxt', 1),
-        _p('F_CHAR order'),
+        _p('char* order'),
         _p('Int* nprow',),
         _p('Int* npcol'),
     ]),
@@ -98,8 +107,31 @@ BLACS_DECLS = [
 ]
 
 
-FIND_INTENTS = re.compile(
-    r'\* *(?P<name>\w*) *\((?P<intent>\w*put)\)(?P<isarray>.+array)?', flags=re.MULTILINE)
+def find_c_decl(inp: str) -> Declaration:
+    """Find a function declaration written in C
+    """
+
+    match_func = PATTERN_C_FUNC.match(inp)
+    if not match_func:
+        raise Exception('unable to parse function from `{}`'.format(inp))
+
+    return_ctype = match_func['rtype']
+    if return_ctype in TO_REPLACE:
+        return_ctype = TO_REPLACE[return_ctype]
+
+    args = match_func['args']
+    args_list = []
+    if args != 'void':
+        for param in args.split(','):
+            match_arg = PATTERN_C_ARG.match(param.strip())
+            arg_name = match_arg.group('name')
+            arg_ctype = match_arg.group('type') + ('*' if match_arg.group('ptr') else '')
+            if arg_ctype in TO_REPLACE:
+                arg_ctype = TO_REPLACE[arg_ctype]
+
+            args_list.append(DeclArgument(arg_name, arg_ctype))
+
+    return Declaration(match_func['name'], return_ctype, args_list)
 
 
 def find_decl(path: pathlib.Path) -> Declaration:
@@ -135,17 +167,38 @@ def find_decl(path: pathlib.Path) -> Declaration:
         if f_args_end < 0:
             raise Exception('could not find arguments list in {}?!?'.format(path))
 
-        # analyse argument list to find intents
-        intents = {}
+        # find declaration
+        decl = find_c_decl(' '.join(line.strip() for line in lines[c_call_end + 1:f_call_end]))
 
-        for match in FIND_INTENTS.finditer('\n'.join(lines[f_args_beg:f_args_end])):
-            intent = match.group('intent').lower()
-            is_array = match.group('isarray') is not None
-            intents[match.group('name').upper()] = Intent.OUTPUT if intent == 'output' else (
-                Intent.INPUT_ARRAY if is_array else Intent.INPUT
-            )
+        # find whether argument is input/output/array/complex, etc
+        args = dict((a.name.upper(), a) for a in decl.arguments)
+        found_arg_doc = []
 
-        return Declaration.from_c_decl(' '.join(line.strip() for line in lines[c_call_end + 1:f_call_end]), intents)
+        for line in lines[f_args_beg:f_args_end]:
+            match_arg_doc = PATTERN_ARG_DOC.match(line)
+            if match_arg_doc is not None:
+                arg_name = match_arg_doc['name'].upper()
+                try:
+                    arg = args[arg_name]
+                    found_arg_doc.append(arg_name)
+
+                    if 'input' in match_arg_doc['intent'].lower():
+                        arg.is_input = True
+                    if 'output' in match_arg_doc['intent'].lower():
+                        arg.is_output = True
+                    if match_arg_doc['extra'] is not None:
+                        if 'array' in match_arg_doc['extra'].lower():
+                            arg.is_array = True
+                        if 'complex' in match_arg_doc['extra'].lower():
+                            arg.is_array = True
+
+                except KeyError:
+                    pass
+
+        if set(found_arg_doc) != set(args.keys()):
+            raise Exception('could not find documentation for all args')
+
+        return decl
 
 
 def find_decls(root: pathlib.Path) -> List[Declaration]:
@@ -156,7 +209,7 @@ def find_decls(root: pathlib.Path) -> List[Declaration]:
     declarations_f = []
 
     for path in root.glob('*_.c'):
-        if path.name not in EXCLUDE and 'blacs' not in path.name:
+        if path.name not in TO_EXCLUDE and 'blacs' not in path.name:
             declarations_f.append(find_decl(path))
 
     return declarations_f
@@ -188,7 +241,7 @@ def create_cblacs_headers_and_wrapper(
     with output_header.open('w') as f:
         f.write(template_header.render(
             declarations_f=decls_f + BLACS_DECLS,
-            defines=DEFINES,
+            defines=TO_DEFINE,
             self_name=SELF_NAME,
             self_repo_url=SELF_REPO_URL,
             self_commit=get_current_commit(pathlib.Path('.')),

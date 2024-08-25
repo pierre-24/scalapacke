@@ -9,8 +9,7 @@
 
 #include <mpi.h>
 
-/* Macros defined in reference scalapack.
- * See https://github.com/Reference-ScaLAPACK/scalapack/blob/master/BLACS/SRC/Bdef.h
+/* defines
  */
 {%- for i, f in defines %}
 #ifndef {{ i }}
@@ -21,7 +20,7 @@
 /* Declarations
  */
 {%- for declaration in declarations_f %}
-{{ declaration.to_extern_decl() }}
+{{ declaration.to_extern_c_decl() }}
 {%- endfor %}
 
 #endif // HEADER_BLACS_H

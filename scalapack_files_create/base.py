@@ -6,7 +6,7 @@ import subprocess
 
 from jinja2 import Environment, FileSystemLoader
 
-from typing import List, Tuple, Self, Dict, Optional
+from typing import List, Self, Dict, Optional
 
 from scalapack_files_create.fortran import Parser as FParser
 
@@ -28,34 +28,39 @@ class Intent(enum.Enum):
     OUTPUT = enum.auto()
 
 
+class DeclArgument:
+    def __init__(self, name: str, ctype: str, is_input: bool = False, is_output: bool = False, is_array: bool = False):
+        self.name = name
+        self.ctype = ctype
+        self.is_input = is_input
+        self.is_output = is_output
+        self.is_array = is_array
+
+    def to_c_arg(self) -> str:
+        return '{}{} {}'.format('const ' if not self.is_output else '', self.ctype, self.name)
+
+    def aliasable(self):
+        return not self.is_output and not self.is_array and self.ctype in ['Int*', 'float*', 'double*']
+
+    def aliase(self):
+        ctype = self.ctype
+
+        if not self.is_output and not self.is_array:
+            if ctype == 'Int*':
+                ctype = 'Int'
+            elif ctype == 'float*':
+                ctype = 'float'
+            elif ctype == 'double*':
+                ctype = 'double'
+
+        return DeclArgument(self.name, ctype, self.is_input, self.is_output, self.is_array)
+
+
 class Declaration:
-    def __init__(self, name: str, return_type: str, params: List[Tuple[str, str, Intent]]):
+    def __init__(self, name: str, return_type: str, arguments: List[DeclArgument]):
         self.name = name
         self.return_type = return_type
-        self.params = params
-
-    @classmethod
-    def from_c_decl(cls, inp: str, intents: Optional[Dict[str, Intent]] = None) -> Self:
-        if intents is None:
-            intents = dict()
-
-        match_func = PATTERN_C_FUNC.match(inp)
-        if not match_func:
-            raise Exception('unable to parse function from `{}`'.format(inp))
-
-        params = match_func['params']
-        params_list = []
-        if params != 'void':
-            for param in params.split(','):
-                match_param = PATTERN_C_PARAM.match(param.strip())
-                param_name = match_param.group('name')
-                params_list.append((
-                    match_param.group('type') + ('*' if match_param.group('ptr') else ''),
-                    param_name,
-                    intents[param_name.upper()]
-                ))
-
-        return cls(match_func.group('name'), match_func.group('rtype'), params_list)
+        self.arguments = arguments
 
     @classmethod
     def from_f_decl(cls, lines: List[str], intents: Optional[Dict[str, Intent]] = None) -> Self:
@@ -70,58 +75,33 @@ class Declaration:
 
         return cls(name, rtype, params_with_intent_list)
 
-    def to_extern_decl(self) -> str:
+    def to_extern_c_decl(self) -> str:
         return 'extern {} {}({});'.format(
             self.return_type,
             self.name,
-            ', '.join('{}{} {}'.format('const ' if p[2] != Intent.OUTPUT else '', p[0], p[1]) for p in self.params)
+            ', '.join(a.to_c_arg() for a in self.arguments)
         )
 
-    @staticmethod
-    def _aliase(typ: str, name: str, intent: Intent) -> Tuple[str, str, Intent]:
-        """Aliase inputs if authorized"""
-
-        if intent == Intent.INPUT:
-            if typ == 'Int*':
-                typ = 'Int'
-            elif typ == 'float*':
-                typ = 'float'
-            elif typ == 'double*':
-                typ = 'double'
-
-        return typ, name, intent
-
     def to_aliased_decl(self) -> str:
-        return_type = self.return_type
-        if return_type == 'F_VOID_FUNC':
-            return_type = 'void'
-
-        aliased_params = [self._aliase(*x) for x in self.params]
 
         return '{} {}{}({});'.format(
-            return_type,
+            self.return_type,
             PREFIX,
             self.name[:-1],
-            ', '.join('{}{} {}'.format(
-                'const ' if x[2] != Intent.OUTPUT else '', x[0], x[1]) for x in aliased_params)
+            ', '.join(a.aliase().to_c_arg() for a in self.arguments)
         )
 
     def to_aliased_wrapper(self) -> str:
         name = self.name
-        aliased_params = [self._aliase(*x) for x in self.params]
-        return_type = self.return_type
-        if return_type == 'F_VOID_FUNC':
-            return_type = 'void'
 
         return '{} {}{}({}) {{\n    {}{}({});\n}}'.format(
-            return_type,
+            self.return_type,
             PREFIX,
             name[:-1],
-            ', '.join('{}{} {}'.format(
-                'const ' if x[2] != Intent.OUTPUT else '', x[0], x[1]) for x in aliased_params),
-            'return ' if return_type != 'void' else '',
+            ', '.join(a.aliase().to_c_arg() for a in self.arguments),
+            'return ' if self.return_type != 'void' else '',
             name,
-            ', '.join('{}{}'.format('&' if x[0] != y[0] else '', x[1]) for x, y in zip(self.params, aliased_params))
+            ', '.join('{}{}'.format('&' if x.aliasable() else '', x.name) for x in self.arguments)
         )
 
     def __repr__(self):
@@ -129,7 +109,7 @@ class Declaration:
             self.__class__.__name__,
             repr(self.name),
             repr(self.return_type),
-            repr(self.params)
+            repr(self.arguments)
         )
 
 

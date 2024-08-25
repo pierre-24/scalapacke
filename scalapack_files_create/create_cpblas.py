@@ -4,24 +4,23 @@ import re
 from typing import List
 
 from scalapack_files_create import SCALAPACK_REPO_URL, SELF_REPO_URL
-from scalapack_files_create.base import Declaration, get_current_commit, jinja_env, Intent
+from scalapack_files_create.base import Declaration, get_current_commit, jinja_env
+from scalapack_files_create.create_cblacs import find_c_decl
 
 SELF_NAME = __name__
 
 DEFINES = [
     ('Int', 'int'),
-    ('F_CHAR_T', 'char*')
 ]
 
-FIND_INTENTS = re.compile(
-    r'\* *(?P<name>\w*) *\((local|global).*(?P<intent>((in)|(out))put)\)(?P<iscomplex>.+COMPLEX)?(?P<isarray>.+array)?',
-    flags=re.MULTILINE
-)
+PATTERN_ARG_DOC = re.compile(r'\s{0,3}\*\s{1,3}(?P<name>\w*)\s+\((?P<intent>.*)\)(?P<extra>.*)?')
 
 
 def find_decl(path: pathlib.Path) -> Declaration:
     """Find declarations in file and return a tuple `(decl_c, decl_f)`
     """
+
+    print(path)
 
     with path.open() as f:
         lines = f.readlines()
@@ -47,26 +46,44 @@ def find_decl(path: pathlib.Path) -> Declaration:
         if f_args_end < 0:
             raise Exception('could not find arguments list in {}?!?'.format(path))
 
-        # analyse argument list to find intents
-        intents = {}
+        # find declaration
+        decl = find_c_decl(' '.join(line.strip() for line in lines[f_call_beg:f_call_end]))
 
-        for match in FIND_INTENTS.finditer('\n'.join(lines[f_args_beg:f_args_end])):
-            intent = match.group('intent').lower()
-            is_array = match.group('iscomplex') is not None
-            is_complex = match.group('isarray') is not None
-            param_name = match.group('name').upper()
+        # find whether argument is input/output/array/complex, etc
+        args = dict((a.name.upper(), a) for a in decl.arguments)
+        found_arg_doc = []
 
-            # fix error in PBLAS/SRC/*trsm_.c and PBLAS/SRC/*trmm_.c: `TRANSA` (doc) → `TRANS` (param)
-            if path.name[2:] in ['trsm_.c', 'trmm_.c'] and param_name == 'TRANSA':
-                param_name = 'TRANS'
+        for line in lines[f_args_beg:f_args_end]:
+            match_arg_doc = PATTERN_ARG_DOC.match(line)
+            if match_arg_doc is not None:
+                arg_name = match_arg_doc['name'].upper()
 
-            intents[param_name] = Intent.OUTPUT if (
-                    intent == 'output'
-            ) else (
-                Intent.INPUT_ARRAY if is_array else (Intent.INPUT_COMPLEX if is_complex else Intent.INPUT)
-            )
+                # fix error in PBLAS/SRC/*trsm_.c and PBLAS/SRC/*trmm_.c: `TRANSA` (doc) → `TRANS` (param)
+                if path.name[2:] in ['trsm_.c', 'trmm_.c'] and arg_name == 'TRANSA':
+                    arg_name = 'TRANS'
 
-        return Declaration.from_c_decl(' '.join(line.strip() for line in lines[f_call_beg:f_call_end]), intents)
+                try:
+                    arg = args[arg_name]
+                    found_arg_doc.append(arg_name)
+
+                    if 'input' in match_arg_doc['intent'].lower():
+                        arg.is_input = True
+                    if 'output' in match_arg_doc['intent'].lower():
+                        print('{} is output'.format(arg_name))
+                        arg.is_output = True
+                    if match_arg_doc['extra'] is not None:
+                        if 'array' in match_arg_doc['extra'].lower():
+                            arg.is_array = True
+                        if 'complex' in match_arg_doc['extra'].lower():
+                            arg.is_array = True
+
+                except KeyError:
+                    pass
+
+        if set(found_arg_doc) != set(args.keys()):
+            raise Exception('could not find documentation for all args')
+
+        return decl
 
 
 def find_decls(root: pathlib.Path) -> List[Declaration]:
