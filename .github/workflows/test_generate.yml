@@ -35,4 +35,4 @@ jobs:
         run: |
           mkdir test_generate
           cd test_generate
-          scaLAPACK_create --all ../scalapack
+          scaLAPACKe_create --all ../scalapack

@@ -1,15 +1,6 @@
 #ifndef HEADER_PBLAS_H
 #define HEADER_PBLAS_H
 
-/* Header by scalapack_files_create.create_cpblas
- * Generated: 2024-08-23 22:12:17.846995
- * Version scalapack_files_create.create_cpblas: https://github.com/pierre-24/scalapack-c-headers/tree/cbcccac4
- * Version scalapack: https://github.com/Reference-ScaLAPACK/scalapack/tree/0128dc24
- */
-
-/* Macros defined in reference scalapack.
- * See https://github.com/Reference-ScaLAPACK/scalapack/blob/master/PBLAS/SRC/pblas.h
- */
 #ifndef Int
 #define Int int
 #endif // Int

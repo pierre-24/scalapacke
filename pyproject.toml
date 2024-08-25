@@ -1,5 +1,5 @@
 [project]
-name = "scalapack-files-create"
+name = "scalapacke-dev-toolkit"
 dynamic = ["version"]
 authors = [
     {name = "Pierre Beaujean", email = "pierre.beaujean@unamur.be"},
@@ -29,11 +29,11 @@ dev = [
 ]
 
 [project.scripts]
-scaLAPACK_create = "scalapack_files_create.script:main"
+scaLAPACKe_create = "scalapacke_files_create.script:main"
 
 [tool.setuptools]
-packages = ['scalapack_files_create']
+packages = ['scalapacke_files_create']
 
 [tool.setuptools.dynamic]
-version = {attr = "scalapack_files_create.__version__"}
+version = {attr = "scalapacke_files_create.__version__"}
 

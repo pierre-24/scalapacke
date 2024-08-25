@@ -7,4 +7,4 @@ install-dev:
 all: install
 
 lint:
-	flake8 scalapack_files_create --max-line=120
+	flake8 scalapacke_files_create --max-line=120

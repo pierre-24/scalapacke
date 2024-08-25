@@ -3133,30 +3133,6 @@ Int SCALAPACKE_pstrord(const char* COMPQ, Int* SELECT, const Int* PARA, const In
     return INFO;
 }
 
-Int SCALAPACKE_pctrrfs(const char* UPLO, const char* TRANS, const char* DIAG, const Int N, const Int NRHS, const float* A, const Int IA, const Int JA, const Int* DESCA, const float* B, const Int IB, const Int JB, const Int* DESCB, const float* X, const Int IX, const Int JX, const Int* DESCX, float* FERR, float* BERR, float* WORK, const Int LWORK, float* RWORK, const Int LRWORK) {
-    Int INFO = 0;
-    pctrrfs_(UPLO, TRANS, DIAG, &N, &NRHS, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB, X, &IX, &JX, DESCX, FERR, BERR, WORK, &LWORK, RWORK, &LRWORK, &INFO);
-    return INFO;
-}
-
-Int SCALAPACKE_pdtrrfs(const char* UPLO, const char* TRANS, const char* DIAG, const Int N, const Int NRHS, const double* A, const Int IA, const Int JA, const Int* DESCA, const double* B, const Int IB, const Int JB, const Int* DESCB, const double* X, const Int IX, const Int JX, const Int* DESCX, double* FERR, double* BERR, double* WORK, const Int LWORK, Int* IWORK, const Int LIWORK) {
-    Int INFO = 0;
-    pdtrrfs_(UPLO, TRANS, DIAG, &N, &NRHS, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB, X, &IX, &JX, DESCX, FERR, BERR, WORK, &LWORK, IWORK, &LIWORK, &INFO);
-    return INFO;
-}
-
-Int SCALAPACKE_pstrrfs(const char* UPLO, const char* TRANS, const char* DIAG, const Int N, const Int NRHS, const float* A, const Int IA, const Int JA, const Int* DESCA, const float* B, const Int IB, const Int JB, const Int* DESCB, const float* X, const Int IX, const Int JX, const Int* DESCX, float* FERR, float* BERR, float* WORK, const Int LWORK, Int* IWORK, const Int LIWORK) {
-    Int INFO = 0;
-    pstrrfs_(UPLO, TRANS, DIAG, &N, &NRHS, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB, X, &IX, &JX, DESCX, FERR, BERR, WORK, &LWORK, IWORK, &LIWORK, &INFO);
-    return INFO;
-}
-
-Int SCALAPACKE_pztrrfs(const char* UPLO, const char* TRANS, const char* DIAG, const Int N, const Int NRHS, const double* A, const Int IA, const Int JA, const Int* DESCA, const double* B, const Int IB, const Int JB, const Int* DESCB, const double* X, const Int IX, const Int JX, const Int* DESCX, double* FERR, double* BERR, double* WORK, const Int LWORK, double* RWORK, const Int LRWORK) {
-    Int INFO = 0;
-    pztrrfs_(UPLO, TRANS, DIAG, &N, &NRHS, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB, X, &IX, &JX, DESCX, FERR, BERR, WORK, &LWORK, RWORK, &LRWORK, &INFO);
-    return INFO;
-}
-
 Int SCALAPACKE_pdtrsen(const char* JOB, const char* COMPQ, const Int* SELECT, const Int* PARA, const Int N, double* T, const Int IT, const Int JT, const Int* DESCT, double* Q, const Int IQ, const Int JQ, const Int* DESCQ, double* WR, double* WI, Int* M, double* S, double* SEP, double* WORK, const Int LWORK, Int* IWORK, const Int LIWORK) {
     Int INFO = 0;
     pdtrsen_(JOB, COMPQ, SELECT, PARA, &N, T, &IT, &JT, DESCT, Q, &IQ, &JQ, DESCQ, WR, WI, M, S, SEP, WORK, &LWORK, IWORK, &LIWORK, &INFO);

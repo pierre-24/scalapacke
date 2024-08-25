@@ -3,9 +3,9 @@ import pathlib
 import re
 from typing import List
 
-from scalapack_files_create import SCALAPACK_REPO_URL, SELF_REPO_URL
-from scalapack_files_create.base import Declaration, get_current_commit, jinja_env, DeclArgument
-from scalapack_files_create.fortran import Parser as FParser
+from scalapacke_files_create import SCALAPACK_REPO_URL, SELF_REPO_URL
+from scalapacke_files_create.base import Declaration, get_current_commit, jinja_env, DeclArgument
+from scalapacke_files_create.fortran import Parser as FParser
 
 SELF_NAME = __name__
 
@@ -46,6 +46,11 @@ TO_EXCLUDE = [
     'dsnrm2.f',
     'dsasum.f',
     'dscasum.f',
+    # not defined in netlib
+    'pctrrfs.f',
+    'pdtrrfs.f',
+    'pstrrfs.f',
+    'pztrrfs.f',
     # not enough documentation
     'slarrf2.f',
     'dlarrf2.f',

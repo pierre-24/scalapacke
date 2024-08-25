@@ -3,9 +3,9 @@ import pathlib
 import re
 from typing import List
 
-from scalapack_files_create import SCALAPACK_REPO_URL, SELF_REPO_URL
-from scalapack_files_create.base import Declaration, get_current_commit, jinja_env
-from scalapack_files_create.create_cblacs import find_c_decl
+from scalapacke_files_create import SCALAPACK_REPO_URL, SELF_REPO_URL
+from scalapacke_files_create.base import Declaration, get_current_commit, jinja_env
+from scalapacke_files_create.create_cblacs import find_c_decl
 
 SELF_NAME = __name__
 

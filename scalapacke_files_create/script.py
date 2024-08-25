@@ -3,10 +3,10 @@ Create headers and wrappers for scaLAPACK
 """
 
 import argparse
-from scalapack_files_create.base import get_dir
-from scalapack_files_create.create_cblacs import create_cblacs_headers_and_wrapper
-from scalapack_files_create.create_cpblas import create_cpblas_headers_and_wrapper
-from scalapack_files_create.create_scalapack import create_scalapack_headers_and_wrapper
+from scalapacke_files_create.base import get_dir
+from scalapacke_files_create.create_cblacs import create_cblacs_headers_and_wrapper
+from scalapacke_files_create.create_cpblas import create_cpblas_headers_and_wrapper
+from scalapacke_files_create.create_scalapack import create_scalapack_headers_and_wrapper
 
 
 OUTPUTS = {
