@@ -31,6 +31,7 @@ jobs:
         run: >-
           meson setup ${{ env.BUILD_DIR }} 
           -Dla_backend=netlib 
+          -Dtests=true
           --buildtype=debug
       - name: Compile
         run: >-

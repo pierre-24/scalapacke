@@ -15,7 +15,7 @@ option(
 option(
     'tests',
     type: 'boolean',
-    value: true,
+    value: false,
     description: 'Include tests',
 )
 
