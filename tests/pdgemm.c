@@ -23,7 +23,7 @@
 
 #include <scalapacke_blacs.h>
 #include <scalapacke_pblas.h>
-#include <scalapack.h>
+#include <scalapacke.h>
 
 int I_ZERO = 0, I_ONE = 1;
 
@@ -37,7 +37,7 @@ int main(int argc, char* argv[]) {
     double norm_A, norm_B, norm_res;
 
     // local
-    int  iam, loc_row, loc_col, loc_nrows, loc_ncols, loc_lld, info;
+    int  iam, loc_row, loc_col, loc_nrows, loc_ncols, loc_lld;
     int desc_distributed[9];
     double *A, *B, *C, *work;
 
@@ -57,8 +57,8 @@ int main(int argc, char* argv[]) {
 
     if(loc_row >= 0) { // if I'm in grid
         // compute length and create arrays
-        loc_nrows = numroc_(&N, &blk_size, &loc_row, &I_ZERO, &glob_nrows);
-        loc_ncols = numroc_(&N, &blk_size, &loc_col, &I_ZERO, &glob_ncols);
+        loc_nrows = SCALAPACKE_numroc(N, blk_size, loc_row, 0, glob_nrows);
+        loc_ncols = SCALAPACKE_numroc(N, blk_size, loc_col, 0, glob_ncols);
         loc_lld =  loc_nrows;
         A = calloc(loc_nrows * loc_ncols, sizeof(double));
         B = calloc(loc_nrows * loc_ncols, sizeof(double));
@@ -72,25 +72,25 @@ int main(int argc, char* argv[]) {
         }
 
         // fill arrays locally
-        for(int loc_j=1; loc_j <= loc_ncols; loc_j++) { /* FORTRAN STARTS AT ONE !!!!!!!!! */
+        for(int loc_j=0; loc_j < loc_ncols; loc_j++) {
             // translate local j to global j
-            glob_j = indxl2g_(&loc_j, &blk_size, &loc_col, &I_ZERO, &glob_ncols) - 1;
-            for(int loc_i=1; loc_i <= loc_nrows; loc_i++) {
-                glob_i = indxl2g_(&loc_i, &blk_size, &loc_row, &I_ZERO, &glob_nrows) - 1;
+            glob_j = SCALAPACKE_indxl2g(loc_j + 1 /* fortran starts at one */, blk_size, loc_col, I_ZERO, glob_ncols) - 1;
+            for(int loc_i=0; loc_i < loc_nrows; loc_i++) {
+                glob_i = SCALAPACKE_indxl2g(loc_i + 1, blk_size, loc_row, I_ZERO, glob_nrows) - 1;
 
                 // set A[i,j] and B[i,j]
-                A[(loc_j - 1) * loc_nrows + (loc_i - 1)] = ((N - glob_j - 1) == glob_i ? 1.0 : 0.0) - (double) (2 * glob_i * (N - glob_j - 1)) / ((double) M);
-                B[(loc_j - 1) * loc_nrows + (loc_i - 1)] = glob_j * N + glob_i;
+                A[loc_j * loc_nrows + loc_i] = ((N - glob_j - 1) == glob_i ? 1.0 : 0.0) - (double) (2 * glob_i * (N - glob_j - 1)) / ((double) M);
+                B[loc_j * loc_nrows + loc_i] = glob_j * N + glob_i;
             }
         }
 
         // create descriptor for A, B and C
-        descinit_(desc_distributed, &N, &N, &blk_size, &blk_size, &I_ZERO, &I_ZERO, &ctx_sys, &loc_lld, &info);
+        SCALAPACKE_descinit(desc_distributed, N, N, blk_size, blk_size, 0, 0, ctx_sys, loc_lld);
 
         // compute norm of A and B
         work = (double*) calloc(loc_nrows, sizeof(double));
-        norm_A = pdlange_("F", &N, &N, A, &I_ONE, &I_ONE, desc_distributed, work);
-        norm_B = pdlange_("F", &N, &N, B, &I_ONE, &I_ONE, desc_distributed, work);
+        norm_A = SCALAPACKE_pdlange("F", N, N, A, 1, 1, desc_distributed, work);
+        norm_B = SCALAPACKE_pdlange("F", N, N, B, 1, 1, desc_distributed, work);
 
         // compute C = A * B
         SCALAPACKE_pdgemm("N", "N", N, N, N,
@@ -107,8 +107,8 @@ int main(int argc, char* argv[]) {
         );
 
         // compute the norm of B & residual
-        norm_res = pdlange_("F", &N, &N, B, &I_ONE, &I_ONE, desc_distributed, work);
-        double eps = pdlamch_(&ctx_sys, "e");
+        norm_res = SCALAPACKE_pdlange("F", N, N, B, 1, 1, desc_distributed, work);
+        double eps = SCALAPACKE_pdlamch(ctx_sys, "e");
         double residual = norm_res / (2 * norm_A * norm_B * eps);
 
         if(iam == 0) {

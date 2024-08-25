@@ -106,7 +106,7 @@ MISSING_DOCS = {
     'pmpim2.f': [
         DeclArgument('IL', 'Int*', is_input=True),
         DeclArgument('IU', 'Int*', is_input=True)
-    ]
+    ],
 }
 
 
@@ -115,8 +115,8 @@ def find_f_decl(lines: List[str]) -> Declaration:
     name, rtype, args_def_list = FParser(lines).decl()
 
     args_list = []
-    for arg_ctype, arg_name in args_def_list:
-        args_list.append(DeclArgument(arg_name, arg_ctype))
+    for arg_ctype, arg_name, arg_is_array in args_def_list:
+        args_list.append(DeclArgument(arg_name, arg_ctype, is_array=arg_is_array))
 
     return Declaration(name.lower() + '_', rtype, args_list)
 
@@ -187,9 +187,14 @@ def find_decl(path: pathlib.Path) -> Declaration:
                         # `WORK`
                         arg.is_output = True
                     if match_arg_doc['extra'] is not None:
+                        if 'complex' in match_arg_doc['extra'].lower():
+                            arg.is_array = True
+                        # normally, that is useless, since the parser already recognize arrays
                         if 'array' in match_arg_doc['extra'].lower():
                             arg.is_array = True
-                        if 'complex' in match_arg_doc['extra'].lower():
+                        if 'pointer into the local' in match_arg_doc['extra'].lower():
+                            arg.is_array = True
+                        if 'pointer into local' in match_arg_doc['extra'].lower():
                             arg.is_array = True
 
                     try:
@@ -230,6 +235,8 @@ def find_decls(root: pathlib.Path) -> List[Declaration]:
 def create_scalapack_headers_and_wrapper(
         repo: pathlib.Path,
         output_header: pathlib.Path,
+        output_ml_header: pathlib.Path,
+        output_ml_wrapper: pathlib.Path
 ):
     # find declarations
     root = repo / 'SRC'
@@ -237,16 +244,42 @@ def create_scalapack_headers_and_wrapper(
     if not root.is_dir() or not root_tools.is_dir():
         raise Exception('{} is not a directory, did you clone {}?'.format(root, SCALAPACK_REPO_URL))
 
-    decls_f = find_decls(root) + find_decls(root_tools)
+    decls_f = find_decls(root)
     decls_f.sort(key=lambda x: x.name[2:] + x.name[1])
+    decls_f_tools = find_decls(root_tools)
+    decls_f_tools.sort(key=lambda x: x.name)
 
     template_header = jinja_env.get_template('scalapack.h.j2')
+    template_ml_header = jinja_env.get_template('scalapacke.h.j2')
+    template_ml_wrapper = jinja_env.get_template('scalapacke.c.j2')
 
     # out
     with output_header.open('w') as f:
         f.write(template_header.render(
-            declarations_f=decls_f,
+            declarations_f=decls_f + decls_f_tools,
             defines=DEFINES,
+            self_name=SELF_NAME,
+            self_repo_url=SELF_REPO_URL,
+            self_commit=get_current_commit(pathlib.Path('.')),
+            scalapack_repo_url=SCALAPACK_REPO_URL,
+            scalapack_commit=get_current_commit(repo),
+            current_time=datetime.datetime.now()
+        ))
+
+    with output_ml_header.open('w') as f:
+        f.write(template_ml_header.render(
+            declarations_f=decls_f + decls_f_tools,
+            self_name=SELF_NAME,
+            self_repo_url=SELF_REPO_URL,
+            self_commit=get_current_commit(pathlib.Path('.')),
+            scalapack_repo_url=SCALAPACK_REPO_URL,
+            scalapack_commit=get_current_commit(repo),
+            current_time=datetime.datetime.now()
+        ))
+
+    with output_ml_wrapper.open('w') as f:
+        f.write(template_ml_wrapper.render(
+            declarations_f=decls_f + decls_f_tools,
             self_name=SELF_NAME,
             self_repo_url=SELF_REPO_URL,
             self_commit=get_current_commit(pathlib.Path('.')),

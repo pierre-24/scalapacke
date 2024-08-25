@@ -1,5 +1,5 @@
-#ifndef HEADER_SCALAPACKE_BLACS_H
-#define HEADER_SCALAPACKE_BLACS_H
+#ifndef HEADER_SCALAPACKE_H
+#define HEADER_SCALAPACKE_H
 
 /* Header by {{ self_name }}
  * Generated: {{ current_time }}
@@ -7,11 +7,12 @@
  * Version scalapack: {{ scalapack_repo_url }}tree/{{ scalapack_commit }}
  */
 
-#include <blacs.h>
+#include <scalapack.h>
 
 /* Declarations
  */
 {%- for declaration in declarations_f %}
 {{ declaration.to_aliased_decl() }}
 {%- endfor %}
-#endif // HEADER_SCALAPACKE_BLACS_H
+
+#endif // HEADER_SCALAPACKE_H

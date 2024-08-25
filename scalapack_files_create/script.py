@@ -22,6 +22,8 @@ OUTPUTS = {
     },
     'scalapack': {
         'output_header': 'scalapack.h',
+        'output_ml_header': 'scalapacke.h',
+        'output_ml_wrapper': 'scalapacke.c'
     }
 }
 

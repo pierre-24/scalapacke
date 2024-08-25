@@ -143,7 +143,7 @@ class Parser:
         else:
             raise Exception('unknown fortran type {}'.format(inp))
 
-    def decl(self) -> Tuple[str, str, List[Tuple[str, str]]]:
+    def decl(self) -> Tuple[str, str, List[Tuple[str, str, bool]]]:
         name = ''
         rtype = 'void'
         args_def_list = []
@@ -183,6 +183,7 @@ class Parser:
 
         # now, the type for each arg
         param_types = {}
+        param_is_array = {}
         while self.current_token.type != TokenType.EOS:
             self.eat(TokenType.NEWL)
 
@@ -192,10 +193,12 @@ class Parser:
             else:
                 # get type
                 type_ = [self.current_token.value]
+                type_is_array = False
 
                 self.eat(TokenType.WORD)
                 if self.current_token.type == TokenType.STAR:
                     type_.append('*')
+                    type_is_array = True
                     self.next()
                     if self.current_token.type == TokenType.WORD:
                         type_.append(self.current_token.value)
@@ -212,15 +215,18 @@ class Parser:
 
                 while self.current_token.type not in [TokenType.NEWL, TokenType.EOS]:
                     param_name = self.current_token.value
+                    is_array = type_is_array
                     self.eat(TokenType.WORD)
 
                     # seriously, how many star and parenthesis can you put to define an array in fortran?!?
                     if self.current_token.type in [TokenType.LPAR, TokenType.STAR]:
+                        is_array = True
                         self.skip_if(lambda x: x.type != TokenType.RPAR)
                         self.eat(TokenType.RPAR)
 
                     # return a pointer anyway, the intent is guessed from the documentation later on
                     param_types[param_name] = ctype + ('*' if ctype[-1] != '*' else '')
+                    param_is_array[param_name] = is_array
 
                     if self.current_token.type == TokenType.COLON:
                         self.next()
@@ -230,6 +236,6 @@ class Parser:
             if p not in param_types:
                 raise Exception('{} do not have a type?!?'.format(p))
 
-            args_def_list.append((param_types[p], p))
+            args_def_list.append((param_types[p], p, param_is_array[p]))
 
         return name, rtype, args_def_list

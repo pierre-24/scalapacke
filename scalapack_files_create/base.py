@@ -60,26 +60,58 @@ class Declaration:
         )
 
     def to_aliased_decl(self) -> str:
+        arguments = self.arguments
+        return_type = self.return_type
+
+        if len(self.arguments) > 0 and self.arguments[-1].name == 'INFO':
+            if return_type != 'void':
+                raise Exception('info, but already a return type: {} :('.format(self.name))
+
+            arguments = self.arguments[:-1]
+            return_type = 'Int'
 
         return '{} {}{}({});'.format(
-            self.return_type,
+            return_type,
             PREFIX,
             self.name[:-1],
-            ', '.join(a.aliase().to_c_arg() for a in self.arguments)
+            ', '.join(a.aliase().to_c_arg() for a in arguments)
         )
 
     def to_aliased_wrapper(self) -> str:
         name = self.name
+        has_info = False
+        arguments = self.arguments
+        return_type = self.return_type
 
-        return '{} {}{}({}) {{\n    {}{}({});\n}}'.format(
-            self.return_type,
+        if len(self.arguments) > 0 and self.arguments[-1].name == 'INFO':
+            arguments = self.arguments[:-1]
+            has_info = True
+            return_type = 'Int'
+
+        # decl
+        r = '{} {}{}({}) {{\n'.format(
+            return_type,
             PREFIX,
             name[:-1],
-            ', '.join(a.aliase().to_c_arg() for a in self.arguments),
+            ', '.join(a.aliase().to_c_arg() for a in arguments),
+        )
+
+        if has_info:
+            r += '    Int INFO = 0;\n'
+
+        r += '    {}{}({}{});\n'.format(
             'return ' if self.return_type != 'void' else '',
             name,
-            ', '.join('{}{}'.format('&' if x.aliasable() else '', x.name) for x in self.arguments)
+            ', '.join('{}{}'.format('&' if x.aliasable() else '', x.name) for x in arguments),
+            ', &INFO' if has_info else ''
         )
+
+        if has_info:
+            r += '    return INFO;\n'
+
+        r += '}'
+
+        return r
 
     def __repr__(self):
         return '<{}({}, {}, {})>'.format(
