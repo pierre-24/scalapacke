@@ -5,16 +5,16 @@ Lastest version: [v0.2.2](https://github.com/pierre-24/scalapacke/releases/tag/v
 Provide a set of headers and wrappers in order to easily use [scaLAPACK](https://www.netlib.org/scalapack/) (and its components, [PBLAS](https://netlib.org/scalapack/pblas_qref.html) and [BLACS](https://netlib.org/blacs/)) in C.
 Unlike [LAPACKe](https://netlib.org/lapack/lapacke.html), **it is not a Fortran to C translation**, rather a set of lightweight wrappers.
 
-## Usage
+## Installation
 
 ### As a standalone thing
 
 Just download [the latest files](https://github.com/pierre-24/scalapacke/releases/download/v0.2.2/scalapacke_v0.2.2.tar.gz) and add the content of `src/` and `include/` where it fits your requirements.
 Don't forget to:
 
-+ Add the files in your build system (Makefile, CMake, or others),
-+ To include a `scalapack` package ([netlib](https://www.netlib.org/scalapack/), [oneMKL](https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl.html), [AOCL](https://www.amd.com/en/developer/aocl/dense.html), or others) in your build system,
-+ To redefine `Int` if you want use 64-bit integers ("ILP64", in the language of intel MKL).
++ add the files in your build system (Makefile, CMake, or others),
++ include a `scalapack` package ([netlib](https://www.netlib.org/scalapack/), [oneMKL](https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl.html), [AOCL](https://www.amd.com/en/developer/aocl/dense.html), or others) in your build system,
++ redefine `Int` if you want use 64-bit integers ("ILP64", in the language of intel MKL).
 
 ### With Meson
 
@@ -45,3 +45,7 @@ project_dep += scalapacke_dep
 You can check out the options in [`meson_options.txt`](./meson_options.txt).
 
 Don't forget to set `CC=mpicc` before any `meson` command, otherwise it will not recognize the use of MPI.
+
+## Usage
+
+*to be added later.*
