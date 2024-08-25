@@ -5,7 +5,7 @@ authors = [
     {name = "Pierre Beaujean", email = "pierre.beaujean@unamur.be"},
 ]
 description = "Create a set of headers and wrappers for ScaLAPACK in C"
-readme = "README.md"
+readme = "scalapacke_files_create/README.md"
 license = {file = "LICENSE"}
 requires-python = ">=3.11"
 classifiers = [
@@ -26,6 +26,7 @@ dev = [
     "flake8",
     "flake8-quotes",
     "autopep8",
+    "bump2version"
 ]
 
 [project.scripts]
