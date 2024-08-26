@@ -38,6 +38,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      # INSTALL
       - name: Install MPI
         uses: mpi4py/setup-mpi@v1
         with:
@@ -72,30 +73,32 @@ jobs:
         run: |
           ${{ env.AOCLROOT }}/set_aocl_interface_symlink.sh ilp64
 
+      # SETUP
       - name: setup (MKL)
         if: ${{ matrix.la_backend == 'mkl' }}
         run: |
           source ${{ env.ONEAPIROOT }}/setvars.sh
-          meson setup ${{ env.BUILD_DIR }} -Dla_backend=mkl-static-lp64-seq -Dmkl_mpi=${{ matrix.mpi }} --buildtype=debug
+          meson setup ${{ env.BUILD_DIR }} -Dla_backend=mkl-static-lp64-seq -Dmkl_mpi=${{ matrix.mpi }} -Dtests=true -Dtests_nprocs=${{ env.NPROCS }} --buildtype=debug
 
       - name: setup (MKL with ILP64)
         if: ${{ matrix.la_backend == 'mkl+ilp64' }}
         run: |
           source ${{ env.ONEAPIROOT }}/setvars.sh
-          meson setup ${{ env.BUILD_DIR }} -Dla_backend=mkl-static-ilp64-seq -Dmkl_mpi=${{ matrix.mpi }} -Dilp64=true --buildtype=debug
+          meson setup ${{ env.BUILD_DIR }} -Dla_backend=mkl-static-ilp64-seq -Dmkl_mpi=${{ matrix.mpi }} -Dilp64=true -Dtests=true -Dtests_nprocs=${{ env.NPROCS }} --buildtype=debug
 
       - name: setup (AOCL)
         if: ${{ matrix.la_backend == 'aocl' }}
         run: |
           source ${{ env.AOCLROOT }}/amd-libs.cfg
-          meson setup ${{ env.BUILD_DIR }} -Dla_backend=custom -Dla_libraries=scalapack --buildtype=debug
+          meson setup ${{ env.BUILD_DIR }} -Dla_backend=custom -Dla_libraries=scalapack -Dtests=true -Dtests_nprocs=${{ env.NPROCS }} --buildtype=debug
 
       - name: setup (AOCL with ILP64)
         if: ${{ matrix.la_backend == 'aocl+ilp64' }}
         run: |
           source ${{ env.AOCLROOT }}/amd-libs.cfg
-          meson setup ${{ env.BUILD_DIR }} -Dla_backend=custom -Dla_libraries=scalapack -Dilp64=true --buildtype=debug
+          meson setup ${{ env.BUILD_DIR }} -Dla_backend=custom -Dla_libraries=scalapack -Dilp64=true -Dtests=true -Dtests_nprocs=${{ env.NPROCS }} --buildtype=debug
 
+      # TESTs
       - name: Compile & test
         run: |
           if [[ "${{ contains(matrix.la_backend, 'mkl') }}" == "true" ]]; then
@@ -103,5 +106,4 @@ jobs:
           elif  [[ "${{ contains(matrix.la_backend, 'aocl') }}" == "true" ]]; then
             source ${{ env.AOCLROOT }}/amd-libs.cfg
           fi
-          meson configure ${{ env.BUILD_DIR }} -Dtests=true -Dtests_nprocs=${{ env.NPROCS }}
           meson test --print-errorlogs -C ${{ env.BUILD_DIR }}

@@ -51,7 +51,7 @@ endif
 # use 64 bit integers if any
 if get_option('ilp64')
     build_args += '-DInt=long long int'
-    message('using 64-bit integers, please check that the selected `la_backend` is compatible')
+    message('using 64-bit integers, check compatibility with `la_backend`/`la_libraries`')
 endif
 
 # fetch sources and includes
