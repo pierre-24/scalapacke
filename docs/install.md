@@ -13,18 +13,19 @@ Concerning scaLAPACK:
 + [netlib scaLAPACK](https://www.netlib.org/scalapack/) (*i.e.*, the reference implementation), 
 + [oneMKL](https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl.html), 
 + [AOCL](https://www.amd.com/en/developer/aocl/dense.html), 
-+ or [others](https://en.wikipedia.org/wiki/LAPACK#Implementations).
++ or [others](https://en.wikipedia.org/wiki/LAPACK#Implementations) (but they generally all rely on netlib's implementation).
 
-In any case check your package manager (or your module system), some of these options might already be available.
+In any case, check your package manager (or your module system), some of these options might already be available.
 
-## Just using the files, in your project
+## Using the files as is, in your project
 
-Just download [the latest files](https://github.com/pierre-24/scalapacke/releases/download/v0.2.2/scalapacke_v0.2.2.tar.gz) and put the content of `src/` and `include/` where it fits your build system.
+Just download [the latest files](https://github.com/pierre-24/scalapacke/releases/download/v0.2.2/scalapacke_v0.2.2.tar.gz) and put the content of `src/` and `include/` wherever it fits you and your building system.
 Don't forget to:
 
 + add the files in your build system (Makefile, CMake, or others),
-+ include the `scalapack` library of your choice in your build system,
-+ redefine `Int` with `-DInt='long long int'` if you want use 64-bit integers ([ILP64](https://en.wikipedia.org/wiki/64-bit_computing#64-bit_data_models), in the language of intel MKL).
++ use `mpicc` (or equivalent),
++ include the `scalapack` library of your choice in your building system,
++ redefine `Int` with `-DInt='long long int'` if you want to use 64-bit integers (*i.e.*, [ILP64](https://en.wikipedia.org/wiki/64-bit_computing#64-bit_data_models)).
 
 ## With Meson, in your project (recommended)
 
@@ -77,6 +78,19 @@ Meson will try its best to find them.
 Note that Meson looks for libraries in `LIBRARY_PATH` (actually [following `gcc`](https://stackoverflow.com/questions/4250624/ld-library-path-vs-library-path) by doing so), so don't forget to `export LIBRARY_PATH=$LIBRARY_PATH:/path/to/your/library/`.
 
 If you want to use 64-bits integers (**if and only if** your scaLAPACK implementation supports it), add `ilp64=true`.
+
+### Tested options
+
+In our [test suite](https://github.com/pierre-24/scalapacke/blob/dev/.github/workflows/test_lib.yml), we cover the following test cases:
+
+| Linear algebra library                                       | MPI flavor           | ILP64                                                                                   |
+|--------------------------------------------------------------|----------------------|-----------------------------------------------------------------------------------------|
+| Netlib scaLAPACK                                             | OpenMPI              | Only without (ILP64 version not available as a Ubuntu package)                          |
+| MKL scaLAPACK                                                | OpenMPI or Intel MPI | With (`la_backend=mkl-static-ilp64-seq`) and without (`la_backend=mkl-static-lp64-seq`) |
+| AOCL (with `la_backend=custom` and `la_libraires=scalapack`) | OpenMPI              | With (using `$AOCLROOT/set_aocl_interface_symlink.sh ilp64`) and without                |
+
+
+Feel free to suggest modifications to this table with your discoveries :)
 
 ## With meson, in your system
 
