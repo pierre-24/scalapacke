@@ -58,12 +58,10 @@ jobs:
           source /opt/intel/oneapi/setvars.sh
           meson setup ${{ env.BUILD_DIR }} -Dla_backend=mkl-static-ilp64-seq -Dmkl_mpi=${{ matrix.mpi }} -Dilp64=true --buildtype=debug
 
-      - name: Compile
-        run: >-
-          meson compile
-          -C ${{ env.BUILD_DIR }}
-
-      - name: Run unit tests
+      - name: Compile & test
         run: |
+          if [[ "${{ contains(matrix.la_backend, 'mkl') }}" == "true" ]]; then
+            source /opt/intel/oneapi/setvars.sh
+          fi
           meson configure ${{ env.BUILD_DIR }} -Dtests=true -Dtests_nprocs=${{ env.NPROCS }}
           meson test --print-errorlogs -C ${{ env.BUILD_DIR }}
