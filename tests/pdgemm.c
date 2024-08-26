@@ -83,7 +83,7 @@ int main(int argc, char* argv[]) {
         }
 
         // create descriptor for A, B and C
-        SCALAPACKE_descinit(desc_distributed, N, N, blk_size, blk_size, 0, 0, ctx_sys, loc_lld);
+        SCALAPACKE_descinit(desc_distributed, N, N, blk_size, blk_size, 0, 0, ctx_sys, N);
 
         // compute norm of A and B
         work = (double*) calloc(loc_nrows, sizeof(double));
