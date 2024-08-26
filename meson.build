@@ -15,48 +15,43 @@ build_args = [
 
 # linear algebra backend
 la_backend = get_option('la_backend')
-if la_backend == 'netlib'
-    scalapack_dep = dependency('scalapack', required: false)  # Fedora style
-    scalapack_dep2 = dependency('scalapack-openmpi', required: false)  # ubuntu style
-    if scalapack_dep.found()
-        project_dep += scalapack_dep
-    elif scalapack_dep2.found()
-        project_dep += scalapack_dep2
-    else
-        netlib_libraries = [
-            'blas',
-            'lapack',
-            'scalapack',
-            'mpi',
-        ]
+if la_backend == 'custom'
+    foreach lib: get_option('la_libraries')
+        project_dep += cc.find_library(lib, required : true)
+    endforeach
+else
+    project_dep += dependency(la_backend, required: false)
+endif
 
-        foreach name: netlib_libraries
-            project_dep += cc.find_library(name, required: true)
-        endforeach
+# if MKL, add the missing libraries
+if la_backend.contains('mkl')
+
+    mkl_mpi = get_option('mkl_mpi')
+    if mkl_mpi == 'mpich'
+        mkl_mpi = 'intelmpi'
     endif
 
-    build_args += '-DUSE_LA_NETLIB'
-elif la_backend == 'mkl'
-    mkl_libraries = [
-        'm',
-        'mkl_scalapack_lp64',
-        'mkl_intel_lp64',
-        'mkl_core',
-        'mkl_sequential',
-        'mkl_blacs_intelmpi_lp64',
-        'iomp5',
-    ]
+    if la_backend.contains('ilp64')
+        mkl_libraries = [
+            'mkl_scalapack_ilp64',
+            'mkl_blacs_' + mkl_mpi + '_ilp64',
+        ]
+    else
+        mkl_libraries = [
+            'mkl_scalapack_lp64',
+            'mkl_blacs_' + mkl_mpi + '_lp64',
+        ]
+    endif
 
     foreach name: mkl_libraries
         project_dep += cc.find_library(name, required: true)
     endforeach
+endif
 
-    build_args += '-DUSE_LA_MKL'
-elif la_backend == 'custom'
-    foreach lib: get_option('la_libraries')
-        project_dep += cc.find_library(lib, required : true)
-    endforeach
-    build_args += '-DUSE_LA_CUSTOM'
+# use 64 bit integers if any
+if get_option('ilp64')
+    build_args += '-DInt=long long int'
+    message('using 64-bit integers, check compatibility with `la_backend`/`la_libraries`')
 endif
 
 # fetch sources and includes
