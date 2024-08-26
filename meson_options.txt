@@ -9,7 +9,7 @@ option(
     'mkl_mpi',
     type: 'combo',
     value: 'openmpi',
-    choices: ['intelmpi', 'openmpi'],
+    choices: ['intelmpi', 'openmpi', 'mpich'],
     description : 'MPI implementation to be used with MKL'
 )
 

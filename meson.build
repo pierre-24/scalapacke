@@ -25,7 +25,12 @@ endif
 
 # if MKL, add the missing libraries
 if la_backend.contains('mkl')
+
     mkl_mpi = get_option('mkl_mpi')
+    if mkl_mpi == 'mpich'
+        mkl_mpi = 'intelmpi'
+    endif
+
     if la_backend.contains('ilp64')
         mkl_libraries = [
             'mkl_scalapack_ilp64',

@@ -9,6 +9,7 @@ on:
 env:
   BUILD_DIR: _build
   NPROCS: 2
+  CC: mpicc
 
 jobs:
   build:
@@ -47,20 +48,15 @@ jobs:
 
       - name: setup (MKL)
         if: ${{ matrix.la_backend == 'mkl' }}
-        run: >-
-          meson setup ${{ env.BUILD_DIR }} 
-          -Dla_backend=mkl-static-lp64-seq 
-          -Dmkl_mpi=${{ matrix.mpi }} 
-          --buildtype=debug
+        run: |
+          source /opt/intel/oneapi/setvars.sh
+          meson setup ${{ env.BUILD_DIR }} -Dla_backend=mkl-static-lp64-seq -Dmkl_mpi=${{ matrix.mpi }} --buildtype=debug
 
       - name: setup (MKL with ILP64)
         if: ${{ matrix.la_backend == 'mkl+ilp64' }}
-        run: >-
-          meson setup ${{ env.BUILD_DIR }} 
-          -Dla_backend=mkl-static-ilp64-seq 
-          -Dmkl_mpi=${{ matrix.mpi }} 
-          -Dilp64=true 
-          --buildtype=debug
+        run: |
+          source /opt/intel/oneapi/setvars.sh
+          meson setup ${{ env.BUILD_DIR }} -Dla_backend=mkl-static-ilp64-seq -Dmkl_mpi=${{ matrix.mpi }} -Dilp64=true --buildtype=debug
 
       - name: Compile
         run: >-
