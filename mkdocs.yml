@@ -1,0 +1,34 @@
+site_name: Documentation of scaLAPACKe
+
+site_description: "Parser for CP2K basis sets and GTH pseudopotentials, and a webserver to find matching basis and pseudo for your calculations."
+site_url: https://pierrebeaujean.github.io/scalapacke/
+repo_url: "https://github.com/pierre-24/scalapacke"
+edit_uri: "blob/dev/docs/"
+repo_name: "pierre-24/scalapacke"
+
+nav:
+  - Home: index.md
+  - About: about.md
+  - For developers:
+      - Installation: dev/install.md
+      - Quickstart: dev/quickstart.md
+      - Tutorial: dev/tutorial.md
+  - For contributors:
+      - Contributing: contrib/CONTRIBUTING.md
+      - Important notes: contrib/notes.md
+
+
+theme:
+  name: material
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.snippets:
+      check_paths: true
+  - toc:
+      permalink: "¤"

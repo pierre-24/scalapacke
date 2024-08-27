@@ -7,8 +7,14 @@ Unlike [LAPACKe](https://netlib.org/lapack/lapacke.html), **it is not a Fortran 
 
 ## Installation
 
-See [there](docs/install.md).
+See [there](docs/dev/install.md).
 
 ## Usage
 
 *to be added later.*
+
+
+## Contribute
+
+Contributions, either with [issues](https://github.com/pierre-24/scalapacke/issues) or [pull requests](https://github.com/pierre-24/scalapacke/pulls) are welcomed.
+See [this document](./docs/contrib/CONTRIBUTING.md) for ways to do so.

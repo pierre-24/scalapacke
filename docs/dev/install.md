@@ -1,4 +1,4 @@
-# Installation
+# Install scaLAPACKe
 
 Any installation of scaLAPACKe requires at least two things: an implementation of the MPI library, and one of scaLAPACK.
 
@@ -55,7 +55,7 @@ project_dep += scalapacke_dep
 
 **Note:** Don't forget to set `CC=mpicc` (or others) before any `meson` command, otherwise it will not use MPI.
 
-You can check out the options of the project in the [`meson_options.txt`](../meson_options.txt).
+You can check out the options of the project in the [`meson_options.txt`](https://github.com/pierre-24/scalapacke/blob/dev/meson_options.txt).
 In short:
 
 + `la_backend`: select the linear algebra backend (a `pkg-config` file or `custom`),
