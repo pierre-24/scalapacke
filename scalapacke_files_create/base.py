@@ -9,6 +9,7 @@ from typing import List
 
 
 PREFIX = 'SCALAPACKE_'
+INT_TYPE = 'lapack_int'
 
 # pattern
 PATTERN_C_FUNC = re.compile(r'(?P<rtype>\w+) (?P<name>\w+)\((?P<params>.*)\)')
@@ -30,14 +31,14 @@ class DeclArgument:
         return '{}{} {}'.format('const ' if not self.is_output else '', self.ctype, self.name)
 
     def aliasable(self):
-        return not self.is_output and not self.is_array and self.ctype in ['Int*', 'float*', 'double*']
+        return not self.is_output and not self.is_array and self.ctype in ['{}*'.format(INT_TYPE), 'float*', 'double*']
 
     def aliase(self):
         ctype = self.ctype
 
         if not self.is_output and not self.is_array:
-            if ctype == 'Int*':
-                ctype = 'Int'
+            if ctype == '{}*'.format(INT_TYPE):
+                ctype = INT_TYPE
             elif ctype == 'float*':
                 ctype = 'float'
             elif ctype == 'double*':
@@ -68,7 +69,7 @@ class Declaration:
                 raise Exception('info, but already a return type: {} :('.format(self.name))
 
             arguments = self.arguments[:-1]
-            return_type = 'Int'
+            return_type = INT_TYPE
 
         return '{} {}{}({});'.format(
             return_type,
@@ -86,7 +87,7 @@ class Declaration:
         if len(self.arguments) > 0 and self.arguments[-1].name == 'INFO':
             arguments = self.arguments[:-1]
             has_info = True
-            return_type = 'Int'
+            return_type = INT_TYPE
 
         # decl
         r = '{} {}{}({}) {{\n'.format(
@@ -97,7 +98,7 @@ class Declaration:
         )
 
         if has_info:
-            r += '    Int INFO = 0;\n'
+            r += '    {} INFO = 0;\n'.format(INT_TYPE)
 
         r += '    {}{}({}{});\n'.format(
             'return ' if self.return_type != 'void' else '',

@@ -6,6 +6,7 @@ A quick and dirty fortran parser in order to correctly extract a function defini
 import enum
 
 from typing import List, Iterable, Callable, Optional, Tuple
+from scalapacke_files_create.base import INT_TYPE
 
 
 class TokenType(enum.Enum):
@@ -132,7 +133,7 @@ class Parser:
             return 'double'
         elif inp[0] in ['INTEGER', 'LOGICAL']:
             assert len(inp) == 1
-            return 'Int'
+            return INT_TYPE
         elif inp[0] == 'CHARACTER':
             return 'char*'
         elif inp[0] == 'COMPLEX':

@@ -25,7 +25,7 @@ Don't forget to:
 + add the files in your build system (Makefile, CMake, or others),
 + use `mpicc` (or equivalent),
 + include the `scalapack` library of your choice in your building system,
-+ redefine `Int` with `-DInt='long long int'` if you want to use 64-bit integers (*i.e.*, [ILP64](https://en.wikipedia.org/wiki/64-bit_computing#64-bit_data_models)).
++ redefine `lapack_int` with `-Dlapack_int='long long int'` if you want to use 64-bit integers (*i.e.*, [ILP64](https://en.wikipedia.org/wiki/64-bit_computing#64-bit_data_models)).
 
 ## With Meson, in your project (recommended)
 
@@ -55,9 +55,17 @@ project_dep += scalapacke_dep
 
 **Note:** Don't forget to set `CC=mpicc` (or others) before any `meson` command, otherwise it will not use MPI.
 
-### Configuring the build
-
 You can check out the options of the project in the [`meson_options.txt`](../meson_options.txt).
+In short:
+
++ `la_backend`: select the linear algebra backend (a `pkg-config` file or `custom`),
++ `mkl_mpi`: select which MPI implementation should be used (only relevant for MKL),
++ `la_libraries`: manually provide a list of librairies to be used (only relevant if `la_backend=custom`),
++ `ilp64`: use 64-bit integers.
+
+You need to provide either a value to `la_backend` or set `la_backend=custom` and fill `la_libraries`, otherwise it will not build.
+
+### More detail about the options
 
 The most easy way to use scaLAPACKe is to set `la_backend` to a [`pkg-config`](https://en.wikipedia.org/wiki/Pkg-config) file, if your OS supports it (if not, see below).
 Check for valid options with:
@@ -69,17 +77,17 @@ pkg-config --list-all | grep scalapack
 For example, on Ubuntu 24.04, something like `default_options: ['la_backend=scalapack-openmpi']` should be used.
 Note that this generally force the choice of an MPI implementation as well.
 
-If you want to use oneMKL, intel developers are nice enough to provide some `pkg-config` files, see [there](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-math-kernel-library-intel-mkl-and-pkg-config-tool.html).
+If you want to use oneMKL, intel developers are nice enough to provide some `pkg-config` files as well, see [there](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-math-kernel-library-intel-mkl-and-pkg-config-tool.html).
 However, those files do not contain scaLAPACK, so our `meson.build` tries to be clever about it, and needs an extra option, `mkl_mpi` which can be either `openmpi` or `intelmpi` (equivalent to MPICH).
 For example, a choice could be `default_options: ['la_backend=mkl-static-lp64-seq', 'mkl_mpi=openmpi']`.
 
-If you want to use custom or exotic libraries, you can set `la_backend=custom` and provide a list of libraries with `la_libraries=lib1,lib2,...`.
+If you want to use custom or exotic libraries (such as AOCL) that do not provide a `pkg-config` file, you can set `la_backend=custom` and provide a list of libraries with `la_libraries=lib1,lib2,...`.
 Meson will try its best to find them.
-Note that Meson looks for libraries in `LIBRARY_PATH` (actually [following `gcc`](https://stackoverflow.com/questions/4250624/ld-library-path-vs-library-path) by doing so), so don't forget to `export LIBRARY_PATH=$LIBRARY_PATH:/path/to/your/library/`.
+Note that Meson looks for libraries in `LIBRARY_PATH` (actually [following `gcc`](https://stackoverflow.com/questions/4250624/ld-library-path-vs-library-path) by doing so), so don't forget to `export LIBRARY_PATH=$LIBRARY_PATH:/path/to/your/library/` if any.
 
 If you want to use 64-bits integers (**if and only if** your scaLAPACK implementation supports it), add `ilp64=true`.
 
-### Tested options
+### Tested builds
 
 In our [test suite](https://github.com/pierre-24/scalapacke/blob/dev/.github/workflows/test_lib.yml), we cover the following test cases:
 
@@ -102,7 +110,7 @@ cd scalapacke
 
 # setup (don't forget to set the different options)
 export CC=mpicc
-meson setup _build -Dla_backend=<SEE_ABOVE>
+meson setup _build  # /!\ see below
 
 # compile
 meson compile -C _build
@@ -115,3 +123,5 @@ meson test -C _build
 meson configure _build --prefix=$HOME/.local
 meson install -C _build
 ```
+
+Note that any of the option discussed in the previous section should be added to the `meson setup` line, prefixed by `-D`, *e.g.*, `-Dla_backend=scalapack-openmpi`, `-Dilp64=true`, etc.
