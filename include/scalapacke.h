@@ -1,12 +1,6 @@
 #ifndef HEADER_SCALAPACKE_H
 #define HEADER_SCALAPACKE_H
 
-/* Header by scalapacke_files_create.create_scalapack
- * Generated: 2024-08-27 15:38:22.898492
- * Version scalapacke_files_create.create_scalapack: https://github.com/pierre-24/scalapack-c-headers/tree/086fa86f
- * Version scalapack: https://github.com/Reference-ScaLAPACK/scalapack/tree/25935e1a
- */
-
 #include <scalapack.h>
 
 /* Declarations
