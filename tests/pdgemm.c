@@ -28,15 +28,15 @@
 
 int main(int argc, char* argv[]) {
     // constants
-    Int N = 256, blk_size = 32, M  = N * (N-1) * (2 * N - 1) / 6;
+    lapack_int N = 256, blk_size = 32, M  = N * (N-1) * (2 * N - 1) / 6;
 
     // global
-    Int nprocs, ctx_sys, glob_nrows, glob_ncols, glob_i, glob_j;
+    lapack_int nprocs, ctx_sys, glob_nrows, glob_ncols, glob_i, glob_j;
     double norm_A, norm_B, norm_res;
 
     // local
-    Int  iam, loc_row, loc_col, loc_nrows, loc_ncols, loc_lld;
-    Int desc_distributed[9];
+    lapack_int  iam, loc_row, loc_col, loc_nrows, loc_ncols, loc_lld;
+    lapack_int desc_distributed[9];
     double *A, *B, *C, *work;
 
     // initialize BLACS & system context
@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
     SCALAPACKE_blacs_get(0, 0, &ctx_sys);
 
     // create the grid
-    glob_nrows = (Int) sqrt((double) nprocs);
+    glob_nrows = (lapack_int) sqrt((double) nprocs);
     glob_ncols = nprocs / glob_nrows;
 
     SCALAPACKE_blacs_gridinit(&ctx_sys, "R", glob_nrows, glob_ncols);
@@ -70,10 +70,10 @@ int main(int argc, char* argv[]) {
         }
 
         // fill arrays locally
-        for(Int loc_j=0; loc_j < loc_ncols; loc_j++) {
+        for(lapack_int loc_j=0; loc_j < loc_ncols; loc_j++) {
             // translate local j to global j
             glob_j = SCALAPACKE_indxl2g(loc_j + 1 /* fortran starts at one */, blk_size, loc_col, 0, glob_ncols) - 1;
-            for(Int loc_i=0; loc_i < loc_nrows; loc_i++) {
+            for(lapack_int loc_i=0; loc_i < loc_nrows; loc_i++) {
                 glob_i = SCALAPACKE_indxl2g(loc_i + 1, blk_size, loc_row, 0, glob_nrows) - 1;
 
                 // set A[i,j] and B[i,j]

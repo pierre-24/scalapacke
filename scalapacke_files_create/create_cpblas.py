@@ -10,7 +10,7 @@ from scalapacke_files_create.create_cblacs import find_c_decl
 SELF_NAME = __name__
 
 DEFINES = [
-    ('Int', 'int'),
+    ('lapack_int', 'int'),
 ]
 
 PATTERN_ARG_DOC = re.compile(r'\s{0,3}\*\s{1,3}(?P<name>\w*)\s+\((?P<intent>.*)\)(?P<extra>.*)?')

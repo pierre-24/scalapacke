@@ -10,7 +10,7 @@ from scalapacke_files_create.fortran import Parser as FParser
 SELF_NAME = __name__
 
 DEFINES = [
-    ('Int', 'int'),
+    ('lapack_int', 'int'),
 ]
 
 PATTERN_ARG_DOC = re.compile(r'\s{0,3}\*\s{1,6}(?P<name>\w*)\s+\((?P<intent>.*?)\)(?P<extra>.*)?')
@@ -250,7 +250,7 @@ def create_scalapack_headers_and_wrapper(
         raise Exception('{} is not a directory, did you clone {}?'.format(root, SCALAPACK_REPO_URL))
 
     decls_f = find_decls(root)
-    decls_f.sort(key=lambda x: x.name[2:] + x.name[1])
+    decls_f.sort(key=lambda x: x.name[2:] + x.name[1] if x.name[0] == 'p' else x.name[1:] + x.name[0])
     decls_f_tools = find_decls(root_tools)
     decls_f_tools.sort(key=lambda x: x.name)
 

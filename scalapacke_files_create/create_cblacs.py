@@ -9,12 +9,12 @@ from scalapacke_files_create.base import Declaration, get_current_commit, jinja_
 SELF_NAME = __name__
 
 TO_DEFINE = [
-    ('Int', 'int'),
+    ('lapack_int', 'int'),
 ]
 
 TO_REPLACE = {
     'F_VOID_FUNC': 'void',
-    'F_INT_FUNC': 'Int',
+    'F_INT_FUNC': 'lapack_int',
     'F_DOUBLE_FUNC': 'double',
     'F_CHAR': 'char*',
     'F_CHAR_T': 'char*'
@@ -44,64 +44,64 @@ def _p(inp: str, r: int = 0) -> DeclArgument:
 
 BLACS_DECLS = [
     # blacs*() functions do not come with a documentation, so manually handle them
-    Declaration('blacs_abort_', 'void', [_p('Int* ConTxt'), _p('Int* ErrNo')]),
-    Declaration('blacs_barrier_', 'void', [_p('Int* ConTxt'), _p('char* scope')]),
-    Declaration('blacs_exit_', 'void', [_p('Int* NotDone')]),
-    Declaration('blacs_freebuff_', 'void', [_p('Int* ConTxt'), _p('Int* wait')]),
+    Declaration('blacs_abort_', 'void', [_p('lapack_int* ConTxt'), _p('lapack_int* ErrNo')]),
+    Declaration('blacs_barrier_', 'void', [_p('lapack_int* ConTxt'), _p('char* scope')]),
+    Declaration('blacs_exit_', 'void', [_p('lapack_int* NotDone')]),
+    Declaration('blacs_freebuff_', 'void', [_p('lapack_int* ConTxt'), _p('lapack_int* wait')]),
     Declaration('blacs_get_', 'void', [
-        _p('Int* ConTxt', ),
-        _p('Int* what'),
-        _p('Int* val', 1)
+        _p('lapack_int* ConTxt', ),
+        _p('lapack_int* what'),
+        _p('lapack_int* val', 1)
     ]),
-    Declaration('blacs_gridexit_', 'void', [_p('Int* ConTxt')]),
+    Declaration('blacs_gridexit_', 'void', [_p('lapack_int* ConTxt')]),
     Declaration('blacs_gridinfo_', 'void', [
-        _p('Int* ConTxt'),
-        _p('Int* nprow', 1),
-        _p('Int* npcol', 1),
-        _p('Int* myrow', 1),
-        _p('Int* mycol', 1)
+        _p('lapack_int* ConTxt'),
+        _p('lapack_int* nprow', 1),
+        _p('lapack_int* npcol', 1),
+        _p('lapack_int* myrow', 1),
+        _p('lapack_int* mycol', 1)
     ]),
     Declaration('blacs_gridinit_', 'void', [
-        _p('Int* ConTxt', 1),
+        _p('lapack_int* ConTxt', 1),
         _p('char* order'),
-        _p('Int* nprow',),
-        _p('Int* npcol'),
+        _p('lapack_int* nprow',),
+        _p('lapack_int* npcol'),
     ]),
     Declaration('blacs_gridmap_', 'void', [
-        _p('Int* ConTxt', 1),
-        _p('Int* usermap', 1),
-        _p('Int* ldup'),
-        _p('Int* nprow0'),
-        _p('Int* npcol0'),
+        _p('lapack_int* ConTxt', 1),
+        _p('lapack_int* usermap', 1),
+        _p('lapack_int* ldup'),
+        _p('lapack_int* nprow0'),
+        _p('lapack_int* npcol0'),
     ]),
     Declaration('blacs_pcoord_', 'void', [
-        _p('Int* ConTxt'),
-        _p('Int* nodenum'),
-        _p('Int* prow', 1),
-        _p('Int* pcol', 1)
+        _p('lapack_int* ConTxt'),
+        _p('lapack_int* nodenum'),
+        _p('lapack_int* prow', 1),
+        _p('lapack_int* pcol', 1)
     ]),
     Declaration('blacs_pinfo_', 'void', [
-        _p('Int* mypnum', 1),
-        _p('Int* nprocs', 1),
+        _p('lapack_int* mypnum', 1),
+        _p('lapack_int* nprocs', 1),
     ]),
-    Declaration('blacs_pnum_', 'Int', [
-        _p('Int* ConTxt'),
-        _p('Int* prow'),
-        _p('Int* pcol')
+    Declaration('blacs_pnum_', 'lapack_int', [
+        _p('lapack_int* ConTxt'),
+        _p('lapack_int* prow'),
+        _p('lapack_int* pcol')
     ]),
     Declaration('blacs_set_', 'void', [
-        _p('Int* ConTxt'),
-        _p('Int* what'),
-        _p('Int* val', 1)
+        _p('lapack_int* ConTxt'),
+        _p('lapack_int* what'),
+        _p('lapack_int* val', 1)
     ]),
     Declaration('blacs_setup_', 'void', [
-        _p('Int* mypnum', 1),
-        _p('Int* nprocs', 1),
+        _p('lapack_int* mypnum', 1),
+        _p('lapack_int* nprocs', 1),
     ]),
     Declaration('blacs2sys_handle_', 'MPI_Comm', [
-        _p('Int* BlacsCtxt')
+        _p('lapack_int* BlacsCtxt')
     ]),
-    Declaration('sys2blacs_handle_', 'Int', [
+    Declaration('sys2blacs_handle_', 'lapack_int', [
         _p('MPI_Comm* SysCtxt')
     ]),
 ]
@@ -125,7 +125,11 @@ def find_c_decl(inp: str) -> Declaration:
         for param in args.split(','):
             match_arg = PATTERN_C_ARG.match(param.strip())
             arg_name = match_arg.group('name')
-            arg_ctype = match_arg.group('type') + ('*' if match_arg.group('ptr') else '')
+
+            arg_ctype = match_arg.group('type')
+            if arg_ctype == 'Int':
+                arg_ctype = 'lapack_int'
+            arg_ctype += ('*' if match_arg.group('ptr') else '')
             if arg_ctype in TO_REPLACE:
                 arg_ctype = TO_REPLACE[arg_ctype]
 
