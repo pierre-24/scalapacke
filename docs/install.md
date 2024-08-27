@@ -83,12 +83,11 @@ If you want to use 64-bits integers (**if and only if** your scaLAPACK implement
 
 In our [test suite](https://github.com/pierre-24/scalapacke/blob/dev/.github/workflows/test_lib.yml), we cover the following test cases:
 
-| Linear algebra library                                       | MPI flavor           | ILP64                                                                                   |
-|--------------------------------------------------------------|----------------------|-----------------------------------------------------------------------------------------|
-| Netlib scaLAPACK                                             | OpenMPI              | Only without (ILP64 version not available as a Ubuntu package)                          |
-| MKL scaLAPACK                                                | OpenMPI or Intel MPI | With (`la_backend=mkl-static-ilp64-seq`) and without (`la_backend=mkl-static-lp64-seq`) |
-| AOCL (with `la_backend=custom` and `la_libraires=scalapack`) | OpenMPI              | With (using `$AOCLROOT/set_aocl_interface_symlink.sh ilp64`) and without                |
-
+| Linear algebra library                                       | MPI flavor           | Can use ILP64?                                                                                     |
+|--------------------------------------------------------------|----------------------|----------------------------------------------------------------------------------------------------|
+| Netlib scaLAPACK                                             | OpenMPI              | No (ILP64 version not available as a Ubuntu package)                                               |
+| MKL scaLAPACK                                                | OpenMPI or Intel MPI | Yes (`la_backend=mkl-static-ilp64-seq`) and no (`la_backend=mkl-static-lp64-seq`)                  |
+| AOCL (with `la_backend=custom` and `la_libraires=scalapack`) | OpenMPI              | No (and probably yes, using `$AOCLROOT/set_aocl_interface_symlink.sh ilp64`, but unstable, see #3) |
 
 Feel free to suggest modifications to this table with your discoveries :)
 
