@@ -9,3 +9,9 @@
     That being said, this document tries to help you entering this (rather obscure?) world.
 
 xxx.
+
+## Sources
+
++ <https://info.gwdg.de/wiki/doku.php?id=wiki:hpc:scalapack>
++ <https://gitlab.phys.ethz.ch/hpcse_fs15/lecture>
++ <https://andyspiros.wordpress.com/2011/07/08/an-example-of-blacs-with-c/>
