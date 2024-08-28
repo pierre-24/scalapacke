@@ -1,39 +1,45 @@
-# Contributors' notes
+# Contributors' Notes
 
-A few notes about the project and how to contribute efficiently :)
+Here are some important notes to help you contribute to the project efficiently :)
 
-## Architecture
+## Project Architecture
 
-This project is divided in three parts:
+The project is organized into three main parts:
 
-1. The actual set of headers and C wrapper files, located in `include/` and `src/`, respectively.
-   They are (partially) backed by a few tests, located in `tests/`.
-2. A set of scripts to manage the repository, located in `scripts/`.
-3. A set of Python script, which helps to generate the headers and wrappers, located in `scalapacke_files_create`.
+1. **Headers and C Wrappers**: Located in the `include/` and `src/` directories, respectively.
+   These files are partially tested, with tests found in the `tests/` directory.
 
-The main build tool is [Meson build system](https://github.com/mesonbuild/meson), which allows [to build the library and run tests](../dev/install.md#with-meson-in-your-project-recommended).
+2. **Repository Management Scripts**:
+   Located in the `scripts/` directory, these scripts help manage various aspects of the repository.
 
-### About the C files
+3. **Python Scripts for Code Generation**:
+   Located in the `scalapacke_files_create/` directory, these scripts assist in generating the headers and wrapper files.
 
-For the moment, the files are auto-generated (see below), with no human intervention so far.
-They are not very human-friendly, thought.
+The primary build tool used is the [Meson build system](https://github.com/mesonbuild/meson), which facilitates both [building the library and running tests](../dev/install.md#with-meson-in-your-project-recommended).
 
-### About the scripts
+### C Files
 
-+ `scripts/package_it.yml` is used by [the GitHub action](https://github.com/pierre-24/scalapacke/blob/dev/.github/workflows/publish.yml) in charge of creating a Meson wrap file for each release.
-   You can manually run it to check if everything is ok.
-+ `scripts/release_it.sh` is a script using [`bump2version`](https://pypi.org/project/bump2version/) in order to upgrade the version number everywhere and trigger the creation of a new release.
-  It is probably **not** a good idea to run it if you don't have the proper right on the repo.
+Currently, the C files are auto-generated (see below) with no human intervention. 
+As a result, they might not be very human-friendly.
 
-### About the python scripts
+### Repository Management Scripts
 
-`scaLAPACKe_create` is a script that create headers and wrappers, feeding from the scaLAPACK reference repository.
+- **`scripts/package_it.yml`**: Used by the [GitHub Action](https://github.com/pierre-24/scalapacke/blob/dev/.github/workflows/publish.yml) responsible for creating a Meson wrap file for each release. 
+  You can run it manually to verify everything is functioning correctly.
+
+- **`scripts/release_it.sh`**: A script that uses [`bump2version`](https://pypi.org/project/bump2version/) to increment the version number across the project and trigger the creation of a new release. 
+  It is probably not advisable to run this script unless you have the appropriate permissions on the repository.
+
+### Python Scripts
+
+- **`scaLAPACKe_create`**: A script that generates the headers and wrappers, based on the scaLAPACK reference repository.
 
 !!! warning
+    
+    The generated files should not be blindly copied into `src/` and `include/`. 
+    Although the script is designed to produce results similar to those already in the repository, there might be manual optimizations or bug fixes in place. 
+    Proceed with caution!
 
-    Note that the resulting files should not be blindly copy-pasted in `src/` and `include/`.
-    While this command should provide similar results, they are not necessary equivalent if some manual optimization/bugfix is required. 
-    Be careful!
 
 The workflow is something like:
 

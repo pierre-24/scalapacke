@@ -54,8 +54,8 @@ Some tips:
     meson test -C _build/
     ```
 
-  Indeed, the code follows the [PEP-8 style recommendations](http://legacy.python.org/dev/peps/pep-0008/), checked by [`flake8`](https://flake8.pycqa.org/en/latest/), for the python part.
-  Having an extensive test suite is also a good idea to prevent regressions.
+    Indeed, the code follows the [PEP-8 style recommendations](http://legacy.python.org/dev/peps/pep-0008/), checked by [`flake8`](https://flake8.pycqa.org/en/latest/), for the python part.
+    Having an extensive test suite is also a good idea to prevent regressions.
 
 + If you want to see and edit the doc, you can run the `mkdocs` webserver:
 

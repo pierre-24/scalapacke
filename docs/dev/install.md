@@ -1,31 +1,36 @@
-# Install scaLAPACKe
+# Installing scaLAPACKe
 
-Any installation of scaLAPACKe requires at least two things: an implementation of the MPI library, and one of scaLAPACK.
+To install scaLAPACKe, you'll need two key components: an MPI library implementation and a scaLAPACK implementation.
 
-Concerning MPI, popular options are:
+Popular MPI options include:
 
-+ [OpenMPI](https://www.open-mpi.org/),
-+ [MPICH](https://www.mpich.org/),
-+ or [others](https://en.wikipedia.org/wiki/Message_Passing_Interface#Official_implementations) (but they generally derive from the previous ones).
+- [OpenMPI](https://www.open-mpi.org/)
+- [MPICH](https://www.mpich.org/)
+- [Other implementations](https://en.wikipedia.org/wiki/Message_Passing_Interface#Official_implementations) (most are derivatives of the above)
 
-Concerning scaLAPACK:
+For scaLAPACK, consider the following:
 
-+ [netlib scaLAPACK](https://www.netlib.org/scalapack/) (*i.e.*, the reference implementation), 
-+ [oneMKL](https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl.html), 
-+ [AOCL](https://www.amd.com/en/developer/aocl/dense.html), 
-+ or [others](https://en.wikipedia.org/wiki/LAPACK#Implementations) (but they generally all rely on netlib's implementation).
+- [Netlib scaLAPACK](https://www.netlib.org/scalapack/) (the reference implementation)
+- [oneMKL](https://www.intel.com/content/www/us/en/developer/tools/oneapi/onemkl.html)
+- [AOCL](https://www.amd.com/en/developer/aocl/dense.html)
+- [Other implementations](https://en.wikipedia.org/wiki/LAPACK#Implementations) (usually based on netlib's version)
 
-In any case, check your package manager (or your module system), some of these options might already be available.
+Check your package manager or module system, as some of these libraries might already be available on your system.
 
-## Using the files as is, in your project
+## Using the files in your project
 
-Just download [the latest files](https://github.com/pierre-24/scalapacke/releases/download/v0.2.3/scalapacke_v0.2.3.tar.gz) and put the content of `src/` and `include/` wherever it fits you and your building system.
-Don't forget to:
+To use scaLAPACKe in your project, follow these steps:
 
-+ add the files in your build system (Makefile, CMake, or others),
-+ use `mpicc` (or equivalent),
-+ include the `scalapack` library of your choice in your building system,
-+ redefine `lapack_int` with `-Dlapack_int='long long int'` if you want to use 64-bit integers (*i.e.*, [ILP64](https://en.wikipedia.org/wiki/64-bit_computing#64-bit_data_models)).
+1. Download [the latest release](https://github.com/pierre-24/scalapacke/releases/download/v0.2.2/scalapacke_v0.2.2.tar.gz).
+2. Extract the contents of the `src/` and `include/` directories to a suitable location within your project.
+
+Make sure to:
+
+- Add the extracted files to your build system (e.g., Makefile, CMake).
+- Use `mpicc` (or an equivalent MPI compiler wrapper) to compile your project.
+- Link against the scaLAPACK library of your choice.
+- If using 64-bit integers (ILP64), redefine `lapack_int` with `-Dlapack_int='long long int'` in your compiler options. 
+  Learn more about ILP64 [here](https://en.wikipedia.org/wiki/64-bit_computing#64-bit_data_models).
 
 ## With Meson, in your project (recommended)
 
@@ -55,20 +60,18 @@ project_dep += scalapacke_dep
 
 **Note:** Don't forget to set `CC=mpicc` (or others) before any `meson` command, otherwise it will not use MPI.
 
-You can check out the options of the project in the [`meson_options.txt`](https://github.com/pierre-24/scalapacke/blob/dev/meson_options.txt).
-In short:
+You can configure the project by adjusting the options found in the [`meson_options.txt`](https://github.com/pierre-24/scalapacke/blob/dev/meson_options.txt) file. Here's a quick overview:
 
-+ `la_backend`: select the linear algebra backend (a `pkg-config` file or `custom`),
-+ `mkl_mpi`: select which MPI implementation should be used (only relevant for MKL),
-+ `la_libraries`: manually provide a list of librairies to be used (only relevant if `la_backend=custom`),
-+ `ilp64`: use 64-bit integers.
+- **`la_backend`**: Select the linear algebra backend, either by specifying a `pkg-config` file or setting it to `custom`.
+- **`mkl_mpi`**: Choose the MPI implementation to use (relevant only for MKL).
+- **`la_libraries`**: Manually specify a list of libraries (relevant only if `la_backend=custom`).
+- **`ilp64`**: Enable 64-bit integers.
 
-You need to provide either a value to `la_backend` or set `la_backend=custom` and fill `la_libraries`, otherwise it will not build.
+To successfully build the project, you must either provide a value for `la_backend` or set `la_backend=custom` and define `la_libraries`.
 
-### More detail about the options
+### Detailed options' description
 
-The most easy way to use scaLAPACKe is to set `la_backend` to a [`pkg-config`](https://en.wikipedia.org/wiki/Pkg-config) file, if your OS supports it (if not, see below).
-Check for valid options with:
+The simplest way to configure scaLAPACKe is by setting `la_backend` to a valid [`pkg-config`](https://en.wikipedia.org/wiki/Pkg-config) file, if supported by your OS. To find available options, run:
 
 ```bash
 pkg-config --list-all | grep scalapack
@@ -77,13 +80,19 @@ pkg-config --list-all | grep scalapack
 For example, on Ubuntu 24.04, something like `default_options: ['la_backend=scalapack-openmpi']` should be used.
 Note that this generally force the choice of an MPI implementation as well.
 
-If you want to use oneMKL, intel developers are nice enough to provide some `pkg-config` files as well, see [there](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-math-kernel-library-intel-mkl-and-pkg-config-tool.html).
-However, those files do not contain scaLAPACK, so our `meson.build` tries to be clever about it, and needs an extra option, `mkl_mpi` which can be either `openmpi` or `intelmpi` (equivalent to MPICH).
-For example, a choice could be `default_options: ['la_backend=mkl-static-lp64-seq', 'mkl_mpi=openmpi']`.
+This generally also selects an MPI implementation.
 
-If you want to use custom or exotic libraries (such as AOCL) that do not provide a `pkg-config` file, you can set `la_backend=custom` and provide a list of libraries with `la_libraries=lib1,lib2,...`.
-Meson will try its best to find them.
-Note that Meson looks for libraries in `LIBRARY_PATH` (actually [following `gcc`](https://stackoverflow.com/questions/4250624/ld-library-path-vs-library-path) by doing so), so don't forget to `export LIBRARY_PATH=$LIBRARY_PATH:/path/to/your/library/` if any.
+If you're using oneMKL, Intel provides several `pkg-config` files, as detailed [here](https://www.intel.com/content/www/us/en/developer/articles/technical/intel-math-kernel-library-intel-mkl-and-pkg-config-tool.html). 
+However, these files don't include scaLAPACK, so our `meson.build` script requires an additional `mkl_mpi` option, which can be set to `openmpi` or `intelmpi` (equivalent to `mpich`). 
+An example configuration might be: `default_options: ['la_backend=mkl-static-lp64-seq', 'mkl_mpi=openmpi']`.
+
+For custom or non-standard libraries (like AOCL) without a `pkg-config` file, set `la_backend=custom` and specify the libraries using `la_libraries=lib1,lib2,...`. 
+Meson will attempt to locate them. 
+Ensure that your `LIBRARY_PATH` is correctly set by exporting it if necessary: 
+
+```bash
+export LIBRARY_PATH=$LIBRARY_PATH:/path/to/your/library/
+```
 
 If you want to use 64-bits integers (**if and only if** your scaLAPACK implementation supports it), add `ilp64=true`.
 
