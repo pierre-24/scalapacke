@@ -1,4 +1,4 @@
-# ScaLAPACKe C headers and wrappers
+# ScaLAPACKe: C headers and wrappers for scaLAPACK
 
 Lastest version: [v0.2.3](https://github.com/pierre-24/scalapacke/releases/tag/v0.2.3), corresponding to [scaLAPACK v2.2.0](https://github.com/Reference-ScaLAPACK/scalapack/releases/tag/v2.2.0).
 
@@ -7,14 +7,15 @@ Unlike [LAPACKe](https://netlib.org/lapack/lapacke.html), **it is not a Fortran 
 
 ## Installation
 
-See [there](docs/dev/install.md).
+See [the documentation](https://pierre-24.github.io/scalapacke/dev/install/).
+
+If you want to learn how to use scaLAPACK(e), also check out [the tutorial](https://pierre-24.github.io/scalapacke/dev/tutorial/). 
 
 ## Usage
 
-*to be added later.*
-
+Check out [this page](https://pierre-24.github.io/scalapacke/dev/quickstart/).
 
 ## Contribute
 
 Contributions, either with [issues](https://github.com/pierre-24/scalapacke/issues) or [pull requests](https://github.com/pierre-24/scalapacke/pulls) are welcomed.
-See [this document](./docs/contrib/CONTRIBUTING.md) for ways to do so.
+See [this page ](https://pierre-24.github.io/scalapacke/contrib/CONTRIBUTING/) for ways to do so.
