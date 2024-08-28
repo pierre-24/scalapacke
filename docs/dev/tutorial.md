@@ -162,24 +162,25 @@ These interfaces share a common set of conventions:
 
 ## Let's code!
 
-In the previous sections, we have seen that there exists a logic in both BLAS and LAPACK that extends to scaLAPACK(e).
+In the previous sections, we've explored the underlying logic of both BLAS and LAPACK, which extends naturally to scaLAPACK(e).
 
-To fully use scaLAPACK(e), one however needs to embrace the [SPDM](https://en.wikipedia.org/wiki/Single_program,_multiple_data) paradigm.
-In short, in order to execute our program in parallel, a command (`mpiexec`, see below) will launch multiple **processes**, each of which is an independent (and autonomous) instance executing the same program (and not necessarily located on the same computer as long as communication is possible).
-At runtime, each process is provided:
+However, to fully leverage scaLAPACK(e), it's essential to embrace the [SPMD](https://en.wikipedia.org/wiki/Single_program,_multiple_data) (Single Program, Multiple Data) paradigm. 
+In this model, parallel execution is achieved by launching multiple **processes** using a command like `mpiexec` (details below). 
+Each process is an independent and autonomous instance executing the same program, possibly on different computers, provided they can communicate with each other. 
+During execution, each process is assigned:
 
-+ a **rank**, which is a unique identifier among all process which allows to identify itself (and differentiate its behavior if any), and 
-+ ways to communicate with other processes.
+- a **rank**, a unique identifier among all processes that allows it to identify itself and potentially modify its behavior, and
+- mechanisms to communicate with other processes.
 
-While the SPDM model alleviates most of the problems due to shared memory found in thread-only parallelism (since each process has its own, private, memory), it requires to share data between processes efficiently.
-[Deadloks](https://en.wikipedia.org/wiki/Deadlock_(computer_science)) are also more common. 
+While the SPMD model avoids many issues related to shared memory in thread-based parallelism (since each process has its own private memory), it necessitates efficient data sharing between processes. 
+Additionally, [deadlocks](https://en.wikipedia.org/wiki/Deadlock_(computer_science)) are more common with this model, due to the need of explicit synchronization.
 
-Nevertheless, in order to use a given scaLAPACKe function, four steps should be followed:
+To effectively use a scaLAPACKe function, follow these four steps:
 
-1. initialize a process grid, *i.e.*, map the different processes to a position in a virtual grid,
-2. distribute the vectors/matrices on that grid, 
-3. call the function, and
-4. release both the matrices and the grid.
+1. Initialize a process grid, mapping the different processes to positions in a virtual grid.
+2. Distribute the vectors/matrices across this grid.
+3. Call the desired scaLAPACKe function.
+4. Release the matrices and the grid once the computation is complete.
 
 
 ### 1. Initialize the grid
