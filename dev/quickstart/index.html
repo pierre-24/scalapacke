@@ -1,0 +1,937 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Parser for CP2K basis sets and GTH pseudopotentials, and a webserver to find matching basis and pseudo for your calculations.">
+      
+      
+      
+        <link rel="canonical" href="https://pierrebeaujean.github.io/scalapacke/dev/quickstart/">
+      
+      
+        <link rel="prev" href="../install/">
+      
+      
+        <link rel="next" href="../tutorial/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.33">
+    
+    
+      
+        <title>Quickstart - Documentation of scaLAPACKe</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.3cba04c6.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#quickstart-into-production" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Documentation of scaLAPACKe" class="md-header__button md-logo" aria-label="Documentation of scaLAPACKe" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Documentation of scaLAPACKe
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Quickstart
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/pierre-24/scalapacke" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pierre-24/scalapacke
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Documentation of scaLAPACKe" class="md-nav__button md-logo" aria-label="Documentation of scaLAPACKe" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Documentation of scaLAPACKe
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/pierre-24/scalapacke" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.6.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    pierre-24/scalapacke
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    About
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    For developers
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            For developers
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../install/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Installation
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Quickstart
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Quickstart
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#common-features-and-caveats-for-both-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Features and Caveats for Both Interfaces
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-low-level-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      The low-level interface
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-middle-level-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      The middle-level interface
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorial/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Tutorial
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    For contributors
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            For contributors
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contrib/CONTRIBUTING/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Contributing
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contrib/notes/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Important notes
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#common-features-and-caveats-for-both-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      Common Features and Caveats for Both Interfaces
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-low-level-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      The low-level interface
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-middle-level-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      The middle-level interface
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+  
+
+
+<h1 id="quickstart-into-production">Quickstart into production<a class="headerlink" href="#quickstart-into-production" title="Permanent link">¤</a></h1>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>This guide assumes you're already familiar with scaLAPACK and are looking to use the C wrappers provided by scaLAPACKe. 
+If you're new to scaLAPACK, please <a href="../tutorial/">check out the tutorial</a> instead.</p>
+</div>
+<p>Currently, scaLAPACKe offers both a <a href="#the-low-level-interface">low-level</a> and a <a href="#the-middle-level-interface">middle-level</a> interface. 
+The main difference between the two is that the middle-level interface uses <em>pass-by-value</em> for arguments.</p>
+<h2 id="common-features-and-caveats-for-both-interfaces">Common Features and Caveats for Both Interfaces<a class="headerlink" href="#common-features-and-caveats-for-both-interfaces" title="Permanent link">¤</a></h2>
+<ul>
+<li>
+<p>Variables of Fortran type <code>INTEGER</code> and <code>LOGICAL</code> are converted to <code>lapack_int</code> in scaLAPACKe. 
+  This conversion supports the use of 64-bit integers through the <a href="https://en.wikipedia.org/wiki/64-bit_computing#64-bit_data_models">ILP64 programming model</a>.</p>
+</li>
+<li>
+<p>Variables of Fortran type <code>COMPLEX</code> and <code>COMPLEX*16</code> are converted to <code>float*</code> and <code>double*</code>, respectively.</p>
+</li>
+<li>
+<p>Arrays are passed as pointers, not as pointers to pointers. 
+  They should be stored in Fortran style, i.e., <a href="https://en.wikipedia.org/wiki/Row-_and_column-major_order">column-major order</a>: for an <code>MxN</code> matrix (where <code>M</code> is the number of rows and <code>N</code> is the number of columns), <code>A(i,j)</code> is accessed as <code>A[i + j * LDA]</code>, where <code>LDA</code> is the <em>leading dimension</em> of <code>A</code> (typically the number of rows, <code>M</code>).</p>
+</li>
+<li>
+<p>Similarly, strings are passed as pointers, not as pointers to pointers. 
+  Generally, only the first character of the string is significant.</p>
+</li>
+<li>
+<p>When an argument (or return value) refers to a row or column number, <strong>1-based indexing</strong> is used (i.e., <code>1 &lt;= i &lt;= N</code> rather than <code>0 &lt;= i &lt; N</code>).</p>
+</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Currently, scaLAPACKe does not provide a mechanism to switch from row-major to column-major storage, unlike <a href="https://netlib.org/lapack/lapacke.html#_array_arguments">LAPACKe</a>.
+Implementing this would incur significant overhead due to the need to redistribute data across all processes. 
+Therefore, it is recommended to use column-major arrays when working with scaLAPACKe functions.</p>
+<p>Remember that memory locality is crucial for performance, so you should adapt your code when looping over array values:</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// A is an MxN array</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// loop over columns</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">M</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="c1">// loop over rows</span>
+<span class="w">        </span><span class="c1">// use `A[i + j * LDA]` for `A(i, j)`.  </span>
+<span class="p">}</span>
+</code></pre></div>
+</div>
+<h2 id="the-low-level-interface">The low-level interface<a class="headerlink" href="#the-low-level-interface" title="Permanent link">¤</a></h2>
+<p>The low-level interface requires three of the <a href="https://github.com/pierre-24/scalapacke/tree/dev/include">header files</a> provided by scaLAPACKe: <code>blacs.h</code>, <code>pblas.h</code>, and <code>scalapack.h</code>.</p>
+<p>This interface follows the customary naming convention for Fortran-C interfaces: the Fortran routine name is converted to lowercase, with an underscore (<code>_</code>) appended at the end. 
+For example, the Fortran subroutine <code>PDGEMM</code> becomes <code>pdgemm_</code>.</p>
+<p>All arguments from the original Fortran subroutine are retained and must be passed as pointers, rather than by value.</p>
+<details class="example">
+<summary>Example</summary>
+<p>The following code:</p>
+<ol>
+<li>Generates two matrices, <span class="arithmatex">\(A\)</span> and <span class="arithmatex">\(I\)</span>, whith <span class="arithmatex">\(I_{ij} = \delta_{ij}\)</span>.
+   <span class="arithmatex">\(A\)</span> is filled with random numbers.</li>
+<li>It computes <span class="arithmatex">\(C = A\times I\)</span> and then <span class="arithmatex">\(A = C \times I - A\)</span>.
+   At the end of this operation, <span class="arithmatex">\(A_{ij} = 0\)</span>.</li>
+<li>It prints <span class="arithmatex">\(\max\{A_{ij}\}\)</span> (which should be zero) and exits.</li>
+</ol>
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdlib.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;time.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;limits.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;math.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;blacs.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;pblas.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;scalapack.h&gt;</span>
+
+<span class="n">lapack_int</span><span class="w"> </span><span class="n">I_ZERO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">I_ONE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="kt">double</span><span class="w"> </span><span class="n">D_ONE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="n">D_ZERO</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">0.0</span><span class="p">,</span><span class="w"> </span><span class="n">D_M_ONE</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">-1.f</span><span class="p">;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">argv</span><span class="p">[])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">lapack_int</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">128</span><span class="p">,</span><span class="w"> </span><span class="n">blk_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span><span class="p">;</span>
+<span class="w">    </span><span class="n">lapack_int</span><span class="w"> </span><span class="n">nprocs</span><span class="p">,</span><span class="w"> </span><span class="n">ctx_sys</span><span class="p">,</span><span class="w"> </span><span class="n">grid_M</span><span class="p">,</span><span class="w"> </span><span class="n">grid_N</span><span class="p">,</span><span class="w"> </span><span class="n">glob_i</span><span class="p">,</span><span class="w"> </span><span class="n">glob_j</span><span class="p">;</span>
+<span class="w">    </span><span class="n">lapack_int</span><span class="w">  </span><span class="n">iam</span><span class="p">,</span><span class="w"> </span><span class="n">loc_row</span><span class="p">,</span><span class="w"> </span><span class="n">loc_col</span><span class="p">,</span><span class="w"> </span><span class="n">loc_M</span><span class="p">,</span><span class="w"> </span><span class="n">loc_N</span><span class="p">,</span><span class="w"> </span><span class="n">loc_LD</span><span class="p">,</span><span class="w"> </span><span class="n">info</span><span class="p">;</span>
+<span class="w">    </span><span class="n">lapack_int</span><span class="w"> </span><span class="n">desc_A</span><span class="p">[</span><span class="mi">9</span><span class="p">];</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">I</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">C</span><span class="p">;</span><span class="w"> </span><span class="c1">// A, I, and C are NxN matrices</span>
+
+<span class="w">    </span><span class="c1">// seed</span>
+<span class="w">    </span><span class="n">srand</span><span class="p">(</span><span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">));</span>
+
+<span class="w">    </span><span class="c1">// initialize BLACS &amp; system context</span>
+<span class="w">    </span><span class="n">blacs_pinfo_</span><span class="p">(</span><span class="o">&amp;</span><span class="n">iam</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">nprocs</span><span class="p">);</span>
+<span class="w">    </span><span class="n">blacs_get_</span><span class="p">(</span><span class="o">&amp;</span><span class="n">I_ZERO</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">I_ZERO</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ctx_sys</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// create a (grid_M x grid_N) grid</span>
+<span class="w">    </span><span class="n">grid_M</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sqrt</span><span class="p">((</span><span class="kt">double</span><span class="p">)</span><span class="w"> </span><span class="n">nprocs</span><span class="p">);</span>
+<span class="w">    </span><span class="n">grid_N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nprocs</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">grid_M</span><span class="p">;</span>
+<span class="w">    </span><span class="n">blacs_gridinit_</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ctx_sys</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;R&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">grid_M</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">grid_N</span><span class="p">);</span>
+<span class="w">    </span><span class="n">blacs_gridinfo_</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ctx_sys</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">grid_M</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">grid_N</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">loc_row</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">loc_col</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">loc_row</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">loc_col</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// if I&#39;m in grid</span>
+<span class="w">        </span><span class="n">loc_M</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numroc_</span><span class="p">(</span><span class="o">&amp;</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">blk_size</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">loc_row</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">I_ZERO</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">grid_M</span><span class="p">);</span>
+<span class="w">        </span><span class="n">loc_N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">numroc_</span><span class="p">(</span><span class="o">&amp;</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">blk_size</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">loc_col</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">I_ZERO</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">grid_N</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">loc_LD</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="n">loc_M</span><span class="p">;</span>
+<span class="w">        </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calloc</span><span class="p">(</span><span class="n">loc_M</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_N</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+<span class="w">        </span><span class="n">I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calloc</span><span class="p">(</span><span class="n">loc_M</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_N</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+<span class="w">        </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calloc</span><span class="p">(</span><span class="n">loc_M</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_N</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+
+<span class="w">        </span><span class="c1">// fill arrays locally</span>
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="n">lapack_int</span><span class="w"> </span><span class="n">loc_j</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">loc_j</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">loc_N</span><span class="p">;</span><span class="w"> </span><span class="n">loc_j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">glob_j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">indxl2g_</span><span class="p">(</span><span class="o">&amp;</span><span class="n">loc_j</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">blk_size</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">loc_col</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">I_ZERO</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">grid_N</span><span class="p">);</span>
+<span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="n">lapack_int</span><span class="w"> </span><span class="n">loc_i</span><span class="o">=</span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">loc_i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">loc_M</span><span class="p">;</span><span class="w"> </span><span class="n">loc_i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// set A[i,j]</span>
+<span class="w">                </span><span class="n">glob_i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">indxl2g_</span><span class="p">(</span><span class="o">&amp;</span><span class="n">loc_i</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">blk_size</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">loc_row</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">I_ZERO</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">grid_M</span><span class="p">);</span>
+<span class="w">                </span><span class="n">A</span><span class="p">[(</span><span class="n">loc_j</span><span class="mi">-1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_LD</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">loc_i</span><span class="mi">-1</span><span class="p">)]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="kt">double</span><span class="p">)</span><span class="w"> </span><span class="n">rand</span><span class="p">())</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">;</span>
+<span class="w">                </span><span class="n">I</span><span class="p">[(</span><span class="n">loc_j</span><span class="mi">-1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_LD</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">loc_i</span><span class="mi">-1</span><span class="p">)]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">glob_i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">glob_j</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// create descriptor for A, I and C</span>
+<span class="w">        </span><span class="n">descinit_</span><span class="p">(</span><span class="n">desc_A</span><span class="p">,</span>
+<span class="w">                  </span><span class="o">&amp;</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">blk_size</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">blk_size</span><span class="p">,</span>
+<span class="w">                  </span><span class="o">&amp;</span><span class="n">I_ZERO</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">I_ZERO</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ctx_sys</span><span class="p">,</span>
+<span class="w">                  </span><span class="o">&amp;</span><span class="n">loc_LD</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">info</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// compute C = A * I</span>
+<span class="w">        </span><span class="n">pdgemm_</span><span class="p">(</span><span class="s">&quot;N&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">N</span><span class="p">,</span>
+<span class="w">                </span><span class="o">&amp;</span><span class="n">D_ONE</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">I_ONE</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">I_ONE</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span>
+<span class="w">                </span><span class="n">I</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">I_ONE</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">I_ONE</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span>
+<span class="w">                </span><span class="o">&amp;</span><span class="n">D_ZERO</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">I_ONE</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">I_ONE</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span>
+<span class="w">        </span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// compute A = C * I - A</span>
+<span class="w">        </span><span class="n">pdgemm_</span><span class="p">(</span><span class="s">&quot;N&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">N</span><span class="p">,</span>
+<span class="w">                </span><span class="o">&amp;</span><span class="n">D_ONE</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">I_ONE</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">I_ONE</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span>
+<span class="w">                </span><span class="n">I</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">I_ONE</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">I_ONE</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span>
+<span class="w">                </span><span class="o">&amp;</span><span class="n">D_M_ONE</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">I_ONE</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">I_ONE</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span>
+<span class="w">        </span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// fetch the maximum (i.e., the 1-norm)</span>
+<span class="w">        </span><span class="kt">double</span><span class="o">*</span><span class="w"> </span><span class="n">work</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">double</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">calloc</span><span class="p">(</span><span class="n">loc_LD</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pdlange_</span><span class="p">(</span><span class="w"> </span><span class="s">&quot;1&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">I_ONE</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">I_ONE</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span><span class="w"> </span><span class="n">work</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">iam</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">            </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">max</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">free</span><span class="p">(</span><span class="n">A</span><span class="p">);</span>
+<span class="w">        </span><span class="n">free</span><span class="p">(</span><span class="n">I</span><span class="p">);</span>
+<span class="w">        </span><span class="n">free</span><span class="p">(</span><span class="n">C</span><span class="p">);</span>
+<span class="w">        </span><span class="n">free</span><span class="p">(</span><span class="n">work</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">blacs_exit_</span><span class="p">(</span><span class="o">&amp;</span><span class="n">I_ZERO</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">EXIT_SUCCESS</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Notice that both <code>loc_i</code> and <code>loc_j</code> starts at one.</p>
+</details>
+<h2 id="the-middle-level-interface">The middle-level interface<a class="headerlink" href="#the-middle-level-interface" title="Permanent link">¤</a></h2>
+<p>The middle-level interface requires all the header and C files provided by scaLAPACKe.</p>
+<p>The naming convention for this interface is as follows: take the Fortran routine name, convert it to lowercase, and prepend it with <code>SCALAPACKE_</code>. 
+For example, the Fortran routine <code>PDGEMM</code> becomes <code>SCALAPACKE_pdgemm</code>.</p>
+<p>The <code>INFO</code> parameter found in the Fortran subroutine is omitted in scaLAPACKe. 
+Instead, the <code>lapack_int</code> return value of the function is set to the value that <code>INFO</code> would have returned.
+All other arguments from the original Fortran subroutine are retained in the C interface.</p>
+<p>Arguments are passed by value rather than by pointer when both of the following conditions are met:</p>
+<ol>
+<li>The argument is input-only.</li>
+<li>The argument is a scalar type (such as <code>INTEGER</code>, <code>REAL</code>, <code>DOUBLE</code>, or <code>LOGICAL</code>).</li>
+</ol>
+<details class="example">
+<summary>Example</summary>
+<p>This is the same program as above, but written using the middle-level interface:</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdlib.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;time.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;limits.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;math.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;scalapacke_blacs.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;scalapacke_pblas.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;scalapacke.h&gt;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">argv</span><span class="p">[])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">lapack_int</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">128</span><span class="p">,</span><span class="w"> </span><span class="n">blk_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span><span class="p">;</span>
+<span class="w">    </span><span class="n">lapack_int</span><span class="w"> </span><span class="n">nprocs</span><span class="p">,</span><span class="w"> </span><span class="n">ctx_sys</span><span class="p">,</span><span class="w"> </span><span class="n">grid_M</span><span class="p">,</span><span class="w"> </span><span class="n">grid_N</span><span class="p">,</span><span class="w"> </span><span class="n">glob_i</span><span class="p">,</span><span class="w"> </span><span class="n">glob_j</span><span class="p">;</span>
+<span class="w">    </span><span class="n">lapack_int</span><span class="w">  </span><span class="n">iam</span><span class="p">,</span><span class="w"> </span><span class="n">loc_row</span><span class="p">,</span><span class="w"> </span><span class="n">loc_col</span><span class="p">,</span><span class="w"> </span><span class="n">loc_M</span><span class="p">,</span><span class="w"> </span><span class="n">loc_N</span><span class="p">,</span><span class="w"> </span><span class="n">loc_LD</span><span class="p">,</span><span class="w"> </span><span class="n">info</span><span class="p">;</span>
+<span class="w">    </span><span class="n">lapack_int</span><span class="w"> </span><span class="n">desc_A</span><span class="p">[</span><span class="mi">9</span><span class="p">];</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">I</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">C</span><span class="p">;</span><span class="w"> </span><span class="c1">// A, I, and C are NxN matrices</span>
+
+<span class="w">    </span><span class="c1">// seed</span>
+<span class="w">    </span><span class="n">srand</span><span class="p">(</span><span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">));</span>
+
+<span class="w">    </span><span class="c1">// initialize BLACS &amp; system context</span>
+<span class="w">    </span><span class="n">SCALAPACKE_blacs_pinfo</span><span class="p">(</span><span class="o">&amp;</span><span class="n">iam</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">nprocs</span><span class="p">);</span>
+<span class="w">    </span><span class="n">SCALAPACKE_blacs_get</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ctx_sys</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// create a (grid_M x grid_N) grid</span>
+<span class="w">    </span><span class="n">grid_M</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sqrt</span><span class="p">((</span><span class="kt">double</span><span class="p">)</span><span class="w"> </span><span class="n">nprocs</span><span class="p">);</span>
+<span class="w">    </span><span class="n">grid_N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nprocs</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">grid_M</span><span class="p">;</span>
+<span class="w">    </span><span class="n">blacs_gridinit_</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ctx_sys</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;R&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">grid_M</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">grid_N</span><span class="p">);</span>
+<span class="w">    </span><span class="n">blacs_gridinfo_</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ctx_sys</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">grid_M</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">grid_N</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">loc_row</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">loc_col</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">loc_row</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// if I&#39;m in grid</span>
+<span class="w">        </span><span class="n">loc_M</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SCALAPACKE_numroc</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">blk_size</span><span class="p">,</span><span class="w"> </span><span class="n">loc_row</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">grid_M</span><span class="p">);</span>
+<span class="w">        </span><span class="n">loc_N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SCALAPACKE_numroc</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">blk_size</span><span class="p">,</span><span class="w"> </span><span class="n">loc_col</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">grid_N</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">loc_LD</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="n">loc_M</span><span class="p">;</span>
+<span class="w">        </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calloc</span><span class="p">(</span><span class="n">loc_M</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_N</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+<span class="w">        </span><span class="n">I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calloc</span><span class="p">(</span><span class="n">loc_M</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_N</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+<span class="w">        </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calloc</span><span class="p">(</span><span class="n">loc_M</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_N</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+
+<span class="w">        </span><span class="c1">// fill arrays locally</span>
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="n">lapack_int</span><span class="w"> </span><span class="n">loc_j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">loc_j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">loc_N</span><span class="p">;</span><span class="w"> </span><span class="n">loc_j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">glob_j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SCALAPACKE_indxl2g</span><span class="p">(</span><span class="n">loc_j</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">blk_size</span><span class="p">,</span><span class="w"> </span><span class="n">loc_col</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">grid_N</span><span class="p">);</span>
+<span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="n">lapack_int</span><span class="w"> </span><span class="n">loc_i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">loc_i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">loc_M</span><span class="p">;</span><span class="w"> </span><span class="n">loc_i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// set A[i,j]</span>
+<span class="w">                </span><span class="n">glob_i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SCALAPACKE_indxl2g</span><span class="p">(</span><span class="n">loc_i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">blk_size</span><span class="p">,</span><span class="w"> </span><span class="n">loc_row</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">grid_M</span><span class="p">)</span><span class="w"> </span><span class="p">;</span>
+<span class="w">                </span><span class="n">A</span><span class="p">[</span><span class="n">loc_j</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_LD</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">loc_i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="kt">double</span><span class="p">)</span><span class="w"> </span><span class="n">rand</span><span class="p">())</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">;</span>
+<span class="w">                </span><span class="n">I</span><span class="p">[</span><span class="n">loc_j</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_LD</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">loc_i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">glob_i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">glob_j</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// create descriptor for A, I and C</span>
+<span class="w">        </span><span class="n">SCALAPACKE_descinit</span><span class="p">(</span><span class="n">desc_A</span><span class="p">,</span>
+<span class="w">                            </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">blk_size</span><span class="p">,</span><span class="w"> </span><span class="n">blk_size</span><span class="p">,</span>
+<span class="w">                            </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">ctx_sys</span><span class="p">,</span>
+<span class="w">                            </span><span class="n">loc_LD</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// compute C = A * I</span>
+<span class="w">        </span><span class="n">SCALAPACKE_pdgemm</span><span class="p">(</span><span class="s">&quot;N&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span>
+<span class="w">                          </span><span class="mf">1.</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span>
+<span class="w">                          </span><span class="n">I</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span>
+<span class="w">                          </span><span class="mf">.0</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span>
+<span class="w">        </span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// compute A = C * I - A</span>
+<span class="w">        </span><span class="n">SCALAPACKE_pdgemm</span><span class="p">(</span><span class="s">&quot;N&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span>
+<span class="w">                          </span><span class="mf">1.</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span>
+<span class="w">                          </span><span class="n">I</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span>
+<span class="w">                          </span><span class="mf">-1.</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span>
+<span class="w">        </span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// fetch the maximum (i.e., the 1-norm)</span>
+<span class="w">        </span><span class="kt">double</span><span class="o">*</span><span class="w"> </span><span class="n">work</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">double</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">calloc</span><span class="p">(</span><span class="n">loc_LD</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SCALAPACKE_pdlange</span><span class="p">(</span><span class="w"> </span><span class="s">&quot;1&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span><span class="w"> </span><span class="n">work</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">iam</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">            </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">max</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">free</span><span class="p">(</span><span class="n">A</span><span class="p">);</span>
+<span class="w">        </span><span class="n">free</span><span class="p">(</span><span class="n">I</span><span class="p">);</span>
+<span class="w">        </span><span class="n">free</span><span class="p">(</span><span class="n">C</span><span class="p">);</span>
+<span class="w">        </span><span class="n">free</span><span class="p">(</span><span class="n">work</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">SCALAPACKE_blacs_exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">EXIT_SUCCESS</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+</details>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../install/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Installation">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Installation
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../tutorial/" class="md-footer__link md-footer__link--next" aria-label="Next: Tutorial">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Tutorial
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.footer"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.af256bd8.min.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+      
+        <script src="../../javascript/katex.js"></script>
+      
+    
+  </body>
+</html>
