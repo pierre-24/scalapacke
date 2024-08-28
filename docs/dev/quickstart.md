@@ -5,8 +5,21 @@
     This guide assumes you're already familiar with scaLAPACK and are looking to use the C wrappers provided by scaLAPACKe. 
     If you're new to scaLAPACK, please [check out the tutorial](./tutorial.md) instead.
 
-Currently, scaLAPACKe offers both a [low-level](#the-low-level-interface) and a [middle-level](#the-middle-level-interface) interface. 
+Currently, scaLAPACKe offers both a [low-level](#the-low-level-interface) and a [middle-level](#the-middle-level-interface) interface to [scaLAPACK](https://netlib.org/scalapack/), [PBLAS](https://netlib.org/scalapack/pblas_qref.html), and [BLACS](https://netlib.org/blacs/). 
 The main difference between the two is that the middle-level interface uses *pass-by-value* for arguments.
+
+## List of routines available in scaLAPACKe
+
+Providing a complete list of routines here would be redundant. 
+By design, scaLAPACKe mirrors the reference implementations of the various components of scaLAPACK, meaning it shares the same set of routines.
+
+For quick reference, you can find the relevant lists here:
+
+- [BLACS Quick Reference](https://netlib.org/blacs/BLACS/QRef.html),
+- [PBLAS Quick Reference](https://netlib.org/scalapack/pblas_qref.html),
+- [scaLAPACK Quick Reference](https://netlib.org/scalapack/slug/node183.html).
+
+If you notice that a routine is missing, feel free to [open an issue](https://github.com/pierre-24/scalapacke/issues). 😊
 
 ## Common Features and Caveats for Both Interfaces
 

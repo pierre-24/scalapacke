@@ -42,4 +42,12 @@ Interested in contributing? Check out our [contribution guidelines](contrib/CONT
 I'm [Pierre Beaujean](https://pierrebeaujean.net), a Ph.D. in quantum chemistry from the [University of Namur](https://unamur.be) (Belgium), and the main (and only) developer of this project. My goal is to leverage scaLAPACK(e) to overcome the computational and memory limitations of a single computer node.
 
 I have no affiliation with netlib, MKL, or similar projects, and I'm not an expert in scaLAPACK. 
-I'm just someone who needed this functionality in C and decided to share my solution with the world. 😉
+I'm just someone who needed this functionality in C and decided to share my solution with the world.
+
+
+## About this documentation
+
+English isn't my first language, and to be honest, even in my native tongue, grammar isn't my strong suit. 
+So, I enlisted the help of artificial intelligence to rephrase parts of this documentation. 
+It's better for everyone this way... Trust me! 👼
+

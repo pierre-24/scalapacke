@@ -1,6 +1,6 @@
-# Installing scaLAPACKe
+# Using and installing scaLAPACKe
 
-To install scaLAPACKe, you'll need two key components: an MPI library implementation and a scaLAPACK implementation.
+To use or install scaLAPACKe, you'll need two key components: an MPI library implementation and a scaLAPACK implementation.
 
 Popular MPI options include:
 
