@@ -3,13 +3,13 @@ import re
 from typing import List
 
 from scalapacke_files_create import SCALAPACK_REPO_URL
-from scalapacke_files_create.base import Declaration, jinja_env
+from scalapacke_files_create.base import Declaration, jinja_env, INT_TYPE
 from scalapacke_files_create.create_cblacs import find_c_decl
 
 SELF_NAME = __name__
 
 DEFINES = [
-    ('lapack_int', 'int'),
+    (INT_TYPE, 'int'),
 ]
 
 PATTERN_ARG_DOC = re.compile(r'\s{0,3}\*\s{1,3}(?P<name>\w*)\s+\((?P<intent>.*)\)(?P<extra>.*)?')

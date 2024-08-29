@@ -3,13 +3,13 @@ import re
 from typing import List
 
 from scalapacke_files_create import SCALAPACK_REPO_URL
-from scalapacke_files_create.base import Declaration, jinja_env, DeclArgument
+from scalapacke_files_create.base import Declaration, jinja_env, DeclArgument, INT_TYPE
 from scalapacke_files_create.fortran import Parser as FParser
 
 SELF_NAME = __name__
 
 DEFINES = [
-    ('lapack_int', 'int'),
+    (INT_TYPE, 'int'),
 ]
 
 PATTERN_ARG_DOC = re.compile(r'\s{0,3}\*\s{1,6}(?P<name>\w*)\s+\((?P<intent>.*?)\)(?P<extra>.*)?')
@@ -98,18 +98,18 @@ ARG_FOLLOW = {
 # arguments not present or not readable from documentation
 MISSING_DOCS = {
     # p?laqr?
-    'pdlaqr0.f': [DeclArgument('RECLEVEL', 'Int*', is_input=True)],  # most probably an input
-    'pslaqr0.f': [DeclArgument('RECLEVEL', 'Int*', is_input=True)],
-    'pdlaqr3.f': [DeclArgument('RECLEVEL', 'Int*', is_input=True)],  # most probably an input
-    'pslaqr3.f': [DeclArgument('RECLEVEL', 'Int*', is_input=True)],
+    'pdlaqr0.f': [DeclArgument('RECLEVEL', '{}*'.format(INT_TYPE), is_input=True)],  # most probably an input
+    'pslaqr0.f': [DeclArgument('RECLEVEL', '{}*'.format(INT_TYPE), is_input=True)],
+    'pdlaqr3.f': [DeclArgument('RECLEVEL', '{}*'.format(INT_TYPE), is_input=True)],  # most probably an input
+    'pslaqr3.f': [DeclArgument('RECLEVEL', '{}*'.format(INT_TYPE), is_input=True)],
     # pjlaenv
-    'pjlaenv.f': [DeclArgument('ICTXT', 'Int*', is_input=True)],
+    'pjlaenv.f': [DeclArgument('ICTXT', '{}*'.format(INT_TYPE), is_input=True)],
     # pmpcol
-    'pmpcol.f': [DeclArgument('LASTCL', 'Int*', is_input=True)],
+    'pmpcol.f': [DeclArgument('LASTCL', '{}*'.format(INT_TYPE), is_input=True)],
     # pmpim2
     'pmpim2.f': [
-        DeclArgument('IL', 'Int*', is_input=True),
-        DeclArgument('IU', 'Int*', is_input=True)
+        DeclArgument('IL', '{}*'.format(INT_TYPE), is_input=True),
+        DeclArgument('IU', '{}*'.format(INT_TYPE), is_input=True)
     ],
 }
 
@@ -117,17 +117,17 @@ MISSING_DOCS = {
 # REDIST/SRC/ is a mess!
 def _mkargs_gemr2d(ctype: str):
     return [
-        DeclArgument('M', 'lapack_int*', is_input=True),
-        DeclArgument('N', 'lapack_int*', is_input=True),
+        DeclArgument('M', '{}*'.format(INT_TYPE), is_input=True),
+        DeclArgument('N', '{}*'.format(INT_TYPE), is_input=True),
         DeclArgument('A', ctype, is_input=True, is_array=True),
-        DeclArgument('IA', 'lapack_int*', is_input=True),
-        DeclArgument('JA', 'lapack_int*', is_input=True),
-        DeclArgument('DESCA', 'lapack_int*', is_input=True, is_array=True),
+        DeclArgument('IA', '{}*'.format(INT_TYPE), is_input=True),
+        DeclArgument('JA', '{}*'.format(INT_TYPE), is_input=True),
+        DeclArgument('DESCA', '{}*'.format(INT_TYPE), is_input=True, is_array=True),
         DeclArgument('B', ctype, is_output=True, is_array=True),
-        DeclArgument('IB', 'lapack_int*', is_input=True),
-        DeclArgument('JB', 'lapack_int*', is_input=True),
-        DeclArgument('DESCB', 'lapack_int*', is_input=True, is_array=True),
-        DeclArgument('ICTXT', 'lapack_int*', is_input=True)
+        DeclArgument('IB', '{}*'.format(INT_TYPE), is_input=True),
+        DeclArgument('JB', '{}*'.format(INT_TYPE), is_input=True),
+        DeclArgument('DESCB', '{}*'.format(INT_TYPE), is_input=True, is_array=True),
+        DeclArgument('ICTXT', '{}*'.format(INT_TYPE), is_input=True)
     ]
 
 
@@ -135,29 +135,29 @@ def _mkargs_trmr2d(ctype: str):
     return [
         DeclArgument('UPLO', 'char*', is_input=True, is_array=True),
         DeclArgument('DIAG', 'char*', is_input=True, is_array=True),
-        DeclArgument('M', 'lapack_int*', is_input=True),
-        DeclArgument('N', 'lapack_int*', is_input=True),
+        DeclArgument('M', '{}*'.format(INT_TYPE), is_input=True),
+        DeclArgument('N', '{}*'.format(INT_TYPE), is_input=True),
         DeclArgument('A', ctype, is_input=True, is_array=True),
-        DeclArgument('IA', 'lapack_int*', is_input=True),
-        DeclArgument('JA', 'lapack_int*', is_input=True),
-        DeclArgument('DESCA', 'lapack_int*', is_input=True, is_array=True),
+        DeclArgument('IA', '{}*'.format(INT_TYPE), is_input=True),
+        DeclArgument('JA', '{}*'.format(INT_TYPE), is_input=True),
+        DeclArgument('DESCA', '{}*'.format(INT_TYPE), is_input=True, is_array=True),
         DeclArgument('B', ctype, is_output=True, is_array=True),
-        DeclArgument('IB', 'lapack_int*', is_input=True),
-        DeclArgument('JB', 'lapack_int*', is_input=True),
-        DeclArgument('DESCB', 'lapack_int*', is_input=True, is_array=True),
-        DeclArgument('ICTXT', 'lapack_int*', is_input=True)
+        DeclArgument('IB', '{}*'.format(INT_TYPE), is_input=True),
+        DeclArgument('JB', '{}*'.format(INT_TYPE), is_input=True),
+        DeclArgument('DESCB', '{}*'.format(INT_TYPE), is_input=True, is_array=True),
+        DeclArgument('ICTXT', '{}*'.format(INT_TYPE), is_input=True)
     ]
 
 
 DECLS_REDIST = [
     Declaration('pcgemr2d_', 'void', _mkargs_gemr2d('float*')),
     Declaration('pdgemr2d_', 'void', _mkargs_gemr2d('double*')),
-    Declaration('pigemr2d_', 'void', _mkargs_gemr2d('lapack_int*')),
+    Declaration('pigemr2d_', 'void', _mkargs_gemr2d('{}*'.format(INT_TYPE))),
     Declaration('psgemr2d_', 'void', _mkargs_gemr2d('float*')),
     Declaration('pzgemr2d_', 'void', _mkargs_gemr2d('double*')),
     Declaration('pctrmr2d_', 'void', _mkargs_trmr2d('float*')),
     Declaration('pdtrmr2d_', 'void', _mkargs_trmr2d('double*')),
-    Declaration('pitrmr2d_', 'void', _mkargs_trmr2d('lapack_int*')),
+    Declaration('pitrmr2d_', 'void', _mkargs_trmr2d('{}*'.format(INT_TYPE))),
     Declaration('pstrmr2d_', 'void', _mkargs_trmr2d('float*')),
     Declaration('pztrmr2d_', 'void', _mkargs_trmr2d('double*')),
 ]
