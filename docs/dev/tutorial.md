@@ -258,13 +258,19 @@ To preserve the value, store it in `grid_ctx`.
 Next, use [`BLACS_GRIDINIT`](https://netlib.org/blacs/BLACS/QRef.html#BLACS_GRIDINIT) to initialize the grid, which will automatically map each process to a position within the grid (or outside if it doesn't belong to the grid).
 This is illustrated below:
 
-
 ![](../assets/blacs_gridinit.svg)
 
-The `grid_ctx` is used as the first argument.
-It serves as both input and output, meaning it accepts the main context and returns the new grid context. 
-The second argument specifies how processes are mapped onto the grid, though this detail is generally not critical. 
-The third and fourth arguments define the number of **rows** and **columns** in the grid, respectively. 
+
+??? note "Arguments of `BLACS_GRIDINIT`"
+    
+    - **The context** (`grid_ctx`).
+      It serves as both input and output, meaning it accepts the main context and returns the new grid context. 
+    - How processes are mapped onto the grid (here `"R"`, meaning in row-order), though this detail is generally not critical.
+    - The number of **rows** that the grid should contain, and of **columns** (`grid_M, grid_N`). 
+
+
+You can create as many grids as you want, which is useful if a given task requires a different grid.
+You can also use [`BLACS_GRIDMAP`](https://netlib.org/blacs/BLACS/QRef.html#BLACS_GRIDMAP) to manually map the processes to the grid, which is useful if you want to create disjoint grids (*e.g.*, if you want to map a part of the processes on a given grid, and the other part on another).
 
 !!! warning
 
@@ -276,14 +282,9 @@ The third and fourth arguments define the number of **rows** and **columns** in 
     Therefore, it's generally advisable to adapt the grid size to match the number of processes. 
     The optimal grid shape and size, however, will depend on the specific problem being solved.
 
-
-You can create as much grids as you want, which is useful if a given task requires a different grid.
-You can also use [`BLACS_GRIDMAP`](https://netlib.org/blacs/BLACS/QRef.html#BLACS_GRIDMAP) to manually map the processes to the grid, which is useful if you want to create disjoint grids (*e.g.*, if you want to map a part of the processes on a given grid, and the other part on another).
-
 Finally, use [`BLACS_GRIDINFO`](https://netlib.org/blacs/BLACS/QRef.html#BLACS_GRIDINFO) to get the position of the process within the grid. 
 If the process is within the grid, `0 <= loc_row < grid_M && 0 <= loc_col < grid_N`, otherwise, `loc_row == -1 && loc_col == -1`. 
 Note that in this function, `grid_M` and `grid_N` are output parameters, meaning you can call this function at any time to retrieve the grid size and the process's position within it, as long as you provide its grid context, `grid_ctx`.
-
 
 Note that **all** processes should execute `BLACS_GRIDINIT`, maybe to discover with `BLACS_GRIDINFO` that they are not part of this grid.
 
@@ -292,7 +293,7 @@ Note that **all** processes should execute `BLACS_GRIDINIT`, maybe to discover w
 scaLAPACK expects arrays to be divided into **blocks** that are distributed among the processes in a grid. 
 Specifically, it uses a [block cyclic distribution algorithm](https://netlib.org/utk/papers/sc96-scalapack/NODE8.HTM).
 
-For example, consider a 9x8 array with 2x2 blocks:
+For example, consider a 8x8 array with 3x3 blocks:
 
 ![Block Cyclic Distribution](../assets/cyclic_distribution.svg)
 
@@ -301,25 +302,27 @@ The entire array is referred to as the **global array**, which is scattered acro
 Each process only stores a portion of the global array, known as the **local memory** or submatrix. 
 This approach is efficient in terms of memory usage.
 
-While the formulas to determine the shape of the local array and the position of each global array element within it are straightforward to derive, helper functions are available. 
-To determine the shape of the local matrix, you can use the [`NUMROC`](https://netlib.org/scalapack/explore-html/d4/d48/numroc_8f_source.html) function (`NUMROC` stands for "Number of Rows or Columns"):
+While the formulas to determine the shape of the local array and the position of each element within it are straightforward to derive, helper functions are already available. 
+To determine the shape of the local matrix, you can use the auxiliary function [`NUMROC`](https://netlib.org/scalapack/explore-html/d4/d48/numroc_8f_source.html) function (`NUMROC` stands for "NUMber of Rows Or Columns"):
 
 ```c
 if (loc_row >= 0 && loc_cols >= 0) { // if process is on the grid
-    lapack_int blk_size = 2, N = 8;
+    lapack_int blk_size = 3, M = 8, N = 8;
   
-    // Starting from a NxN matrix, compute the shape of the local one, loc_M x loc_N
-    lapack_int loc_M = SCALAPACKE_numroc(N, blk_size, loc_row, 0, grid_M);
+    // Starting from a MxN matrix, compute the shape of the local one, loc_Mxloc_N
+    lapack_int loc_M = SCALAPACKE_numroc(M, blk_size, loc_row, 0, grid_M);
     lapack_int loc_N = SCALAPACKE_numroc(N, blk_size, loc_col, 0, grid_N);
 ```
 
-To determine the local dimensions (number of rows and columns), the `NUMROC` function requires the following arguments:
+??? note "Arguments of `NUMROC`"
 
-- **Global dimension length** (`N`): the size of the corresponding dimension of the global array.
-- **Block size** (`blk_size`): the size of each block in the block cyclic distribution.
-- **Process coordinate** (`loc_row`/`loc_col`): the coordinate of the process within the grid for that dimension.
-- **Process owning index 0** (here, it is `0`): the coordinate of the process that owns index 0 in that dimension.
-- **Grid dimension size** (`grid_M`/`grid_N`): the total number of processes in that grid dimension.
+    To determine the local dimensions (number of rows and columns), the `NUMROC` function requires the following arguments:
+  
+    - **Global dimension length**: the size of the corresponding dimension of the global array (`M`/`N`).
+    - **Block size**: the size of each block in the block cyclic distribution (`blk_size`).
+    - **Process coordinate*: the coordinate of the process within the grid for that dimension* (`loc_row`/`loc_col`).
+    - **Process owning index 0**: the coordinate of the process that owns index 0 in that dimension (here, it is `0`).
+    - **Grid dimension size**: the total number of processes in that grid dimension (`grid_M`/`grid_N`).
 
 By definition, `0 <= loc_M < N && 0 <= loc_N < N`.
 With these values, you can then allocate the submatrix locally.
@@ -328,6 +331,98 @@ With these values, you can then allocate the submatrix locally.
 // Allocate the local memory
 double* loc_A = calloc(loc_M * loc_N, sizeof(double));
 ```
+
+The last step before filling the array is to create a **descriptor**, which describes how it is scattered across the process grid, using the auxiliary function [`DESCINIT`](https://netlib.org/scalapack/explore-html/dd/d22/descinit_8f_source.html):
+
+```c
+lapack_int loc_LD = loc_M;
+lapack_int desc_A[9];
+SCALAPACKE_descinit(desc_A,
+                    M, N, blk_size, blk_size,
+                    0, 0, grid_ctx,
+                    loc_LD);
+```
+
+To create a descriptor for scaLAPACK, you need to provide 9 arguments that will define the structure of the data distribution across the process grid. 
+The descriptor will be used by ScaLAPACK functions to map between local and global arrays.
+
+
+??? note "Arguments of `DESCINIT`"
+
+     1. **Descriptor array** (`lapack_int desc_A[9]`, output): an array of 9 integers that will be filled to define the descriptor.
+  
+     2. **Global array dimensions** (`M, N`): the dimensions of the global array, where `M` is the number of rows and `N` is the number of columns.
+  
+     3. **Block size** (`blk_size, blk_size`): the block size along both dimensions of the array. 
+  
+     4. **Process grid coordinates** (`0, 0`): the coordinates of the first process in the process grid. For most use cases, this will be `(0, 0)`, indicating the top-left corner of the grid.
+  
+     5. **Grid context** (`grid_ctx`): the BLACS context that defines the process grid. This context manages the communication between processes.
+  
+     6. **Leading dimension (of local submatrix)** (`loc_LD`): the leading dimension of the local submatrix, which is typically the number of rows in the local block. 
+        This must satisfy `loc_LD >= loc_M`.
+
+Once this descriptor is initialized, it can be passed to PBLAS/scaLAPACK functions, enabling them to correctly interpret the mapping between the local data (distributed across the processes) and the global array. 
+This ensures that operations performed by scaLAPACK are correctly applied to the global matrix in a distributed computing environment.
+
+
+To fill the local parts of the array, we have two solutions:
+
+1. Filling the array locally, or
+2. Creating the array on one process and communicate.
+
+Let's explore the two options.
+
+#### Filling the array locally
+
+If the array's contents can be determined locally on each process, this is the preferred approach as it eliminates the need for inter-process communication. 
+To do this, you must map local indices to global indices, which can be done using the auxiliary function [`INDXL2G`](https://netlib.org/scalapack/explore-html/d4/deb/indxl2g_8f_source.html). This function facilitates the mapping from a local array element `loc_A(loc_i, loc_j)` to the corresponding global array element `A(glob_i, glob_j)`.
+
+??? note "Parameters of `INDXL2G`"
+
+    - **Local Index**: The index of the element within the local block on the process  (`loc_i`/`loc_j`).
+  
+    - **Block Size** (`blk_size`): The size of the block in the corresponding dimension (rows or columns, `blk_size`).
+    
+    - **Local Dimension Length**: The number of rows or columns in the local array for that dimension (`loc_row`/`loc_col`).
+  
+    - **First Process**: The process coordinate (in the grid) where the distribution of blocks begins. 
+      Typically, this is set to `0`.
+  
+    - **Grid Dimension Length**: The total number of processes along the corresponding dimension (rows or columns) in the process grid (`grid_M`/`grid_N`).
+
+For example, consider making the global array `A` symmetric, where each element is defined by the formula:
+
+$$A_{ij} = 1 + \frac{|i-j|}{2}$$
+
+In this case, you would use `INDXL2G` to determine the global indices `glob_i` and `glob_j` corresponding to the local indices `loc_i` and `loc_j`, then apply the formula locally to fill the array.
+
+```c
+// fill array locally
+for(lapack_int loc_j=0; loc_j < loc_N; loc_j++) {
+    lapack_int glob_j = SCALAPACKE_indxl2g(loc_j + 1, blk_size, loc_col, 0, grid_N);
+    for(lapack_int loc_i=0; loc_i < loc_M; loc_i++) { 
+        lapack_int glob_i = SCALAPACKE_indxl2g(loc_i + 1, blk_size, loc_row, 0, grid_M) ;
+        
+        // set loc_A[loc_i,loc_j] with the content of A[glob_i, glob_j]
+        loc_A[loc_j * loc_LD + loc_i] = 1 + .5 * fabs((double) (glob_i -  glob_j));
+    }
+}
+```
+
+!!! warning
+
+    Notice that:
+  
+    + the code store the data in the array using column-major ordering.
+    + When passed to scaLAPACK(e) function, array index starts at one rather than zero.
+
+
+#### Broadcasting the array
+
+If it is not possible to create the array locally (*e.g.*, if it comes from a file), another option is to create the array on one process and communicate each block to the others.
+
+An easy option is to use one of the [`P?GEMR2D`](https://www.intel.com/content/www/us/en/docs/onemkl/developer-reference-c/2023-0/p-gemr2d.html) auxiliary functions, in this case `PDGEMR2D`.
 
 ### 3. Call the function
 
