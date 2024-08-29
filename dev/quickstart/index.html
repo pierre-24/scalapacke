@@ -365,6 +365,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#list-of-routines-available-in-scalapacke" class="md-nav__link">
+    <span class="md-ellipsis">
+      List of routines available in scaLAPACKe
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#common-features-and-caveats-for-both-interfaces" class="md-nav__link">
     <span class="md-ellipsis">
       Common Features and Caveats for Both Interfaces
@@ -539,6 +548,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#list-of-routines-available-in-scalapacke" class="md-nav__link">
+    <span class="md-ellipsis">
+      List of routines available in scaLAPACKe
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#common-features-and-caveats-for-both-interfaces" class="md-nav__link">
     <span class="md-ellipsis">
       Common Features and Caveats for Both Interfaces
@@ -589,8 +607,18 @@
 <p>This guide assumes you're already familiar with scaLAPACK and are looking to use the C wrappers provided by scaLAPACKe. 
 If you're new to scaLAPACK, please <a href="../tutorial/">check out the tutorial</a> instead.</p>
 </div>
-<p>Currently, scaLAPACKe offers both a <a href="#the-low-level-interface">low-level</a> and a <a href="#the-middle-level-interface">middle-level</a> interface. 
+<p>Currently, scaLAPACKe offers both a <a href="#the-low-level-interface">low-level</a> and a <a href="#the-middle-level-interface">middle-level</a> interface to <a href="https://netlib.org/scalapack/">scaLAPACK</a>, <a href="https://netlib.org/scalapack/pblas_qref.html">PBLAS</a>, and <a href="https://netlib.org/blacs/">BLACS</a>. 
 The main difference between the two is that the middle-level interface uses <em>pass-by-value</em> for arguments.</p>
+<h2 id="list-of-routines-available-in-scalapacke">List of routines available in scaLAPACKe<a class="headerlink" href="#list-of-routines-available-in-scalapacke" title="Permanent link">¤</a></h2>
+<p>Providing a complete list of routines here would be redundant. 
+By design, scaLAPACKe mirrors the reference implementations of the various components of scaLAPACK, meaning it shares the same set of routines.</p>
+<p>For quick reference, you can find the relevant lists here:</p>
+<ul>
+<li><a href="https://netlib.org/blacs/BLACS/QRef.html">BLACS Quick Reference</a>,</li>
+<li><a href="https://netlib.org/scalapack/pblas_qref.html">PBLAS Quick Reference</a>,</li>
+<li><a href="https://netlib.org/scalapack/slug/node183.html">scaLAPACK Quick Reference</a>.</li>
+</ul>
+<p>If you notice that a routine is missing, feel free to <a href="https://github.com/pierre-24/scalapacke/issues">open an issue</a>. 😊</p>
 <h2 id="common-features-and-caveats-for-both-interfaces">Common Features and Caveats for Both Interfaces<a class="headerlink" href="#common-features-and-caveats-for-both-interfaces" title="Permanent link">¤</a></h2>
 <ul>
 <li>
@@ -627,6 +655,10 @@ Therefore, it is recommended to use column-major arrays when working with scaLAP
 </div>
 <h2 id="the-low-level-interface">The low-level interface<a class="headerlink" href="#the-low-level-interface" title="Permanent link">¤</a></h2>
 <p>The low-level interface requires three of the <a href="https://github.com/pierre-24/scalapacke/tree/dev/include">header files</a> provided by scaLAPACKe: <code>blacs.h</code>, <code>pblas.h</code>, and <code>scalapack.h</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;blacs.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;pblas.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;scalapack.h&gt;</span>
+</code></pre></div>
 <p>This interface follows the customary naming convention for Fortran-C interfaces: the Fortran routine name is converted to lowercase, with an underscore (<code>_</code>) appended at the end. 
 For example, the Fortran subroutine <code>PDGEMM</code> becomes <code>pdgemm_</code>.</p>
 <p>All arguments from the original Fortran subroutine are retained and must be passed as pointers, rather than by value.</p>
@@ -724,6 +756,7 @@ For example, the Fortran subroutine <code>PDGEMM</code> becomes <code>pdgemm_</c
 <span class="w">        </span><span class="n">free</span><span class="p">(</span><span class="n">I</span><span class="p">);</span>
 <span class="w">        </span><span class="n">free</span><span class="p">(</span><span class="n">C</span><span class="p">);</span>
 <span class="w">        </span><span class="n">free</span><span class="p">(</span><span class="n">work</span><span class="p">);</span>
+<span class="w">        </span><span class="n">blacs_gridexit_</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ctx_sys</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="n">blacs_exit_</span><span class="p">(</span><span class="o">&amp;</span><span class="n">I_ZERO</span><span class="p">);</span>
@@ -733,7 +766,11 @@ For example, the Fortran subroutine <code>PDGEMM</code> becomes <code>pdgemm_</c
 <p>Notice that both <code>loc_i</code> and <code>loc_j</code> starts at one.</p>
 </details>
 <h2 id="the-middle-level-interface">The middle-level interface<a class="headerlink" href="#the-middle-level-interface" title="Permanent link">¤</a></h2>
-<p>The middle-level interface requires all the header and C files provided by scaLAPACKe.</p>
+<p>The middle-level interface requires all the headers and wrappers files provided by scaLAPACKe.</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;scalapacke_blacs.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;scalapacke_pblas.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;scalapacke.h&gt;</span>
+</code></pre></div>
 <p>The naming convention for this interface is as follows: take the Fortran routine name, convert it to lowercase, and prepend it with <code>SCALAPACKE_</code>. 
 For example, the Fortran routine <code>PDGEMM</code> becomes <code>SCALAPACKE_pdgemm</code>.</p>
 <p>The <code>INFO</code> parameter found in the Fortran subroutine is omitted in scaLAPACKe. 
@@ -760,74 +797,77 @@ All other arguments from the original Fortran subroutine are retained in the C i
 
 <span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">argv</span><span class="p">[])</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">lapack_int</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">128</span><span class="p">,</span><span class="w"> </span><span class="n">blk_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">16</span><span class="p">;</span>
-<span class="w">    </span><span class="n">lapack_int</span><span class="w"> </span><span class="n">nprocs</span><span class="p">,</span><span class="w"> </span><span class="n">ctx_sys</span><span class="p">,</span><span class="w"> </span><span class="n">grid_M</span><span class="p">,</span><span class="w"> </span><span class="n">grid_N</span><span class="p">,</span><span class="w"> </span><span class="n">glob_i</span><span class="p">,</span><span class="w"> </span><span class="n">glob_j</span><span class="p">;</span>
+<span class="w">    </span><span class="n">lapack_int</span><span class="w"> </span><span class="n">nprocs</span><span class="p">,</span><span class="w"> </span><span class="n">sys_ctx</span><span class="p">,</span><span class="w"> </span><span class="n">grid_ctx</span><span class="p">,</span><span class="w"> </span><span class="n">grid_M</span><span class="p">,</span><span class="w"> </span><span class="n">grid_N</span><span class="p">,</span><span class="w"> </span><span class="n">glob_i</span><span class="p">,</span><span class="w"> </span><span class="n">glob_j</span><span class="p">;</span>
 <span class="w">    </span><span class="n">lapack_int</span><span class="w">  </span><span class="n">iam</span><span class="p">,</span><span class="w"> </span><span class="n">loc_row</span><span class="p">,</span><span class="w"> </span><span class="n">loc_col</span><span class="p">,</span><span class="w"> </span><span class="n">loc_M</span><span class="p">,</span><span class="w"> </span><span class="n">loc_N</span><span class="p">,</span><span class="w"> </span><span class="n">loc_LD</span><span class="p">,</span><span class="w"> </span><span class="n">info</span><span class="p">;</span>
 <span class="w">    </span><span class="n">lapack_int</span><span class="w"> </span><span class="n">desc_A</span><span class="p">[</span><span class="mi">9</span><span class="p">];</span>
-<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">I</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">C</span><span class="p">;</span><span class="w"> </span><span class="c1">// A, I, and C are NxN matrices</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">loc_A</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">loc_I</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">loc_C</span><span class="p">;</span><span class="w"> </span><span class="c1">// loc_A, loc_I, and loc_C are NxN matrices</span>
 
 <span class="w">    </span><span class="c1">// seed</span>
 <span class="w">    </span><span class="n">srand</span><span class="p">(</span><span class="n">time</span><span class="p">(</span><span class="nb">NULL</span><span class="p">));</span>
 
 <span class="w">    </span><span class="c1">// initialize BLACS &amp; system context</span>
 <span class="w">    </span><span class="n">SCALAPACKE_blacs_pinfo</span><span class="p">(</span><span class="o">&amp;</span><span class="n">iam</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">nprocs</span><span class="p">);</span>
-<span class="w">    </span><span class="n">SCALAPACKE_blacs_get</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ctx_sys</span><span class="p">);</span>
+<span class="w">    </span><span class="n">SCALAPACKE_blacs_get</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">sys_ctx</span><span class="p">);</span>
 
 <span class="w">    </span><span class="c1">// create a (grid_M x grid_N) grid</span>
 <span class="w">    </span><span class="n">grid_M</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sqrt</span><span class="p">((</span><span class="kt">double</span><span class="p">)</span><span class="w"> </span><span class="n">nprocs</span><span class="p">);</span>
 <span class="w">    </span><span class="n">grid_N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nprocs</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">grid_M</span><span class="p">;</span>
-<span class="w">    </span><span class="n">blacs_gridinit_</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ctx_sys</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;R&quot;</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">grid_M</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">grid_N</span><span class="p">);</span>
-<span class="w">    </span><span class="n">blacs_gridinfo_</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ctx_sys</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">grid_M</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">grid_N</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">loc_row</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">loc_col</span><span class="p">);</span>
+<span class="w">    </span><span class="n">grid_ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sys_ctx</span><span class="p">;</span>
+<span class="w">    </span><span class="n">SCALAPACKE_blacs_gridinit</span><span class="p">(</span><span class="o">&amp;</span><span class="n">grid_ctx</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;R&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">grid_M</span><span class="p">,</span><span class="w"> </span><span class="n">grid_N</span><span class="p">);</span>
+<span class="w">    </span><span class="n">SCALAPACKE_blacs_gridinfo</span><span class="p">(</span><span class="n">grid_ctx</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">grid_M</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">grid_N</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">loc_row</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">loc_col</span><span class="p">);</span>
 
-<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">loc_row</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// if I&#39;m in grid</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">loc_row</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// if loc_I&#39;m in grid</span>
 <span class="w">        </span><span class="n">loc_M</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SCALAPACKE_numroc</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">blk_size</span><span class="p">,</span><span class="w"> </span><span class="n">loc_row</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">grid_M</span><span class="p">);</span>
 <span class="w">        </span><span class="n">loc_N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SCALAPACKE_numroc</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">blk_size</span><span class="p">,</span><span class="w"> </span><span class="n">loc_col</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">grid_N</span><span class="p">);</span>
 
 <span class="w">        </span><span class="n">loc_LD</span><span class="w"> </span><span class="o">=</span><span class="w">  </span><span class="n">loc_M</span><span class="p">;</span>
-<span class="w">        </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calloc</span><span class="p">(</span><span class="n">loc_M</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_N</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
-<span class="w">        </span><span class="n">I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calloc</span><span class="p">(</span><span class="n">loc_M</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_N</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
-<span class="w">        </span><span class="n">C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calloc</span><span class="p">(</span><span class="n">loc_M</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_N</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+<span class="w">        </span><span class="n">loc_A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calloc</span><span class="p">(</span><span class="n">loc_M</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_N</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+<span class="w">        </span><span class="n">loc_I</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calloc</span><span class="p">(</span><span class="n">loc_M</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_N</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+<span class="w">        </span><span class="n">loc_C</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calloc</span><span class="p">(</span><span class="n">loc_M</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_N</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
 
 <span class="w">        </span><span class="c1">// fill arrays locally</span>
 <span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="n">lapack_int</span><span class="w"> </span><span class="n">loc_j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">loc_j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">loc_N</span><span class="p">;</span><span class="w"> </span><span class="n">loc_j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 <span class="w">            </span><span class="n">glob_j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SCALAPACKE_indxl2g</span><span class="p">(</span><span class="n">loc_j</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">blk_size</span><span class="p">,</span><span class="w"> </span><span class="n">loc_col</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">grid_N</span><span class="p">);</span>
-<span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="n">lapack_int</span><span class="w"> </span><span class="n">loc_i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">loc_i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">loc_M</span><span class="p">;</span><span class="w"> </span><span class="n">loc_i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// set A[i,j]</span>
+<span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="n">lapack_int</span><span class="w"> </span><span class="n">loc_i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">loc_i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">loc_M</span><span class="p">;</span><span class="w"> </span><span class="n">loc_i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// set loc_A[i,j]</span>
 <span class="w">                </span><span class="n">glob_i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SCALAPACKE_indxl2g</span><span class="p">(</span><span class="n">loc_i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">blk_size</span><span class="p">,</span><span class="w"> </span><span class="n">loc_row</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">grid_M</span><span class="p">)</span><span class="w"> </span><span class="p">;</span>
-<span class="w">                </span><span class="n">A</span><span class="p">[</span><span class="n">loc_j</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_LD</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">loc_i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="kt">double</span><span class="p">)</span><span class="w"> </span><span class="n">rand</span><span class="p">())</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">;</span>
-<span class="w">                </span><span class="n">I</span><span class="p">[</span><span class="n">loc_j</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_LD</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">loc_i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">glob_i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">glob_j</span><span class="p">);</span>
+<span class="w">                </span><span class="n">loc_A</span><span class="p">[</span><span class="n">loc_j</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_LD</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">loc_i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">((</span><span class="kt">double</span><span class="p">)</span><span class="w"> </span><span class="n">rand</span><span class="p">())</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">INT_MAX</span><span class="p">;</span>
+<span class="w">                </span><span class="n">loc_I</span><span class="p">[</span><span class="n">loc_j</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_LD</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">loc_i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">glob_i</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">glob_j</span><span class="p">);</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">        </span><span class="p">}</span>
 
-<span class="w">        </span><span class="c1">// create descriptor for A, I and C</span>
+<span class="w">        </span><span class="c1">// create descriptor for loc_A, loc_I and loc_C</span>
 <span class="w">        </span><span class="n">SCALAPACKE_descinit</span><span class="p">(</span><span class="n">desc_A</span><span class="p">,</span>
 <span class="w">                            </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">blk_size</span><span class="p">,</span><span class="w"> </span><span class="n">blk_size</span><span class="p">,</span>
-<span class="w">                            </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">ctx_sys</span><span class="p">,</span>
+<span class="w">                            </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">grid_ctx</span><span class="p">,</span>
 <span class="w">                            </span><span class="n">loc_LD</span><span class="p">);</span>
 
-<span class="w">        </span><span class="c1">// compute C = A * I</span>
+<span class="w">        </span><span class="c1">// compute loc_C = loc_A * loc_I</span>
 <span class="w">        </span><span class="n">SCALAPACKE_pdgemm</span><span class="p">(</span><span class="s">&quot;N&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span>
-<span class="w">                          </span><span class="mf">1.</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span>
-<span class="w">                          </span><span class="n">I</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span>
-<span class="w">                          </span><span class="mf">.0</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span>
+<span class="w">                          </span><span class="mf">1.</span><span class="p">,</span><span class="w"> </span><span class="n">loc_A</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span>
+<span class="w">                          </span><span class="n">loc_I</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span>
+<span class="w">                          </span><span class="mf">.0</span><span class="p">,</span><span class="w"> </span><span class="n">loc_C</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span>
 <span class="w">        </span><span class="p">);</span>
 
-<span class="w">        </span><span class="c1">// compute A = C * I - A</span>
+<span class="w">        </span><span class="c1">// compute loc_A = loc_C * loc_I - loc_A</span>
 <span class="w">        </span><span class="n">SCALAPACKE_pdgemm</span><span class="p">(</span><span class="s">&quot;N&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;N&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span>
-<span class="w">                          </span><span class="mf">1.</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span>
-<span class="w">                          </span><span class="n">I</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span>
-<span class="w">                          </span><span class="mf">-1.</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span>
+<span class="w">                          </span><span class="mf">1.</span><span class="p">,</span><span class="w"> </span><span class="n">loc_C</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span>
+<span class="w">                          </span><span class="n">loc_I</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span>
+<span class="w">                          </span><span class="mf">-1.</span><span class="p">,</span><span class="w"> </span><span class="n">loc_A</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span>
 <span class="w">        </span><span class="p">);</span>
 
 <span class="w">        </span><span class="c1">// fetch the maximum (i.e., the 1-norm)</span>
 <span class="w">        </span><span class="kt">double</span><span class="o">*</span><span class="w"> </span><span class="n">work</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">double</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">calloc</span><span class="p">(</span><span class="n">loc_LD</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
-<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SCALAPACKE_pdlange</span><span class="p">(</span><span class="w"> </span><span class="s">&quot;1&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span><span class="w"> </span><span class="n">work</span><span class="p">);</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SCALAPACKE_pdlange</span><span class="p">(</span><span class="s">&quot;1&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">loc_A</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span><span class="w"> </span><span class="n">work</span><span class="p">);</span>
 
 <span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">iam</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
 <span class="w">            </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">max</span><span class="p">);</span>
 
-<span class="w">        </span><span class="n">free</span><span class="p">(</span><span class="n">A</span><span class="p">);</span>
-<span class="w">        </span><span class="n">free</span><span class="p">(</span><span class="n">I</span><span class="p">);</span>
-<span class="w">        </span><span class="n">free</span><span class="p">(</span><span class="n">C</span><span class="p">);</span>
+<span class="w">        </span><span class="n">free</span><span class="p">(</span><span class="n">loc_A</span><span class="p">);</span>
+<span class="w">        </span><span class="n">free</span><span class="p">(</span><span class="n">loc_I</span><span class="p">);</span>
+<span class="w">        </span><span class="n">free</span><span class="p">(</span><span class="n">loc_C</span><span class="p">);</span>
 <span class="w">        </span><span class="n">free</span><span class="p">(</span><span class="n">work</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">SCALAPACKE_blacs_gridexit</span><span class="p">(</span><span class="n">grid_ctx</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="n">SCALAPACKE_blacs_exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>

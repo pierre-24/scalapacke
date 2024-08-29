@@ -228,17 +228,6 @@
         
       
       
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          
-  
-  <span class="md-ellipsis">
-    Home
-  </span>
-  
-
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
       <a href="." class="md-nav__link md-nav__link--active">
         
   
@@ -248,43 +237,6 @@
   
 
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installation
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Usage
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
       
     </li>
   
@@ -519,32 +471,6 @@
     
   
   
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#installation" class="md-nav__link">
-    <span class="md-ellipsis">
-      Installation
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#usage" class="md-nav__link">
-    <span class="md-ellipsis">
-      Usage
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
 </nav>
                   </div>
                 </div>
@@ -562,13 +488,157 @@
 
 
 <h1 id="scalapacke">ScaLAPACKe<a class="headerlink" href="#scalapacke" title="Permanent link">¤</a></h1>
-<p>Provide a set of headers and wrappers in order to easily use <a href="https://www.netlib.org/scalapack/">scaLAPACK</a> (and its components, <a href="https://netlib.org/scalapack/pblas_qref.html">PBLAS</a> and <a href="https://netlib.org/blacs/">BLACS</a>) in C.
-Unlike <a href="https://netlib.org/lapack/lapacke.html">LAPACKe</a>, <strong>it is not a Fortran to C translation</strong>, rather a set of lightweight wrappers.</p>
-<p>More info <a href="about/">here</a>.</p>
-<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">¤</a></h2>
-<p>See <a href="dev/install/">there</a>.</p>
-<h2 id="usage">Usage<a class="headerlink" href="#usage" title="Permanent link">¤</a></h2>
-<p><em>to be added later.</em></p>
+<p>This project provides a set of headers and wrappers designed to facilitate the use of <a href="https://www.netlib.org/scalapack/">ScaLAPACK</a> and its components, <a href="https://netlib.org/scalapack/pblas_qref.html">PBLAS</a> and <a href="https://netlib.org/blacs/">BLACS</a>, in C.</p>
+<p>Unlike <a href="https://netlib.org/lapack/lapacke.html">LAPACKE</a>, which translates Fortran interfaces to C, these wrappers are <strong>not</strong> a direct translation from Fortran. 
+Instead, they are lightweight wrappers that streamline the integration of ScaLAPACK functionalities into C applications, <a href="dev/quickstart/">in a predictable way</a>.</p>
+<p>Below is an example of using the wrapper to perform eigenvalue and eigenvector computations with <code>PDSYEV</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="cm">/* Inspired by https://wwwuser.gwdguser.de/~ohaan/ScaLAPACK_examples/demo_PDSYEV.f</span>
+<span class="cm"> *</span>
+<span class="cm"> * Compute the eigenvalues and eigenvectors of a NxN real symmetric matrix `A`, where: `A[i,j] = 1/(1+.5*fabs(i-j))`.</span>
+<span class="cm"> * Check if they match by comparing with `|A * x_i - e_i * x_i|`, where `e_i` is the eigenvalue associated with `x_i`.</span>
+<span class="cm"> */</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdlib.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;math.h&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;scalapacke_blacs.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;scalapacke_pblas.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;scalapacke.h&gt;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">argc</span><span class="p">,</span><span class="w"> </span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">argv</span><span class="p">[])</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// constant</span>
+<span class="w">    </span><span class="n">lapack_int</span><span class="w"> </span><span class="n">N</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">128</span><span class="p">,</span><span class="w"> </span><span class="n">blk_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">32</span><span class="p">,</span><span class="w"> </span><span class="n">lwork</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// global</span>
+<span class="w">    </span><span class="n">lapack_int</span><span class="w"> </span><span class="n">nprocs</span><span class="p">,</span><span class="w"> </span><span class="n">ctx_sys</span><span class="p">,</span><span class="w"> </span><span class="n">glob_nrows</span><span class="p">,</span><span class="w"> </span><span class="n">glob_ncols</span><span class="p">,</span><span class="w"> </span><span class="n">glob_i</span><span class="p">,</span><span class="w"> </span><span class="n">glob_j</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// local</span>
+<span class="w">    </span><span class="n">lapack_int</span><span class="w">  </span><span class="n">iam</span><span class="p">,</span><span class="w"> </span><span class="n">loc_row</span><span class="p">,</span><span class="w"> </span><span class="n">loc_col</span><span class="p">,</span><span class="w"> </span><span class="n">loc_nrows</span><span class="p">,</span><span class="w"> </span><span class="n">loc_ncols</span><span class="p">,</span><span class="w"> </span><span class="n">loc_lld</span><span class="p">,</span><span class="w"> </span><span class="n">info</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">lapack_int</span><span class="w"> </span><span class="n">desc_A</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span><span class="w"> </span><span class="n">desc_r</span><span class="p">[</span><span class="mi">9</span><span class="p">];</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="o">*</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">Ap</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">w</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">r</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">work</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">norm_res</span><span class="p">,</span><span class="w"> </span><span class="n">norm_X</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// initialize BLACS &amp; system context</span>
+<span class="w">    </span><span class="n">SCALAPACKE_blacs_pinfo</span><span class="p">(</span><span class="o">&amp;</span><span class="n">iam</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">nprocs</span><span class="p">);</span>
+<span class="w">    </span><span class="n">SCALAPACKE_blacs_get</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ctx_sys</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// create the grid</span>
+<span class="w">    </span><span class="n">glob_nrows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">lapack_int</span><span class="p">)</span><span class="w"> </span><span class="n">sqrt</span><span class="p">((</span><span class="kt">double</span><span class="p">)</span><span class="w"> </span><span class="n">nprocs</span><span class="p">);</span>
+<span class="w">    </span><span class="n">glob_ncols</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nprocs</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">glob_nrows</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// create the grid</span>
+<span class="w">    </span><span class="n">glob_nrows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">lapack_int</span><span class="p">)</span><span class="w"> </span><span class="n">sqrt</span><span class="p">((</span><span class="kt">double</span><span class="p">)</span><span class="w"> </span><span class="n">nprocs</span><span class="p">);</span>
+<span class="w">    </span><span class="n">glob_ncols</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">nprocs</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">glob_nrows</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">SCALAPACKE_blacs_gridinit</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ctx_sys</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;R&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">glob_nrows</span><span class="p">,</span><span class="w"> </span><span class="n">glob_ncols</span><span class="p">);</span>
+<span class="w">    </span><span class="n">SCALAPACKE_blacs_gridinfo</span><span class="p">(</span><span class="n">ctx_sys</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">glob_nrows</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">glob_ncols</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">loc_row</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">loc_col</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">loc_row</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="c1">// if I&#39;m in grid</span>
+<span class="w">        </span><span class="c1">// compute length and create arrays</span>
+<span class="w">        </span><span class="n">loc_nrows</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SCALAPACKE_numroc</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">blk_size</span><span class="p">,</span><span class="w"> </span><span class="n">loc_row</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">glob_nrows</span><span class="p">);</span>
+<span class="w">        </span><span class="n">loc_ncols</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SCALAPACKE_numroc</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">blk_size</span><span class="p">,</span><span class="w"> </span><span class="n">loc_col</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">glob_ncols</span><span class="p">);</span>
+<span class="w">        </span><span class="n">loc_lld</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">loc_nrows</span><span class="p">;</span><span class="w"> </span><span class="c1">// column major</span>
+
+<span class="w">        </span><span class="n">A</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calloc</span><span class="p">(</span><span class="n">loc_nrows</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_ncols</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+<span class="w">        </span><span class="n">Ap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calloc</span><span class="p">(</span><span class="n">loc_nrows</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_ncols</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+<span class="w">        </span><span class="n">X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calloc</span><span class="p">(</span><span class="n">loc_nrows</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_ncols</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+<span class="w">        </span><span class="n">w</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calloc</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="p">));</span>
+<span class="w">        </span><span class="n">r</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calloc</span><span class="p">(</span><span class="n">loc_nrows</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="p">));</span>
+
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">NULL</span><span class="w"> </span><span class="o">||</span><span class="n">X</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">NULL</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">NULL</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d :: cannot allocate :(</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">iam</span><span class="p">);</span>
+<span class="w">            </span><span class="n">exit</span><span class="p">(</span><span class="n">EXIT_FAILURE</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// fill array locally</span>
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="n">lapack_int</span><span class="w"> </span><span class="n">loc_j</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">loc_j</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">loc_ncols</span><span class="p">;</span><span class="w"> </span><span class="n">loc_j</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// translate local j to global j</span>
+<span class="w">            </span><span class="n">glob_j</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SCALAPACKE_indxl2g</span><span class="p">(</span><span class="n">loc_j</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">blk_size</span><span class="p">,</span><span class="w"> </span><span class="n">loc_col</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">glob_ncols</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">            </span><span class="k">for</span><span class="p">(</span><span class="n">lapack_int</span><span class="w"> </span><span class="n">loc_i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">loc_i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">loc_nrows</span><span class="p">;</span><span class="w"> </span><span class="n">loc_i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">glob_i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SCALAPACKE_indxl2g</span><span class="p">(</span><span class="n">loc_i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">blk_size</span><span class="p">,</span><span class="w"> </span><span class="n">loc_row</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">glob_nrows</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="w">                </span><span class="c1">// set A[i,j]</span>
+<span class="w">                </span><span class="k">if</span><span class="p">(</span><span class="n">glob_i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">glob_j</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">A</span><span class="p">[</span><span class="n">loc_j</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_nrows</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">loc_i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1.</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mf">1.</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">.5</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">fabs</span><span class="p">((</span><span class="kt">double</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">glob_i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">glob_j</span><span class="p">)));</span>
+<span class="w">                    </span><span class="n">Ap</span><span class="p">[</span><span class="n">loc_j</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_nrows</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">loc_i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="n">loc_j</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">loc_nrows</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">loc_i</span><span class="p">];</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// create descriptor for A, X, and r</span>
+<span class="w">        </span><span class="n">SCALAPACKE_descinit</span><span class="p">(</span><span class="n">desc_A</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">blk_size</span><span class="p">,</span><span class="w"> </span><span class="n">blk_size</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">ctx_sys</span><span class="p">,</span><span class="w"> </span><span class="n">loc_lld</span><span class="p">);</span>
+<span class="w">        </span><span class="n">SCALAPACKE_descinit</span><span class="p">(</span><span class="n">desc_r</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">blk_size</span><span class="p">,</span><span class="w"> </span><span class="n">blk_size</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">ctx_sys</span><span class="p">,</span><span class="w"> </span><span class="n">loc_lld</span><span class="p">);</span>
+
+<span class="w">        </span><span class="c1">// request lwork</span>
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">tmpw</span><span class="p">;</span>
+<span class="w">        </span><span class="n">SCALAPACKE_pdsyev</span><span class="p">(</span><span class="s">&quot;V&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;U&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">Ap</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">tmpw</span><span class="p">,</span><span class="w"> </span><span class="mi">-1</span><span class="p">);</span>
+<span class="w">        </span><span class="n">lwork</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">lapack_int</span><span class="p">)</span><span class="w"> </span><span class="n">tmpw</span><span class="p">;</span>
+
+<span class="w">        </span><span class="c1">// compute the eigenvalues and vectors</span>
+<span class="w">        </span><span class="c1">// NOTE: like dsyev(), the content of A is irremediably destroyed in the process :(</span>
+<span class="w">        </span><span class="n">work</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calloc</span><span class="p">(</span><span class="n">lwork</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="p">));</span>
+<span class="w">        </span><span class="n">info</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SCALAPACKE_pdsyev</span><span class="p">(</span><span class="s">&quot;V&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;U&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="n">Ap</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span><span class="w"> </span><span class="n">w</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span><span class="w"> </span><span class="n">work</span><span class="p">,</span><span class="w"> </span><span class="n">lwork</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">info</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d :: error: info is %d</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">iam</span><span class="p">,</span><span class="w"> </span><span class="n">info</span><span class="p">);</span>
+<span class="w">            </span><span class="n">exit</span><span class="p">(</span><span class="n">EXIT_FAILURE</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="kt">double</span><span class="w"> </span><span class="n">max_residual</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">.0f</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">for</span><span class="p">(</span><span class="n">lapack_int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">N</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// compute `r = A * x_i`</span>
+<span class="w">            </span><span class="c1">// according to the doc of pdsyev, eigenvectors are located in columns</span>
+<span class="w">            </span><span class="n">SCALAPACKE_pdsymv</span><span class="p">(</span><span class="s">&quot;U&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span>
+<span class="w">                    </span><span class="mf">1.</span><span class="p">,</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">                    </span><span class="mf">.0</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_r</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="p">);</span>
+
+<span class="w">            </span><span class="c1">// compute `r = r - e_i * x_i`</span>
+<span class="w">            </span><span class="n">SCALAPACKE_pdaxpy</span><span class="p">(</span>
+<span class="w">                    </span><span class="n">N</span><span class="p">,</span>
+<span class="w">                    </span><span class="o">-</span><span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">r</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_r</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">            </span><span class="p">);</span>
+
+<span class="w">            </span><span class="c1">// compute norm of x_i and r</span>
+<span class="w">            </span><span class="n">norm_X</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SCALAPACKE_pdlange</span><span class="p">(</span><span class="w"> </span><span class="s">&quot;F&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span><span class="w"> </span><span class="n">work</span><span class="p">);</span>
+<span class="w">            </span><span class="n">norm_res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SCALAPACKE_pdlange</span><span class="p">(</span><span class="s">&quot;F&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">r</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_r</span><span class="p">,</span><span class="w"> </span><span class="n">work</span><span class="p">);</span>
+<span class="w">            </span><span class="kt">double</span><span class="w"> </span><span class="n">eps</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pdlamch_</span><span class="p">(</span><span class="o">&amp;</span><span class="n">ctx_sys</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;e&quot;</span><span class="p">);</span>
+<span class="w">            </span><span class="kt">double</span><span class="w"> </span><span class="n">residual</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">norm_res</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">fabs</span><span class="p">(</span><span class="n">w</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">])</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">norm_X</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">eps</span><span class="p">);</span><span class="w"> </span><span class="c1">// might not be the correct residual :(</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">residual</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">max_residual</span><span class="p">)</span>
+<span class="w">                </span><span class="n">max_residual</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">residual</span><span class="p">;</span>
+
+<span class="w">            </span><span class="k">if</span><span class="p">(</span><span class="n">iam</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="p">(</span><span class="n">residual</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                    </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d :: residual for eigenvalue %d is %f &gt; 100, aborting</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">iam</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="n">residual</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">exit</span><span class="p">(</span><span class="n">EXIT_FAILURE</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="n">iam</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d :: largest residual is %f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">iam</span><span class="p">,</span><span class="w"> </span><span class="n">max_residual</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="c1">// free</span>
+<span class="w">        </span><span class="n">free</span><span class="p">(</span><span class="n">A</span><span class="p">);</span>
+<span class="w">        </span><span class="n">free</span><span class="p">(</span><span class="n">X</span><span class="p">);</span>
+<span class="w">        </span><span class="n">free</span><span class="p">(</span><span class="n">w</span><span class="p">);</span>
+<span class="w">        </span><span class="n">free</span><span class="p">(</span><span class="n">r</span><span class="p">);</span>
+<span class="w">        </span><span class="n">free</span><span class="p">(</span><span class="n">work</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">SCALAPACKE_blacs_gridexit</span><span class="p">(</span><span class="n">ctx_sys</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span>
+<span class="w">        </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;%d :: i&#39;m out!</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">iam</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// finalize BLACS</span>
+<span class="w">    </span><span class="n">SCALAPACKE_blacs_exit</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">EXIT_SUCCESS</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
 
 
 

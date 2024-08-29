@@ -68,7 +68,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#installing-scalapacke" class="md-skip">
+        <a href="#using-and-installing-scalapacke" class="md-skip">
           Skip to content
         </a>
       
@@ -631,8 +631,8 @@
   
 
 
-<h1 id="installing-scalapacke">Installing scaLAPACKe<a class="headerlink" href="#installing-scalapacke" title="Permanent link">¤</a></h1>
-<p>To install scaLAPACKe, you'll need two key components: an MPI library implementation and a scaLAPACK implementation.</p>
+<h1 id="using-and-installing-scalapacke">Using and installing scaLAPACKe<a class="headerlink" href="#using-and-installing-scalapacke" title="Permanent link">¤</a></h1>
+<p>To use or install scaLAPACKe, you'll need two key components: an MPI library implementation and a scaLAPACK implementation.</p>
 <p>Popular MPI options include:</p>
 <ul>
 <li><a href="https://www.open-mpi.org/">OpenMPI</a></li>
@@ -670,7 +670,7 @@ Just grab the wrap file corresponding to the version you want to use ...</p>
 mkdir<span class="w"> </span>-p<span class="w"> </span>subprojects
 
 <span class="c1"># download wrap file</span>
-wget<span class="w"> </span>https://github.com/pierre-24/scalapacke/releases/download/v0.2.2/scalapacke_v0.2.2.wrap<span class="w"> </span>-O<span class="w"> </span>subprojects/scalapacke.wrap
+wget<span class="w"> </span>https://github.com/pierre-24/scalapacke/releases/download/v0.2.3/scalapacke_v0.2.3.wrap<span class="w"> </span>-O<span class="w"> </span>subprojects/scalapacke.wrap
 </code></pre></div>
 <p>... and add something like this in your <code>meson.build</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="n">scalapacke_dep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cc</span><span class="p">.</span><span class="n">find_library</span><span class="p">(</span><span class="s">&#39;scalapacke&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">required</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
