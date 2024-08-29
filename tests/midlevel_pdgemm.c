@@ -11,7 +11,7 @@
 
 int main(int argc, char* argv[]) {
     lapack_int N = 128, blk_size = 16;
-    lapack_int nprocs, ctx_sys, ctx_grid, grid_M, grid_N, glob_i, glob_j;
+    lapack_int nprocs, sys_ctx, grid_ctx, grid_M, grid_N, glob_i, glob_j;
     lapack_int  iam, loc_row, loc_col, loc_M, loc_N, loc_LD, info;
     lapack_int desc_A[9];
     double *A, *I, *C; // A, I, and C are NxN matrices
@@ -21,14 +21,14 @@ int main(int argc, char* argv[]) {
 
     // initialize BLACS & system context
     SCALAPACKE_blacs_pinfo(&iam, &nprocs);
-    SCALAPACKE_blacs_get(0, 0, &ctx_sys);
+    SCALAPACKE_blacs_get(0, 0, &sys_ctx);
 
     // create a (grid_M x grid_N) grid
     grid_M = sqrt((double) nprocs);
     grid_N = nprocs / grid_M;
-    ctx_grid = ctx_sys;
-    SCALAPACKE_blacs_gridinit(&ctx_grid, "R", grid_M, grid_N);
-    SCALAPACKE_blacs_gridinfo(ctx_grid, &grid_M, &grid_N, &loc_row, &loc_col);
+    grid_ctx = sys_ctx;
+    SCALAPACKE_blacs_gridinit(&grid_ctx, "R", grid_M, grid_N);
+    SCALAPACKE_blacs_gridinfo(grid_ctx, &grid_M, &grid_N, &loc_row, &loc_col);
 
     if(loc_row >= 0) { // if I'm in grid
         loc_M = SCALAPACKE_numroc(N, blk_size, loc_row, 0, grid_M);
@@ -52,7 +52,7 @@ int main(int argc, char* argv[]) {
         // create descriptor for A, I and C
         SCALAPACKE_descinit(desc_A,
                             N, N, blk_size, blk_size,
-                            0, 0, ctx_grid,
+                            0, 0, grid_ctx,
                             loc_LD);
 
         // compute C = A * I

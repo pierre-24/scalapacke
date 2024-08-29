@@ -116,7 +116,7 @@ These conventions make it easier to understand and use the routines.
 ### What about scaLAPACK?
 
 The primary routines in PBLAS and scaLAPACK are prefixed with "P", followed by the name of their non-distributed counterpart. 
-While these distributed routines require additional arguments to describe the layout of vectors and matrices (as explained below), they largely retain the logic and structure of their non-distributed versions.
+While these distributed routines require additional arguments to describe the layout of vectors and matrices (as explained below), they largely retain the logic and structure of their non-distributed versions (but check the documentation to verify it is the case).
 
 For example, the [`(P)DGESV` routine](https://netlib.org/lapack/explore-html-3.6.1/d7/d3b/group__double_g_esolve_ga5ee879032a8365897c3ba91e3dc8d512.html) solve the system of linear equation $A\,X = B$ where $A$ is a `N`-by-`N` matrix and $B$ and $X$ are `N`-by-`NRHS` matrices:
 
@@ -175,6 +175,27 @@ During execution, each process is assigned:
 While the SPMD model avoids many issues related to shared memory in thread-based parallelism (since each process has its own private memory), it necessitates efficient data sharing between processes. 
 Additionally, [deadlocks](https://en.wikipedia.org/wiki/Deadlock_(computer_science)) are more common with this model, due to the need of explicit synchronization.
 
+
+!!! info
+
+    Consider the following scenario:
+    
+    ```c
+    lapack_int a_given_context;
+    SCALAPACKE_do_A(a_given_context, ...);
+
+    if(iam == 0)
+      do_something_that_only_0_do();
+
+    SCALAPACKE_do_B(a_given_context, ...);
+    ```
+
+    With BLACS [and thus, PBLAS and scaLAPACK(e)], communication calls are *blocking*, meaning a function won't return until **all** participating processes have completed their respective tasks. 
+
+    In this example, all processes will execute `SCALAPACKE_do_A` together. 
+    However, they must then wait for the rank-0 process to complete `do_something_that_only_0_do()` before proceeding to `SCALAPACKE_do_B`. 
+    If, for any reason, a process does not reach or execute `SCALAPACKE_do_B`, a deadlock will occur, halting the entire operation.
+
 To effectively use a scaLAPACKe function, follow these four steps:
 
 1. Initialize a process grid, mapping the different processes to positions in a virtual grid.
@@ -182,8 +203,17 @@ To effectively use a scaLAPACKe function, follow these four steps:
 3. Call the desired scaLAPACKe function.
 4. Release the matrices and the grid once the computation is complete.
 
+All that is to be realized using scaLAPACKe.
+Thus, let's include the relevant headers:
+
+```c
+#include <scalapacke_blacs.h>
+#include <scalapacke_pblas.h>
+#include <scalapacke.h>
+```
 
 ### 1. Initialize the grid
+
 
 Following the previous discussion, the first step for a given process is to know the number of processes and its rank.
 For that, we need to use a [BLACS](https://netlib.org/blacs/BLACS/QRef.html) function.
@@ -194,7 +224,7 @@ SCALAPACKE_blacs_pinfo(&iam, &nprocs);
 ```
 
 `nprocs` now holds the total number of processes, while `iam` stores the rank of the current process. 
-According to the [PINFO specification](https://netlib.org/blacs/BLACS/QRef.html#BLACS_PINFO), `0 <= iam < nprocs`. 
+According to the [`BLACS_PINFO` specification](https://netlib.org/blacs/BLACS/QRef.html#BLACS_PINFO), `0 <= iam < nprocs`. 
 A common practice is to have the rank-0 process handle tasks that should be executed only once, such as reading or writing files. 
 In this context, the rank-0 process is often considered the primary process (though not necessarily the first one to start running), while the other processes serve as followers.
 
@@ -204,46 +234,71 @@ In this context, the rank-0 process is often considered the primary process (tho
 
 Now it's time to create a process grid. 
 A grid groups processes into a subset that will collaborate on various computational tasks involving matrices distributed across the grid. 
-In this example, we'll request a 3x2 grid:
+In this example, we'll request a 2x2 grid:
 
 ```c
-lapack_int ctx_sys, ctx_grid, grid_M = 3, grid_N = 2, loc_row, loc_col;
+lapack_int sys_ctx, grid_ctx, grid_M = 2, grid_N = 2, loc_row, loc_col;
 
 // get the system context
-SCALAPACKE_blacs_get(0, 0, &ctx_sys);
+SCALAPACKE_blacs_get(0, 0, &sys_ctx);
 
 // create a (grid_M x grid_N) grid
-ctx_grid = ctx_sys;
-SCALAPACKE_blacs_gridinit(&ctx_grid, "R", grid_M, grid_N);
+grid_ctx = sys_ctx;
+SCALAPACKE_blacs_gridinit(&grid_ctx, "R", grid_M, grid_N);
 
 // request my position in the grid
-SCALAPACKE_blacs_gridinfo(ctx_grid, &grid_M, &grid_N, &loc_row, &loc_col);
+SCALAPACKE_blacs_gridinfo(grid_ctx, &grid_M, &grid_N, &loc_row, &loc_col);
 ```
 
 Each process grid is identified by a **context**, which is derived from the main (or system) context. 
-The first argument of `BLACS_GRIDINIT` is both input and output, meaning it receives the main context and returns the new grid context.
-To create a grid, first request the main context using [`BLACS_GET`](https://netlib.org/blacs/BLACS/QRef.html#BLACS_GET) and store it in `ctx_sys`.
-To avoid losing the value, the value is then stored in `ctx_grid`.
-Then, use [`BLACS_GRIDINIT`](https://netlib.org/blacs/BLACS/QRef.html#BLACS_GRIDINIT) to initialize the grid, with `ctx_grid` as first argument. 
-The second argument determines how processes are mapped to the grid (though this is typically not critical in practice), the third specifies the number of **rows**, and the fourth the number of **columns** in the grid.
+To create a grid, first request the main context using [`BLACS_GET`](https://netlib.org/blacs/BLACS/QRef.html#BLACS_GET) and store it in `sys_ctx`.
+
+To preserve the value, store it in `grid_ctx`. 
+
+Next, use [`BLACS_GRIDINIT`](https://netlib.org/blacs/BLACS/QRef.html#BLACS_GRIDINIT) to initialize the grid, which will automatically map each process to a position within the grid (or outside if it doesn't belong to the grid).
+This is illustrated below:
+
+
+![](../assets/blacs_gridinit.svg)
+
+The `grid_ctx` is used as the first argument.
+It serves as both input and output, meaning it accepts the main context and returns the new grid context. 
+The second argument specifies how processes are mapped onto the grid, though this detail is generally not critical. 
+The third and fourth arguments define the number of **rows** and **columns** in the grid, respectively. 
 
 !!! warning
 
-    If the number of processes is smaller than the grid size, `BLACS_GRIDINIT` will abort the program.
+    If the number of processes is fewer than the grid size, `BLACS_GRIDINIT` will abort the program.
+    In the example above, this means that the program must be run with at least 4 processes.
 
-Finally, use [`BLACS_GRIDINFO`](https://netlib.org/blacs/BLACS/QRef.html#BLACS_GRIDINFO) to determine the position of a process within the grid. 
-If the process is within the grid, `0 <= loc_row < grid_M && 0 <= loc_col < grid_N`; otherwise, `loc_row == -1 && loc_col == -1`. 
-Note that in this function, `grid_M` and `grid_N` are output parameters, meaning you can call this function at any time to retrieve the grid size and the process's position within it, as long as you provide its grid context, `ctx_grid`.
+    Extra processes beyond the grid size will remain idle and perform no computational tasks. 
+    From a user's perspective, this situation should be avoided, as increasing the number of processes without adjusting the grid size will not result in any speedup.
+    Therefore, it's generally advisable to adapt the grid size to match the number of processes. 
+    The optimal grid shape and size, however, will depend on the specific problem being solved.
 
-### 2. distribute data on the grid
+
+You can create as much grids as you want, which is useful if a given task requires a different grid.
+You can also use [`BLACS_GRIDMAP`](https://netlib.org/blacs/BLACS/QRef.html#BLACS_GRIDMAP) to manually map the processes to the grid, which is useful if you want to create disjoint grids (*e.g.*, if you want to map a part of the processes on a given grid, and the other part on another).
+
+Finally, use [`BLACS_GRIDINFO`](https://netlib.org/blacs/BLACS/QRef.html#BLACS_GRIDINFO) to get the position of the process within the grid. 
+If the process is within the grid, `0 <= loc_row < grid_M && 0 <= loc_col < grid_N`, otherwise, `loc_row == -1 && loc_col == -1`. 
+Note that in this function, `grid_M` and `grid_N` are output parameters, meaning you can call this function at any time to retrieve the grid size and the process's position within it, as long as you provide its grid context, `grid_ctx`.
+
+
+Note that **all** processes should execute `BLACS_GRIDINIT`, maybe to discover with `BLACS_GRIDINFO` that they are not part of this grid.
+
+### 2. Distribute data on the grid
 
 xxx
 
-### 3. call the function
+### 3. Call the function
 
 xxx
 
-### 4. release
+### 4. Release!
+
+![](https://media1.tenor.com/m/rFwzdbMTeAoAAAAd/card-captor-sakura-anime.gif)
+*"Release" is the final word in [Sakura](https://en.wikipedia.org/wiki/Cardcaptor_Sakura)'s spell to activate her scepter, so she shouts it in every episode. Couldn't resist the reference! 😉*
 
 xxx
 

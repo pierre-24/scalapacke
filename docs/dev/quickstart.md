@@ -56,6 +56,12 @@ If you notice that a routine is missing, feel free to [open an issue](https://gi
 
 The low-level interface requires three of the [header files](https://github.com/pierre-24/scalapacke/tree/dev/include) provided by scaLAPACKe: `blacs.h`, `pblas.h`, and `scalapack.h`.
 
+```c
+#include <blacs.h>
+#include <pblas.h>
+#include <scalapack.h>
+```
+
 This interface follows the customary naming convention for Fortran-C interfaces: the Fortran routine name is converted to lowercase, with an underscore (`_`) appended at the end. 
 For example, the Fortran subroutine `PDGEMM` becomes `pdgemm_`.
 
@@ -79,7 +85,13 @@ All arguments from the original Fortran subroutine are retained and must be pass
 
 ## The middle-level interface
 
-The middle-level interface requires all the header and C files provided by scaLAPACKe.
+The middle-level interface requires all the headers and wrappers files provided by scaLAPACKe.
+
+```c
+#include <scalapacke_blacs.h>
+#include <scalapacke_pblas.h>
+#include <scalapacke.h>
+```
 
 The naming convention for this interface is as follows: take the Fortran routine name, convert it to lowercase, and prepend it with `SCALAPACKE_`. 
 For example, the Fortran routine `PDGEMM` becomes `SCALAPACKE_pdgemm`.
