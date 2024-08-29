@@ -559,6 +559,8 @@ SCALAPACKE_blacs_exit(0);
 
 ## Compilation and execution
 
+You can find the source code of this example in [this archive](../assets/tutorial.tar.gz).
+
 xxx.
 
 ## Sources
