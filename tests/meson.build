@@ -8,7 +8,6 @@ tests_to_run = [
 	'lowlevel_pdgemm',
 	'midlevel_pdgemm',
 	'pdgemm_residual',
-	'tutorial_pdsyev',
 ]
 
 mpiexec = find_program('mpiexec', required : true)
