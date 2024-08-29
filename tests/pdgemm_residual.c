@@ -122,6 +122,8 @@ int main(int argc, char* argv[]) {
         free(B);
         free(C);
         free(work);
+
+        SCALAPACKE_blacs_gridexit(ctx_sys);
     } else
         printf("%d :: i'm out!\n", iam);
 

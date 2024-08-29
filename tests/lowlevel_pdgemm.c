@@ -82,6 +82,7 @@ int main(int argc, char* argv[]) {
         free(I);
         free(C);
         free(work);
+        blacs_gridexit_(&ctx_sys);
     }
 
     blacs_exit_(&I_ZERO);

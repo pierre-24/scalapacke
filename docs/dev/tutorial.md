@@ -365,6 +365,11 @@ The descriptor will be used by ScaLAPACK functions to map between local and glob
 Once this descriptor is initialized, it can be passed to PBLAS/scaLAPACK functions, enabling them to correctly interpret the mapping between the local data (distributed across the processes) and the global array. 
 This ensures that operations performed by scaLAPACK are correctly applied to the global matrix in a distributed computing environment.
 
+!!! note
+
+    If you have multiple arrays of the same size distributed across the same grid, you don't need a separate descriptor for each one. 
+    A descriptor simply describes how an array of a specific size is distributed on a particular grid, so one descriptor can be reused for all arrays with the same distribution.
+
 
 To fill the local parts of the array, we have two solutions:
 
@@ -420,13 +425,117 @@ for(lapack_int loc_j=0; loc_j < loc_N; loc_j++) {
 
 #### Broadcasting the array
 
-If it is not possible to create the array locally (*e.g.*, if it comes from a file), another option is to create the array on one process and communicate each block to the others.
+When it is not feasible to create the array locally on each process—such as when the data is read from a file—an alternative approach is to create the global array on a single process and then distribute the blocks to other processes. 
+This can be efficiently accomplished using one of the [`P?GEMR2D`](https://www.intel.com/content/www/us/en/docs/onemkl/developer-reference-c/2023-0/p-gemr2d.html) auxiliary functions, such as `PDGEMR2D` for double-precision arrays.
 
-An easy option is to use one of the [`P?GEMR2D`](https://www.intel.com/content/www/us/en/docs/onemkl/developer-reference-c/2023-0/p-gemr2d.html) auxiliary functions, in this case `PDGEMR2D`.
+First, a new grid is needed that includes only the rank-0 process, which will be responsible for creating and initially holding the global matrix. 
+This grid is created as follows:
+
+
+```c
+// this grid should be created right after grid_ctx
+// Reminder: all processes should call GRIDINIT, 
+// only to discover later that they are not part of it ;)
+lapack_int ctx_0 = sys_ctx;
+SCALAPACKE_blacs_gridinit(&ctx_0, "R", 1, 1);
+```
+
+Here, `ctx_0` is the new grid context for the rank-0 process, where the global array will be created.
+
+Next, a descriptor for the global matrix is created, and the matrix is allocated and filled by the rank-0 process:
+
+```c
+double * glob_A = NULL;
+lapack_int desc_glob_A[9];
+
+if(iam == 0) {
+    // create a proper descriptor for this array
+    SCALAPACKE_descinit(desc_glob_A, M, N, M, N, 0, 0, ctx_0, M);
+
+    // fill global array
+    glob_A = calloc(M * N, sizeof(double));
+    for(lapack_int glob_j=0; glob_j < N; glob_j++) {
+        for(lapack_int glob_i=0; glob_i < M; glob_i++) {
+            glob_A[glob_j * M + glob_i] = 1 + .5 * fabs((double) (glob_i - glob_j));
+        }
+    }
+} else
+    desc_glob_A[1] = -1; // Mark processes that do not allocate the global array
+```
+
+In this setup, only the rank-0 process allocates and fills `glob_A`. 
+All other processes signal that they do not hold a part of the global array by setting the second element of the descriptor (*i.e.*, `desc_glob_A[1]`) to -1.
+
+Once the global matrix is ready on rank-0, it can be redistributed to all processes in the main grid (`grid_ctx`) using `PDGEMR2D`:
+
+```c
+// Distribute the global matrix across the process grid
+SCALAPACKE_pdgemr2d(
+  M, N,
+  glob_A, 1, 1, desc_glob_A, // Source: global matrix on rank-0
+  loc_A, 1, 1, desc_A,       // Destination: local matrices on each process
+  grid_ctx
+);
+
+if (iam == 0)
+    free(glob_A); // Free the global matrix on rank-0 after redistribution
+```
+
+??? note "Arguments of `PDGEMR2D`"
+
+    - **Global array shape**: the number of rows and columns in the global array (`M, N`).
+  
+    - **Source Matrix**:
+
+        + `glob_A`: Pointer to the memory holding the global matrix.
+        + `1, 1`: Coordinates of the starting element in the source matrix.
+        + `desc_glob_A`: Descriptor for the global matrix.
+  
+    - **Destination Matrix**:
+
+        + `loc_A`: Pointer to the local matrix on each process.
+        + `1, 1`: Coordinates of the starting element in the destination matrix.
+        + `desc_A`: Descriptor for the local matrix.
+  
+    - **Grid context**: the context that includes all processes involved in the source and destination grids (here, `grid_ctx`).
+
+
+Note that there are additional point-to-point and broadcast communication of arrays functions available at the BLACS level. 
+For a comprehensive overview, refer to [the BLACS quick reference guide](https://netlib.org/blacs/BLACS/QRef.html).
+
+Furthermore, for an example of point-to-point communication, you can explore [one of our test programs](https://github.com/pierre-24/scalapacke/blob/dev/tests/hello_blacs.c), which demonstrates the use of the [`?GESD2D`](https://netlib.org/blacs/BLACS/QRef.html#SD) and [`?GERV2D`](https://netlib.org/blacs/BLACS/QRef.html#RV) functions for sending and receiving data between processes. 
 
 ### 3. Call the function
 
-xxx
+Now that we have one array distributed on the grid, we can finally perform some calculation.
+Of course, you can follow the same steps to distribute other arrays to compute more complex things.
+
+To finish our example, let's compute the eigenvalues of $A$, using [`PDSYEV`](https://netlib.org/scalapack/explore-html/d0/d1a/pdsyev_8f_source.html) (since $A$ is symmetric).
+The function requires an auxiliary workspace, `WORK`, for which the rules are a bit convoluted.
+We will therefore make two calls: one to request the ideal size, the second to actually do the calculation:
+
+```c
+// request the size of `WORK` by setting `LWORK` to -1
+double tmpw;
+SCALAPACKE_pdsyev(
+  "N", "U", N, 
+  loc_A, 1, 1, desc_A, 
+  w, 
+  NULL, 1, 1, desc_A,
+  &tmpw, -1);
+
+lapack_int lwork = (lapack_int) tmpw;
+
+// compute the eigenvalues, stored in `w`
+double* w = calloc(N, sizeof(double ));
+double* work = calloc(lwork, sizeof(double ));
+SCALAPACKE_pdsyev(
+  "N", "U", N, 
+  loc_A, 1, 1, desc_A, // input matrix
+  w, 
+  NULL, 1, 1, desc_A,  // eigenvectors
+  work, lwork);
+```
 
 ### 4. Release!
 
@@ -434,7 +543,19 @@ xxx
 
 *"Release" is the final word in [Sakura](https://en.wikipedia.org/wiki/Cardcaptor_Sakura)'s spell to activate her scepter, so she shouts it in every episode. Couldn't resist the reference! 😉*
 
-xxx
+More seriously, this is just a reminder that all thing that were allocated should be released, including BLACS internals.
+Thus:
+
+```c
+    free(work);
+    free(w);
+    free(loc_A);
+
+    SCALAPACKE_blacs_gridexit(grid_ctx);
+}
+
+SCALAPACKE_blacs_exit(0);
+```
 
 ## Compilation and execution
 

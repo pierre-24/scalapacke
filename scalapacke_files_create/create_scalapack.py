@@ -1,10 +1,9 @@
-import datetime
 import pathlib
 import re
 from typing import List
 
-from scalapacke_files_create import SCALAPACK_REPO_URL, SELF_REPO_URL
-from scalapacke_files_create.base import Declaration, get_current_commit, jinja_env, DeclArgument
+from scalapacke_files_create import SCALAPACK_REPO_URL
+from scalapacke_files_create.base import Declaration, jinja_env, DeclArgument
 from scalapacke_files_create.fortran import Parser as FParser
 
 SELF_NAME = __name__
@@ -113,6 +112,55 @@ MISSING_DOCS = {
         DeclArgument('IU', 'Int*', is_input=True)
     ],
 }
+
+
+# REDIST/SRC/ is a mess!
+def _mkargs_gemr2d(ctype: str):
+    return [
+        DeclArgument('M', 'lapack_int*', is_input=True),
+        DeclArgument('N', 'lapack_int*', is_input=True),
+        DeclArgument('A', ctype, is_input=True, is_array=True),
+        DeclArgument('IA', 'lapack_int*', is_input=True),
+        DeclArgument('JA', 'lapack_int*', is_input=True),
+        DeclArgument('DESCA', 'lapack_int*', is_input=True, is_array=True),
+        DeclArgument('B', ctype, is_output=True, is_array=True),
+        DeclArgument('IB', 'lapack_int*', is_input=True),
+        DeclArgument('JB', 'lapack_int*', is_input=True),
+        DeclArgument('DESCB', 'lapack_int*', is_input=True, is_array=True),
+        DeclArgument('ICTXT', 'lapack_int*', is_input=True)
+    ]
+
+
+def _mkargs_trmr2d(ctype: str):
+    return [
+        DeclArgument('UPLO', 'char*', is_input=True, is_array=True),
+        DeclArgument('DIAG', 'char*', is_input=True, is_array=True),
+        DeclArgument('M', 'lapack_int*', is_input=True),
+        DeclArgument('N', 'lapack_int*', is_input=True),
+        DeclArgument('A', ctype, is_input=True, is_array=True),
+        DeclArgument('IA', 'lapack_int*', is_input=True),
+        DeclArgument('JA', 'lapack_int*', is_input=True),
+        DeclArgument('DESCA', 'lapack_int*', is_input=True, is_array=True),
+        DeclArgument('B', ctype, is_output=True, is_array=True),
+        DeclArgument('IB', 'lapack_int*', is_input=True),
+        DeclArgument('JB', 'lapack_int*', is_input=True),
+        DeclArgument('DESCB', 'lapack_int*', is_input=True, is_array=True),
+        DeclArgument('ICTXT', 'lapack_int*', is_input=True)
+    ]
+
+
+DECLS_REDIST = [
+    Declaration('pcgemr2d_', 'void', _mkargs_gemr2d('float*')),
+    Declaration('pdgemr2d_', 'void', _mkargs_gemr2d('double*')),
+    Declaration('pigemr2d_', 'void', _mkargs_gemr2d('lapack_int*')),
+    Declaration('psgemr2d_', 'void', _mkargs_gemr2d('float*')),
+    Declaration('pzgemr2d_', 'void', _mkargs_gemr2d('double*')),
+    Declaration('pctrmr2d_', 'void', _mkargs_trmr2d('float*')),
+    Declaration('pdtrmr2d_', 'void', _mkargs_trmr2d('double*')),
+    Declaration('pitrmr2d_', 'void', _mkargs_trmr2d('lapack_int*')),
+    Declaration('pstrmr2d_', 'void', _mkargs_trmr2d('float*')),
+    Declaration('pztrmr2d_', 'void', _mkargs_trmr2d('double*')),
+]
 
 
 def find_f_decl(lines: List[str]) -> Declaration:
@@ -261,34 +309,16 @@ def create_scalapack_headers_and_wrapper(
     # out
     with output_header.open('w') as f:
         f.write(template_header.render(
-            declarations_f=decls_f + decls_f_tools,
+            declarations_f=decls_f + decls_f_tools + DECLS_REDIST,
             defines=DEFINES,
-            self_name=SELF_NAME,
-            self_repo_url=SELF_REPO_URL,
-            self_commit=get_current_commit(pathlib.Path('.')),
-            scalapack_repo_url=SCALAPACK_REPO_URL,
-            scalapack_commit=get_current_commit(repo),
-            current_time=datetime.datetime.now()
         ))
 
     with output_ml_header.open('w') as f:
         f.write(template_ml_header.render(
-            declarations_f=decls_f + decls_f_tools,
-            self_name=SELF_NAME,
-            self_repo_url=SELF_REPO_URL,
-            self_commit=get_current_commit(pathlib.Path('.')),
-            scalapack_repo_url=SCALAPACK_REPO_URL,
-            scalapack_commit=get_current_commit(repo),
-            current_time=datetime.datetime.now()
+            declarations_f=decls_f + decls_f_tools + DECLS_REDIST,
         ))
 
     with output_ml_wrapper.open('w') as f:
         f.write(template_ml_wrapper.render(
-            declarations_f=decls_f + decls_f_tools,
-            self_name=SELF_NAME,
-            self_repo_url=SELF_REPO_URL,
-            self_commit=get_current_commit(pathlib.Path('.')),
-            scalapack_repo_url=SCALAPACK_REPO_URL,
-            scalapack_commit=get_current_commit(repo),
-            current_time=datetime.datetime.now()
+            declarations_f=decls_f + decls_f_tools + DECLS_REDIST,
         ))

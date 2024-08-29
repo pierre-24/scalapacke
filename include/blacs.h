@@ -1,5 +1,6 @@
 #ifndef HEADER_BLACS_H
 #define HEADER_BLACS_H
+
 #include <mpi.h>
 
 /* defines

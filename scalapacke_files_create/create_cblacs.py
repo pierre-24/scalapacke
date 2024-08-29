@@ -1,10 +1,9 @@
-import datetime
 import pathlib
 from typing import List
 import re
 
-from scalapacke_files_create import SCALAPACK_REPO_URL, SELF_REPO_URL
-from scalapacke_files_create.base import Declaration, get_current_commit, jinja_env, DeclArgument
+from scalapacke_files_create import SCALAPACK_REPO_URL
+from scalapacke_files_create.base import Declaration, jinja_env, DeclArgument
 
 SELF_NAME = __name__
 
@@ -246,32 +245,14 @@ def create_cblacs_headers_and_wrapper(
         f.write(template_header.render(
             declarations_f=decls_f + BLACS_DECLS,
             defines=TO_DEFINE,
-            self_name=SELF_NAME,
-            self_repo_url=SELF_REPO_URL,
-            self_commit=get_current_commit(pathlib.Path('.')),
-            scalapack_repo_url=SCALAPACK_REPO_URL,
-            scalapack_commit=get_current_commit(repo),
-            current_time=datetime.datetime.now()
         ))
 
     with output_ml_header.open('w') as f:
         f.write(template_ml_header.render(
             declarations_f=decls_f + BLACS_DECLS,
-            self_name=SELF_NAME,
-            self_repo_url=SELF_REPO_URL,
-            self_commit=get_current_commit(pathlib.Path('.')),
-            scalapack_repo_url=SCALAPACK_REPO_URL,
-            scalapack_commit=get_current_commit(repo),
-            current_time=datetime.datetime.now()
         ))
 
     with output_ml_wrapper.open('w') as f:
         f.write(template_ml_wrapper.render(
             declarations_f=decls_f + BLACS_DECLS,
-            self_name=SELF_NAME,
-            self_repo_url=SELF_REPO_URL,
-            self_commit=get_current_commit(pathlib.Path('.')),
-            scalapack_repo_url=SCALAPACK_REPO_URL,
-            scalapack_commit=get_current_commit(repo),
-            current_time=datetime.datetime.now()
         ))

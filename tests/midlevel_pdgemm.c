@@ -80,6 +80,8 @@ int main(int argc, char* argv[]) {
         free(loc_I);
         free(loc_C);
         free(work);
+
+        SCALAPACKE_blacs_gridexit(grid_ctx);
     }
 
     SCALAPACKE_blacs_exit(0);
