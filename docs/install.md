@@ -19,7 +19,7 @@ In any case, check your package manager (or your module system), some of these o
 
 ## Using the files as is, in your project
 
-Just download [the latest files](https://github.com/pierre-24/scalapacke/releases/download/v0.2.2/scalapacke_v0.2.2.tar.gz) and put the content of `src/` and `include/` wherever it fits you and your building system.
+Just download [the latest files](https://github.com/pierre-24/scalapacke/releases/download/v0.2.3/scalapacke_v0.2.3.tar.gz) and put the content of `src/` and `include/` wherever it fits you and your building system.
 Don't forget to:
 
 + add the files in your build system (Makefile, CMake, or others),
@@ -39,7 +39,7 @@ Just grab the wrap file corresponding to the version you want to use ...
 mkdir -p subprojects
 
 # download wrap file
-wget https://github.com/pierre-24/scalapacke/releases/download/v0.2.2/scalapacke_v0.2.2.wrap -O subprojects/scalapacke.wrap
+wget https://github.com/pierre-24/scalapacke/releases/download/v0.2.3/scalapacke_v0.2.3.wrap -O subprojects/scalapacke.wrap
 ```
 
 ... and add something like this in your `meson.build`:
