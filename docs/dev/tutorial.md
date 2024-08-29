@@ -203,14 +203,17 @@ To effectively use a scaLAPACKe function, follow these four steps:
 3. Call the desired scaLAPACKe function.
 4. Release the matrices and the grid once the computation is complete.
 
-All that is to be realized using scaLAPACKe.
-Thus, let's include the relevant headers:
+In the rest of this tutorial, we will apply those steps to compute the eigenvalues of a symmetric matrix.
+This would be achieved using [`DSYEV`](https://netlib.org/lapack/explore-html/d8/d1c/group__heev_ga8995c47a7578fef733189df3490258ff.html) in LAPACK, but all that is now to be realized using **sca**LAPACK**e**.
+Thus, let's start by including the relevant headers:
 
 ```c
 #include <scalapacke_blacs.h>
 #include <scalapacke_pblas.h>
 #include <scalapacke.h>
 ```
+
+... And now, let's dig into the recipe.
 
 ### 1. Initialize the grid
 
@@ -543,7 +546,7 @@ SCALAPACKE_pdsyev(
 
 *"Release" is the final word in [Sakura](https://en.wikipedia.org/wiki/Cardcaptor_Sakura)'s spell to activate her scepter, so she shouts it in every episode. Couldn't resist the reference! 😉*
 
-More seriously, this is just a reminder that all thing that were allocated should be released, including BLACS internals.
+More seriously, this is just a reminder that all things that were allocated once should be released, including BLACS internals.
 Thus:
 
 ```c
@@ -555,15 +558,78 @@ Thus:
 }
 
 SCALAPACKE_blacs_exit(0);
+
+// ... Ashes to ashes, dust to dust.
 ```
 
 ## Compilation and execution
 
-You can find the source code of this example in [this archive](../assets/tutorial.tar.gz).
+You can find the source code for this example in [this archive](../assets/tutorial.tar.gz). 
+A `meson.build` file, compatible with the [Meson build system](https://github.com/mesonbuild/meson), is also included. 
+You may need to adjust the ScaLAPACKe-related options according to [this documentation](install.md#with-meson-in-your-project-recommended).
 
-xxx.
+To build the executable, follow these steps:
 
-## Sources
+```bash
+# Use the MPI compiler
+export CC=mpicc
+
+# Fetch the libraries and prepare the build environment
+meson setup _build
+
+# Compile the code
+meson compile -C _build
+```
+
+After the compilation completes, a `tutorial` executable will be created in the `_build` directory.
+
+To run the executable, use [`mpiexec`](https://docs.open-mpi.org/en/v5.0.x/man-openmpi/man1/mpirun.1.html), which is provided by your MPI installation. 
+For example, to launch the application with 4 processes, run:
+
+```bash
+# to launch the application with 4 processes
+mpiexec -n 4 _buid/tutorial
+```
+
+If you monitor your resource manager (e.g., `htop`) during execution (but you need to be quick!), you will notice that the application is indeed launched four times, corresponding to the four processes.
+
+## Notes on Performance
+
+The [ScaLAPACK documentation](https://netlib.org/scalapack/slug/node106.html) offers several performance recommendations:
+
+> - Local matrix size of approximately 1000-by-1000.
+> - Avoid solving small problems on too many processors.
+> - Use an efficient data distribution with a square processor grid and a square block size (e.g., 64).
+
+However, these guidelines are over 25 years old and may not fully reflect the capabilities of modern hardware and software. 
+Below is an updated set of recommendations:
+
+- **Square Process Grid**: A square process grid (`P ≈ Q`) generally provides better performance. 
+  This configuration helps to balance the computational load and minimize communication overhead.
+
+- **Adapt Distribution to Resources**: It's important to adapt the data distribution to the number of available processes. 
+  Uneven distribution can cause load imbalance, where some processes are idle while others continue to compute, reducing overall efficiency.
+
+- **Optimal Block Size**: The block size is crucial for performance, as it impacts both load balancing and communication costs. 
+  Typical block sizes range from 32 to 128, but the optimal size may vary depending on the specific problem and hardware.
+
+- **Minimize Communication**: Whenever possible, reduce communication between processes. 
+  Keeping data local and minimizing data exchange can significantly enhance performance.
+
+- **Memory Alignment**: Proper memory alignment is critical for maximizing performance on modern processors. 
+  Misaligned memory accesses can lead to cache inefficiencies and slower execution times.
+
+- **OpenMP**: for some local computations, you can also take advantage of [OpenMP](https://openmp.llvm.org/).
+
+By following these updated recommendations, you can achieve better performance in ScaLAPACK, taking full advantage of current computing architectures.
+
+
+## Conclusions
+
+Thanks to this tutorial, you know understand better how an application using scaLAPACK(e) should be designed.
+Now, the sky is the limit to what you can achieve with those tools 😀
+
+**Few other tutorials on scaLAPACK:**
 
 + <https://info.gwdg.de/wiki/doku.php?id=wiki:hpc:scalapack>
 + <https://gitlab.phys.ethz.ch/hpcse_fs15/lecture>
