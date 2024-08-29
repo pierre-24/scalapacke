@@ -1,20 +1,19 @@
-import datetime
 import pathlib
 from typing import List
 import re
 
-from scalapacke_files_create import SCALAPACK_REPO_URL, SELF_REPO_URL
-from scalapacke_files_create.base import Declaration, get_current_commit, jinja_env, DeclArgument
+from scalapacke_files_create import SCALAPACK_REPO_URL
+from scalapacke_files_create.base import Declaration, jinja_env, DeclArgument, INT_TYPE
 
 SELF_NAME = __name__
 
 TO_DEFINE = [
-    ('lapack_int', 'int'),
+    (INT_TYPE, 'int'),
 ]
 
 TO_REPLACE = {
     'F_VOID_FUNC': 'void',
-    'F_INT_FUNC': 'lapack_int',
+    'F_INT_FUNC': INT_TYPE,
     'F_DOUBLE_FUNC': 'double',
     'F_CHAR': 'char*',
     'F_CHAR_T': 'char*'
@@ -44,64 +43,64 @@ def _p(inp: str, r: int = 0) -> DeclArgument:
 
 BLACS_DECLS = [
     # blacs*() functions do not come with a documentation, so manually handle them
-    Declaration('blacs_abort_', 'void', [_p('lapack_int* ConTxt'), _p('lapack_int* ErrNo')]),
-    Declaration('blacs_barrier_', 'void', [_p('lapack_int* ConTxt'), _p('char* scope')]),
-    Declaration('blacs_exit_', 'void', [_p('lapack_int* NotDone')]),
-    Declaration('blacs_freebuff_', 'void', [_p('lapack_int* ConTxt'), _p('lapack_int* wait')]),
+    Declaration('blacs_abort_', 'void', [_p('{}* ConTxt'.format(INT_TYPE)), _p('{}* ErrNo'.format(INT_TYPE))]),
+    Declaration('blacs_barrier_', 'void', [_p('{}* ConTxt'.format(INT_TYPE)), _p('char* scope')]),
+    Declaration('blacs_exit_', 'void', [_p('{}* NotDone'.format(INT_TYPE))]),
+    Declaration('blacs_freebuff_', 'void', [_p('{}* ConTxt'.format(INT_TYPE)), _p('{}* wait'.format(INT_TYPE))]),
     Declaration('blacs_get_', 'void', [
-        _p('lapack_int* ConTxt', ),
-        _p('lapack_int* what'),
-        _p('lapack_int* val', 1)
+        _p('{}* ConTxt'.format(INT_TYPE), ),
+        _p('{}* what'.format(INT_TYPE)),
+        _p('{}* val'.format(INT_TYPE), 1)
     ]),
-    Declaration('blacs_gridexit_', 'void', [_p('lapack_int* ConTxt')]),
+    Declaration('blacs_gridexit_', 'void', [_p('{}* ConTxt'.format(INT_TYPE))]),
     Declaration('blacs_gridinfo_', 'void', [
-        _p('lapack_int* ConTxt'),
-        _p('lapack_int* nprow', 1),
-        _p('lapack_int* npcol', 1),
-        _p('lapack_int* myrow', 1),
-        _p('lapack_int* mycol', 1)
+        _p('{}* ConTxt'.format(INT_TYPE)),
+        _p('{}* nprow'.format(INT_TYPE), 1),
+        _p('{}* npcol'.format(INT_TYPE), 1),
+        _p('{}* myrow'.format(INT_TYPE), 1),
+        _p('{}* mycol'.format(INT_TYPE), 1)
     ]),
     Declaration('blacs_gridinit_', 'void', [
-        _p('lapack_int* ConTxt', 1),
+        _p('{}* ConTxt'.format(INT_TYPE), 1),
         _p('char* order'),
-        _p('lapack_int* nprow',),
-        _p('lapack_int* npcol'),
+        _p('{}* nprow'.format(INT_TYPE),),
+        _p('{}* npcol'.format(INT_TYPE)),
     ]),
     Declaration('blacs_gridmap_', 'void', [
-        _p('lapack_int* ConTxt', 1),
-        _p('lapack_int* usermap', 1),
-        _p('lapack_int* ldup'),
-        _p('lapack_int* nprow0'),
-        _p('lapack_int* npcol0'),
+        _p('{}* ConTxt'.format(INT_TYPE), 1),
+        _p('{}* usermap'.format(INT_TYPE), 1),
+        _p('{}* ldup'.format(INT_TYPE)),
+        _p('{}* nprow0'.format(INT_TYPE)),
+        _p('{}* npcol0'.format(INT_TYPE)),
     ]),
     Declaration('blacs_pcoord_', 'void', [
-        _p('lapack_int* ConTxt'),
-        _p('lapack_int* nodenum'),
-        _p('lapack_int* prow', 1),
-        _p('lapack_int* pcol', 1)
+        _p('{}* ConTxt'.format(INT_TYPE)),
+        _p('{}* nodenum'.format(INT_TYPE)),
+        _p('{}* prow'.format(INT_TYPE), 1),
+        _p('{}* pcol'.format(INT_TYPE), 1)
     ]),
     Declaration('blacs_pinfo_', 'void', [
-        _p('lapack_int* mypnum', 1),
-        _p('lapack_int* nprocs', 1),
+        _p('{}* mypnum'.format(INT_TYPE), 1),
+        _p('{}* nprocs'.format(INT_TYPE), 1),
     ]),
     Declaration('blacs_pnum_', 'lapack_int', [
-        _p('lapack_int* ConTxt'),
-        _p('lapack_int* prow'),
-        _p('lapack_int* pcol')
+        _p('{}* ConTxt'.format(INT_TYPE)),
+        _p('{}* prow'.format(INT_TYPE)),
+        _p('{}* pcol'.format(INT_TYPE))
     ]),
     Declaration('blacs_set_', 'void', [
-        _p('lapack_int* ConTxt'),
-        _p('lapack_int* what'),
-        _p('lapack_int* val', 1)
+        _p('{}* ConTxt'.format(INT_TYPE)),
+        _p('{}* what'.format(INT_TYPE)),
+        _p('{}* val'.format(INT_TYPE), 1)
     ]),
     Declaration('blacs_setup_', 'void', [
-        _p('lapack_int* mypnum', 1),
-        _p('lapack_int* nprocs', 1),
+        _p('{}* mypnum'.format(INT_TYPE), 1),
+        _p('{}* nprocs'.format(INT_TYPE), 1),
     ]),
     Declaration('blacs2sys_handle_', 'MPI_Comm', [
-        _p('lapack_int* BlacsCtxt')
+        _p('{}* BlacsCtxt'.format(INT_TYPE))
     ]),
-    Declaration('sys2blacs_handle_', 'lapack_int', [
+    Declaration('sys2blacs_handle_', INT_TYPE, [
         _p('MPI_Comm* SysCtxt')
     ]),
 ]
@@ -128,7 +127,7 @@ def find_c_decl(inp: str) -> Declaration:
 
             arg_ctype = match_arg.group('type')
             if arg_ctype == 'Int':
-                arg_ctype = 'lapack_int'
+                arg_ctype = INT_TYPE
             arg_ctype += ('*' if match_arg.group('ptr') else '')
             if arg_ctype in TO_REPLACE:
                 arg_ctype = TO_REPLACE[arg_ctype]
@@ -246,32 +245,14 @@ def create_cblacs_headers_and_wrapper(
         f.write(template_header.render(
             declarations_f=decls_f + BLACS_DECLS,
             defines=TO_DEFINE,
-            self_name=SELF_NAME,
-            self_repo_url=SELF_REPO_URL,
-            self_commit=get_current_commit(pathlib.Path('.')),
-            scalapack_repo_url=SCALAPACK_REPO_URL,
-            scalapack_commit=get_current_commit(repo),
-            current_time=datetime.datetime.now()
         ))
 
     with output_ml_header.open('w') as f:
         f.write(template_ml_header.render(
             declarations_f=decls_f + BLACS_DECLS,
-            self_name=SELF_NAME,
-            self_repo_url=SELF_REPO_URL,
-            self_commit=get_current_commit(pathlib.Path('.')),
-            scalapack_repo_url=SCALAPACK_REPO_URL,
-            scalapack_commit=get_current_commit(repo),
-            current_time=datetime.datetime.now()
         ))
 
     with output_ml_wrapper.open('w') as f:
         f.write(template_ml_wrapper.render(
             declarations_f=decls_f + BLACS_DECLS,
-            self_name=SELF_NAME,
-            self_repo_url=SELF_REPO_URL,
-            self_commit=get_current_commit(pathlib.Path('.')),
-            scalapack_repo_url=SCALAPACK_REPO_URL,
-            scalapack_commit=get_current_commit(repo),
-            current_time=datetime.datetime.now()
         ))

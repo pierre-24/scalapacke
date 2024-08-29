@@ -5,7 +5,10 @@ tests_dep += cc.find_library('m', required: true)
 # list of tests
 tests_to_run = [
     'hello_blacs',
-	'pdgemm',
+	'lowlevel_pdgemm',
+	'midlevel_pdgemm',
+	'pdgemm_residual',
+	'pdsyev',
 ]
 
 mpiexec = find_program('mpiexec', required : true)

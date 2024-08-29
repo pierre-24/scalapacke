@@ -1,16 +1,15 @@
-import datetime
 import pathlib
 import re
 from typing import List
 
-from scalapacke_files_create import SCALAPACK_REPO_URL, SELF_REPO_URL
-from scalapacke_files_create.base import Declaration, get_current_commit, jinja_env
+from scalapacke_files_create import SCALAPACK_REPO_URL
+from scalapacke_files_create.base import Declaration, jinja_env, INT_TYPE
 from scalapacke_files_create.create_cblacs import find_c_decl
 
 SELF_NAME = __name__
 
 DEFINES = [
-    ('lapack_int', 'int'),
+    (INT_TYPE, 'int'),
 ]
 
 PATTERN_ARG_DOC = re.compile(r'\s{0,3}\*\s{1,3}(?P<name>\w*)\s+\((?P<intent>.*)\)(?P<extra>.*)?')
@@ -118,32 +117,14 @@ def create_cpblas_headers_and_wrapper(
         f.write(template_header.render(
             declarations_f=decls_f,
             defines=DEFINES,
-            self_name=SELF_NAME,
-            self_repo_url=SELF_REPO_URL,
-            self_commit=get_current_commit(pathlib.Path('.')),
-            scalapack_repo_url=SCALAPACK_REPO_URL,
-            scalapack_commit=get_current_commit(repo),
-            current_time=datetime.datetime.now()
         ))
 
     with output_ml_header.open('w') as f:
         f.write(template_ml_header.render(
             declarations_f=decls_f,
-            self_name=SELF_NAME,
-            self_repo_url=SELF_REPO_URL,
-            self_commit=get_current_commit(pathlib.Path('.')),
-            scalapack_repo_url=SCALAPACK_REPO_URL,
-            scalapack_commit=get_current_commit(repo),
-            current_time=datetime.datetime.now()
         ))
 
     with output_ml_wrapper.open('w') as f:
         f.write(template_ml_wrapper.render(
             declarations_f=decls_f,
-            self_name=SELF_NAME,
-            self_repo_url=SELF_REPO_URL,
-            self_commit=get_current_commit(pathlib.Path('.')),
-            scalapack_repo_url=SCALAPACK_REPO_URL,
-            scalapack_commit=get_current_commit(repo),
-            current_time=datetime.datetime.now()
         ))

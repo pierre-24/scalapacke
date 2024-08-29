@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
         // compute length and create arrays
         loc_nrows = SCALAPACKE_numroc(N, blk_size, loc_row, 0, glob_nrows);
         loc_ncols = SCALAPACKE_numroc(N, blk_size, loc_col, 0, glob_ncols);
-        loc_lld =  loc_nrows;
+        loc_lld = loc_nrows; // column major
         A = calloc(loc_nrows * loc_ncols, sizeof(double));
         B = calloc(loc_nrows * loc_ncols, sizeof(double));
         C = calloc(loc_nrows * loc_ncols, sizeof(double));
@@ -83,10 +83,10 @@ int main(int argc, char* argv[]) {
         }
 
         // create descriptor for A, B and C
-        SCALAPACKE_descinit(desc_distributed, N, N, blk_size, blk_size, 0, 0, ctx_sys, N);
+        SCALAPACKE_descinit(desc_distributed, N, N, blk_size, blk_size, 0, 0, ctx_sys, loc_lld);
 
         // compute norm of A and B
-        work = (double*) calloc(loc_nrows, sizeof(double));
+        work = (double*) calloc(loc_lld, sizeof(double));
         norm_A = SCALAPACKE_pdlange("F", N, N, A, 1, 1, desc_distributed, work);
         norm_B = SCALAPACKE_pdlange("F", N, N, B, 1, 1, desc_distributed, work);
 
@@ -111,7 +111,7 @@ int main(int argc, char* argv[]) {
 
         if(iam == 0) {
             if(residual > 1.0) {
-                printf("%d :: r > 1 :(", iam);
+                printf("%d :: r = %d > 1 :(", iam, residual);
                 exit(EXIT_FAILURE);
             } else
                 printf("%d :: r = %f\n", iam, residual);
@@ -122,6 +122,8 @@ int main(int argc, char* argv[]) {
         free(B);
         free(C);
         free(work);
+
+        SCALAPACKE_blacs_gridexit(ctx_sys);
     } else
         printf("%d :: i'm out!\n", iam);
 
