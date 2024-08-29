@@ -289,7 +289,45 @@ Note that **all** processes should execute `BLACS_GRIDINIT`, maybe to discover w
 
 ### 2. Distribute data on the grid
 
-xxx
+scaLAPACK expects arrays to be divided into **blocks** that are distributed among the processes in a grid. 
+Specifically, it uses a [block cyclic distribution algorithm](https://netlib.org/utk/papers/sc96-scalapack/NODE8.HTM).
+
+For example, consider a 9x8 array with 2x2 blocks:
+
+![Block Cyclic Distribution](../assets/cyclic_distribution.svg)
+
+As shown, not all processes hold all the data. 
+The entire array is referred to as the **global array**, which is scattered across different processes. 
+Each process only stores a portion of the global array, known as the **local memory** or submatrix. 
+This approach is efficient in terms of memory usage.
+
+While the formulas to determine the shape of the local array and the position of each global array element within it are straightforward to derive, helper functions are available. 
+To determine the shape of the local matrix, you can use the [`NUMROC`](https://netlib.org/scalapack/explore-html/d4/d48/numroc_8f_source.html) function (`NUMROC` stands for "Number of Rows or Columns"):
+
+```c
+if (loc_row >= 0 && loc_cols >= 0) { // if process is on the grid
+    lapack_int blk_size = 2, N = 8;
+  
+    // Starting from a NxN matrix, compute the shape of the local one, loc_M x loc_N
+    lapack_int loc_M = SCALAPACKE_numroc(N, blk_size, loc_row, 0, grid_M);
+    lapack_int loc_N = SCALAPACKE_numroc(N, blk_size, loc_col, 0, grid_N);
+```
+
+To determine the local dimensions (number of rows and columns), the `NUMROC` function requires the following arguments:
+
+- **Global dimension length** (`N`): the size of the corresponding dimension of the global array.
+- **Block size** (`blk_size`): the size of each block in the block cyclic distribution.
+- **Process coordinate** (`loc_row`/`loc_col`): the coordinate of the process within the grid for that dimension.
+- **Process owning index 0** (here, it is `0`): the coordinate of the process that owns index 0 in that dimension.
+- **Grid dimension size** (`grid_M`/`grid_N`): the total number of processes in that grid dimension.
+
+By definition, `0 <= loc_M < N && 0 <= loc_N < N`.
+With these values, you can then allocate the submatrix locally.
+
+```c   
+// Allocate the local memory
+double* loc_A = calloc(loc_M * loc_N, sizeof(double));
+```
 
 ### 3. Call the function
 
@@ -298,6 +336,7 @@ xxx
 ### 4. Release!
 
 ![](https://media1.tenor.com/m/rFwzdbMTeAoAAAAd/card-captor-sakura-anime.gif)
+
 *"Release" is the final word in [Sakura](https://en.wikipedia.org/wiki/Cardcaptor_Sakura)'s spell to activate her scepter, so she shouts it in every episode. Couldn't resist the reference! 😉*
 
 xxx
