@@ -489,8 +489,7 @@
 
 <h1 id="scalapacke">ScaLAPACKe<a class="headerlink" href="#scalapacke" title="Permanent link">¤</a></h1>
 <p>This project provides a set of headers and wrappers designed to facilitate the use of <a href="https://www.netlib.org/scalapack/">ScaLAPACK</a> and its components, <a href="https://netlib.org/scalapack/pblas_qref.html">PBLAS</a> and <a href="https://netlib.org/blacs/">BLACS</a>, in C.</p>
-<p>Unlike <a href="https://netlib.org/lapack/lapacke.html">LAPACKE</a>, which translates Fortran interfaces to C, these wrappers are <strong>not</strong> a direct translation from Fortran. 
-Instead, they are lightweight wrappers that streamline the integration of ScaLAPACK functionalities into C applications, <a href="dev/quickstart/">in a predictable way</a>.</p>
+<p>Like <a href="https://netlib.org/lapack/lapacke.html">LAPACKE</a>, they are lightweight wrappers that streamline the integration of ScaLAPACK functionalities into C applications, <a href="dev/quickstart/">in a predictable way</a>.</p>
 <p>Below is an example of using the wrapper to perform eigenvalue and eigenvector computations with <code>PDSYEV</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="cm">/* Inspired by https://wwwuser.gwdguser.de/~ohaan/ScaLAPACK_examples/demo_PDSYEV.f</span>
 <span class="cm"> *</span>

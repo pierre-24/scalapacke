@@ -664,7 +664,8 @@
 </ul>
 <p>The third issue (documentation) remains an ongoing challenge, reflecting a broader trend in netlib's projects that rely heavily on aging user guides and systematic function design.</p>
 <p><strong>Note:</strong> This project is in its early stages, and the API is not yet stable and may undergo changes.</p>
-<p>For more information on how to use scaLAPACKe in practice, including common caveats, refer to the <a href="../dev/quickstart/">Quickstart Guide</a>. A more beginner-friendly introduction to (sca)LAPACK(e) is also available <a href="../dev/tutorial/">here</a>.</p>
+<p>For more information on how to use scaLAPACKe in practice, including common caveats, refer to the <a href="../dev/quickstart/">Quickstart Guide</a>. 
+A more beginner-friendly introduction to (sca)LAPACK(e) is also available <a href="../dev/tutorial/">here</a>.</p>
 <h3 id="alternatives">Alternatives<a class="headerlink" href="#alternatives" title="Permanent link">¤</a></h3>
 <p>Currently, there are no direct alternatives to this project that allow for using <strong>sca</strong>LAPACK in C, other than the aforementioned headers provided by oneMKL (<code>mkl_{blacs,pblas,scalapack}.h</code>). If such an alternative existed, this project likely wouldn't.</p>
 <p>However, <strong><a href="https://github.com/icl-utk-edu/slate/">SLATE</a></strong>, written in C++, aims to replace scaLAPACK and is worth considering. There is also an (undocumented?) <a href="https://bitbucket.org/icl/slate-tutorial/src/master/c_api/">C API</a>, which appears to be <a href="https://github.com/icl-utk-edu/slate/blob/master/src/c_api/wrappers.cc">auto-generated</a>. Additionally, with the rise of GPUs, other projects with different approaches have emerged.</p>
