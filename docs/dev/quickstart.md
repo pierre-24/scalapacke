@@ -24,9 +24,11 @@ If you notice that a routine is missing, feel free to [open an issue](https://gi
 ## Common Features and Caveats for Both Interfaces
 
 - Variables of Fortran type `INTEGER` and `LOGICAL` are converted to `lapack_int` in scaLAPACKe. 
-  This conversion supports the use of 64-bit integers through the [ILP64 programming model](https://en.wikipedia.org/wiki/64-bit_computing#64-bit_data_models).
+  This conversion supports the use of 64-bit integers (see [ILP64 programming model](https://en.wikipedia.org/wiki/64-bit_computing#64-bit_data_models)).
 
-- Variables of Fortran type `COMPLEX` and `COMPLEX*16` are converted to `float*` and `double*`, respectively.
+- Following [LAPACKe](https://netlib.org/lapack/lapacke.html#_complex_types), variables of Fortran type `COMPLEX` and `COMPLEX*16` are converted to `lapack_complex_float*` and `lapack_complex_double*`, respectively.
+  It is assumed throughout that the real and imaginary components are stored contiguously in memory, with the real component first.
+  The `lapack_complex_float` and `lapack_complex_double` macros can be either C99 `_Complex` types, a C struct defined type, or a custom complex type.
 
 - Arrays are passed as pointers, not as pointers to pointers. 
   They should be stored in Fortran style, i.e., [column-major order](https://en.wikipedia.org/wiki/Row-_and_column-major_order): for an `MxN` matrix (where `M` is the number of rows and `N` is the number of columns), `A(i,j)` is accessed as `A[i + j * LDA]`, where `LDA` is the *leading dimension* of `A` (typically the number of rows, `M`).
@@ -103,7 +105,7 @@ All other arguments from the original Fortran subroutine are retained in the C i
 Arguments are passed by value rather than by pointer when both of the following conditions are met:
 
 1. The argument is input-only.
-2. The argument is a scalar type (such as `INTEGER`, `REAL`, `DOUBLE`, or `LOGICAL`).
+2. The argument is a scalar type (such as `INTEGER`, `REAL`, `DOUBLE`, `COMPLEX`, or `LOGICAL`).
 
 ??? Example
 

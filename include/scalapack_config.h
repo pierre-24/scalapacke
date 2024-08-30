@@ -56,7 +56,7 @@ extern "C" {
 #endif
 #endif // LAPACK_IFMT
 
-
+#ifndef LAPACK_COMPLEX_CUSTOM
 #if defined(LAPACK_COMPLEX_STRUCTURE)
 
 typedef struct { float real, imag; } _lapack_complex_float;
@@ -101,8 +101,9 @@ static inline lapack_complex_double lapack_make_complex_double(double re, double
     lapack_complex_double z = re + im * I;
     return z;
 }
-
 #endif
+
+#endif // LAPACK_COMPLEX_CUSTOM
 
 #ifdef __cplusplus
 }
