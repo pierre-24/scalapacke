@@ -29,7 +29,7 @@ Make sure to:
 - Add the extracted files to your build system (e.g., Makefile, CMake).
 - Use `mpicc` (or an equivalent MPI compiler wrapper) to compile your project.
 - Link against the scaLAPACK library of your choice.
-- If using 64-bit integers (ILP64), redefine `lapack_int` with `-Dlapack_int='long long int'` in your compiler options. 
+- If using 64-bit integers (ILP64), use `-DLAPACK_ILP64` in your compiler options.
   Learn more about ILP64 [here](https://en.wikipedia.org/wiki/64-bit_computing#64-bit_data_models).
 
 ## With Meson, in your project (recommended)

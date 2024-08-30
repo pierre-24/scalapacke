@@ -1,12 +1,20 @@
 #ifndef HEADER_SCALAPACKE_H
 #define HEADER_SCALAPACKE_H
 
-#include <scalapack.h>
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
+#include "scalapack.h"
 
 /* Declarations
  */
 {%- for declaration in declarations_f %}
 {{ declaration.to_aliased_decl() }}
 {%- endfor %}
+
+#ifdef __cplusplus
+}
+#endif // __cplusplus
 
 #endif // HEADER_SCALAPACKE_H

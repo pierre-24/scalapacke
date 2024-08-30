@@ -650,6 +650,8 @@ By following these updated recommendations, you can achieve better performance i
 Thanks to this tutorial, you know understand better how an application using scaLAPACK(e) should be designed.
 Now, the sky is the limit to what you can achieve with those tools 😀
 
+Now, don't forget to [read about the few quirks of scaLAPACKe](quickstart.md).
+
 **Few other tutorials on scaLAPACK:**
 
 + <https://info.gwdg.de/wiki/doku.php?id=wiki:hpc:scalapack>

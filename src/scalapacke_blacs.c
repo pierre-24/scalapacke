@@ -1,7 +1,7 @@
 #include "scalapacke_blacs.h"
 
 
-void SCALAPACKE_cgamn2d(const lapack_int ConTxt, const char* scope, const char* top, const lapack_int m, const lapack_int n, float* A, const lapack_int lda, lapack_int* rA, lapack_int* cA, const lapack_int ldia, const lapack_int rdest, const lapack_int cdest) {
+void SCALAPACKE_cgamn2d(const lapack_int ConTxt, const char* scope, const char* top, const lapack_int m, const lapack_int n, lapack_complex_float* A, const lapack_int lda, lapack_int* rA, lapack_int* cA, const lapack_int ldia, const lapack_int rdest, const lapack_int cdest) {
     cgamn2d_(&ConTxt, scope, top, &m, &n, A, &lda, rA, cA, &ldia, &rdest, &cdest);
 }
 
@@ -17,11 +17,11 @@ void SCALAPACKE_sgamn2d(const lapack_int ConTxt, const char* scope, const char* 
     sgamn2d_(&ConTxt, scope, top, &m, &n, A, &lda, rA, cA, &ldia, &rdest, &cdest);
 }
 
-void SCALAPACKE_zgamn2d(const lapack_int ConTxt, const char* scope, const char* top, const lapack_int m, const lapack_int n, double* A, const lapack_int lda, lapack_int* rA, lapack_int* cA, const lapack_int ldia, const lapack_int rdest, const lapack_int cdest) {
+void SCALAPACKE_zgamn2d(const lapack_int ConTxt, const char* scope, const char* top, const lapack_int m, const lapack_int n, lapack_complex_double* A, const lapack_int lda, lapack_int* rA, lapack_int* cA, const lapack_int ldia, const lapack_int rdest, const lapack_int cdest) {
     zgamn2d_(&ConTxt, scope, top, &m, &n, A, &lda, rA, cA, &ldia, &rdest, &cdest);
 }
 
-void SCALAPACKE_cgamx2d(const lapack_int ConTxt, const char* scope, const char* top, const lapack_int m, const lapack_int n, float* A, const lapack_int lda, lapack_int* rA, lapack_int* cA, const lapack_int ldia, const lapack_int rdest, const lapack_int cdest) {
+void SCALAPACKE_cgamx2d(const lapack_int ConTxt, const char* scope, const char* top, const lapack_int m, const lapack_int n, lapack_complex_float* A, const lapack_int lda, lapack_int* rA, lapack_int* cA, const lapack_int ldia, const lapack_int rdest, const lapack_int cdest) {
     cgamx2d_(&ConTxt, scope, top, &m, &n, A, &lda, rA, cA, &ldia, &rdest, &cdest);
 }
 
@@ -37,11 +37,11 @@ void SCALAPACKE_sgamx2d(const lapack_int ConTxt, const char* scope, const char* 
     sgamx2d_(&ConTxt, scope, top, &m, &n, A, &lda, rA, cA, &ldia, &rdest, &cdest);
 }
 
-void SCALAPACKE_zgamx2d(const lapack_int ConTxt, const char* scope, const char* top, const lapack_int m, const lapack_int n, double* A, const lapack_int lda, lapack_int* rA, lapack_int* cA, const lapack_int ldia, const lapack_int rdest, const lapack_int cdest) {
+void SCALAPACKE_zgamx2d(const lapack_int ConTxt, const char* scope, const char* top, const lapack_int m, const lapack_int n, lapack_complex_double* A, const lapack_int lda, lapack_int* rA, lapack_int* cA, const lapack_int ldia, const lapack_int rdest, const lapack_int cdest) {
     zgamx2d_(&ConTxt, scope, top, &m, &n, A, &lda, rA, cA, &ldia, &rdest, &cdest);
 }
 
-void SCALAPACKE_cgebr2d(const lapack_int ConTxt, const char* scope, const char* top, const lapack_int m, const lapack_int n, float* A, const lapack_int lda, const lapack_int rsrc, const lapack_int csrc) {
+void SCALAPACKE_cgebr2d(const lapack_int ConTxt, const char* scope, const char* top, const lapack_int m, const lapack_int n, lapack_complex_float* A, const lapack_int lda, const lapack_int rsrc, const lapack_int csrc) {
     cgebr2d_(&ConTxt, scope, top, &m, &n, A, &lda, &rsrc, &csrc);
 }
 
@@ -57,11 +57,11 @@ void SCALAPACKE_sgebr2d(const lapack_int ConTxt, const char* scope, const char* 
     sgebr2d_(&ConTxt, scope, top, &m, &n, A, &lda, &rsrc, &csrc);
 }
 
-void SCALAPACKE_zgebr2d(const lapack_int ConTxt, const char* scope, const char* top, const lapack_int m, const lapack_int n, double* A, const lapack_int lda, const lapack_int rsrc, const lapack_int csrc) {
+void SCALAPACKE_zgebr2d(const lapack_int ConTxt, const char* scope, const char* top, const lapack_int m, const lapack_int n, lapack_complex_double* A, const lapack_int lda, const lapack_int rsrc, const lapack_int csrc) {
     zgebr2d_(&ConTxt, scope, top, &m, &n, A, &lda, &rsrc, &csrc);
 }
 
-void SCALAPACKE_cgebs2d(const lapack_int ConTxt, const char* scope, const char* top, const lapack_int m, const lapack_int n, const float* A, const lapack_int lda) {
+void SCALAPACKE_cgebs2d(const lapack_int ConTxt, const char* scope, const char* top, const lapack_int m, const lapack_int n, const lapack_complex_float* A, const lapack_int lda) {
     cgebs2d_(&ConTxt, scope, top, &m, &n, A, &lda);
 }
 
@@ -77,11 +77,11 @@ void SCALAPACKE_sgebs2d(const lapack_int ConTxt, const char* scope, const char* 
     sgebs2d_(&ConTxt, scope, top, &m, &n, A, &lda);
 }
 
-void SCALAPACKE_zgebs2d(const lapack_int ConTxt, const char* scope, const char* top, const lapack_int m, const lapack_int n, const double* A, const lapack_int lda) {
+void SCALAPACKE_zgebs2d(const lapack_int ConTxt, const char* scope, const char* top, const lapack_int m, const lapack_int n, const lapack_complex_double* A, const lapack_int lda) {
     zgebs2d_(&ConTxt, scope, top, &m, &n, A, &lda);
 }
 
-void SCALAPACKE_cgerv2d(const lapack_int ConTxt, const lapack_int m, const lapack_int n, float* A, const lapack_int lda, const lapack_int rsrc, const lapack_int csrc) {
+void SCALAPACKE_cgerv2d(const lapack_int ConTxt, const lapack_int m, const lapack_int n, lapack_complex_float* A, const lapack_int lda, const lapack_int rsrc, const lapack_int csrc) {
     cgerv2d_(&ConTxt, &m, &n, A, &lda, &rsrc, &csrc);
 }
 
@@ -97,11 +97,11 @@ void SCALAPACKE_sgerv2d(const lapack_int ConTxt, const lapack_int m, const lapac
     sgerv2d_(&ConTxt, &m, &n, A, &lda, &rsrc, &csrc);
 }
 
-void SCALAPACKE_zgerv2d(const lapack_int ConTxt, const lapack_int m, const lapack_int n, double* A, const lapack_int lda, const lapack_int rsrc, const lapack_int csrc) {
+void SCALAPACKE_zgerv2d(const lapack_int ConTxt, const lapack_int m, const lapack_int n, lapack_complex_double* A, const lapack_int lda, const lapack_int rsrc, const lapack_int csrc) {
     zgerv2d_(&ConTxt, &m, &n, A, &lda, &rsrc, &csrc);
 }
 
-void SCALAPACKE_cgesd2d(const lapack_int ConTxt, const lapack_int m, const lapack_int n, const float* A, const lapack_int lda, const lapack_int rdest, const lapack_int cdest) {
+void SCALAPACKE_cgesd2d(const lapack_int ConTxt, const lapack_int m, const lapack_int n, const lapack_complex_float* A, const lapack_int lda, const lapack_int rdest, const lapack_int cdest) {
     cgesd2d_(&ConTxt, &m, &n, A, &lda, &rdest, &cdest);
 }
 
@@ -117,11 +117,11 @@ void SCALAPACKE_sgesd2d(const lapack_int ConTxt, const lapack_int m, const lapac
     sgesd2d_(&ConTxt, &m, &n, A, &lda, &rdest, &cdest);
 }
 
-void SCALAPACKE_zgesd2d(const lapack_int ConTxt, const lapack_int m, const lapack_int n, const double* A, const lapack_int lda, const lapack_int rdest, const lapack_int cdest) {
+void SCALAPACKE_zgesd2d(const lapack_int ConTxt, const lapack_int m, const lapack_int n, const lapack_complex_double* A, const lapack_int lda, const lapack_int rdest, const lapack_int cdest) {
     zgesd2d_(&ConTxt, &m, &n, A, &lda, &rdest, &cdest);
 }
 
-void SCALAPACKE_cgsum2d(const lapack_int ConTxt, const char* scope, const char* top, const lapack_int m, const lapack_int n, float* A, const lapack_int lda, const lapack_int rdest, const lapack_int cdest) {
+void SCALAPACKE_cgsum2d(const lapack_int ConTxt, const char* scope, const char* top, const lapack_int m, const lapack_int n, lapack_complex_float* A, const lapack_int lda, const lapack_int rdest, const lapack_int cdest) {
     cgsum2d_(&ConTxt, scope, top, &m, &n, A, &lda, &rdest, &cdest);
 }
 
@@ -137,11 +137,11 @@ void SCALAPACKE_sgsum2d(const lapack_int ConTxt, const char* scope, const char* 
     sgsum2d_(&ConTxt, scope, top, &m, &n, A, &lda, &rdest, &cdest);
 }
 
-void SCALAPACKE_zgsum2d(const lapack_int ConTxt, const char* scope, const char* top, const lapack_int m, const lapack_int n, double* A, const lapack_int lda, const lapack_int rdest, const lapack_int cdest) {
+void SCALAPACKE_zgsum2d(const lapack_int ConTxt, const char* scope, const char* top, const lapack_int m, const lapack_int n, lapack_complex_double* A, const lapack_int lda, const lapack_int rdest, const lapack_int cdest) {
     zgsum2d_(&ConTxt, scope, top, &m, &n, A, &lda, &rdest, &cdest);
 }
 
-void SCALAPACKE_ctrbr2d(const lapack_int ConTxt, const char* scope, const char* top, const char* uplo, const char* diag, const lapack_int m, const lapack_int n, float* A, const lapack_int lda, const lapack_int rsrc, const lapack_int csrc) {
+void SCALAPACKE_ctrbr2d(const lapack_int ConTxt, const char* scope, const char* top, const char* uplo, const char* diag, const lapack_int m, const lapack_int n, lapack_complex_float* A, const lapack_int lda, const lapack_int rsrc, const lapack_int csrc) {
     ctrbr2d_(&ConTxt, scope, top, uplo, diag, &m, &n, A, &lda, &rsrc, &csrc);
 }
 
@@ -157,11 +157,11 @@ void SCALAPACKE_strbr2d(const lapack_int ConTxt, const char* scope, const char* 
     strbr2d_(&ConTxt, scope, top, uplo, diag, &m, &n, A, &lda, &rsrc, &csrc);
 }
 
-void SCALAPACKE_ztrbr2d(const lapack_int ConTxt, const char* scope, const char* top, const char* uplo, const char* diag, const lapack_int m, const lapack_int n, double* A, const lapack_int lda, const lapack_int rsrc, const lapack_int csrc) {
+void SCALAPACKE_ztrbr2d(const lapack_int ConTxt, const char* scope, const char* top, const char* uplo, const char* diag, const lapack_int m, const lapack_int n, lapack_complex_double* A, const lapack_int lda, const lapack_int rsrc, const lapack_int csrc) {
     ztrbr2d_(&ConTxt, scope, top, uplo, diag, &m, &n, A, &lda, &rsrc, &csrc);
 }
 
-void SCALAPACKE_ctrbs2d(const lapack_int ConTxt, const char* scope, const char* top, const char* uplo, const char* diag, const lapack_int m, const lapack_int n, const float* A, const lapack_int lda) {
+void SCALAPACKE_ctrbs2d(const lapack_int ConTxt, const char* scope, const char* top, const char* uplo, const char* diag, const lapack_int m, const lapack_int n, const lapack_complex_float* A, const lapack_int lda) {
     ctrbs2d_(&ConTxt, scope, top, uplo, diag, &m, &n, A, &lda);
 }
 
@@ -177,11 +177,11 @@ void SCALAPACKE_strbs2d(const lapack_int ConTxt, const char* scope, const char* 
     strbs2d_(&ConTxt, scope, top, uplo, diag, &m, &n, A, &lda);
 }
 
-void SCALAPACKE_ztrbs2d(const lapack_int ConTxt, const char* scope, const char* top, const char* uplo, const char* diag, const lapack_int m, const lapack_int n, const double* A, const lapack_int lda) {
+void SCALAPACKE_ztrbs2d(const lapack_int ConTxt, const char* scope, const char* top, const char* uplo, const char* diag, const lapack_int m, const lapack_int n, const lapack_complex_double* A, const lapack_int lda) {
     ztrbs2d_(&ConTxt, scope, top, uplo, diag, &m, &n, A, &lda);
 }
 
-void SCALAPACKE_ctrrv2d(const lapack_int ConTxt, const char* uplo, const char* diag, const lapack_int m, const lapack_int n, float* A, const lapack_int lda, const lapack_int rsrc, const lapack_int csrc) {
+void SCALAPACKE_ctrrv2d(const lapack_int ConTxt, const char* uplo, const char* diag, const lapack_int m, const lapack_int n, lapack_complex_float* A, const lapack_int lda, const lapack_int rsrc, const lapack_int csrc) {
     ctrrv2d_(&ConTxt, uplo, diag, &m, &n, A, &lda, &rsrc, &csrc);
 }
 
@@ -197,11 +197,11 @@ void SCALAPACKE_strrv2d(const lapack_int ConTxt, const char* uplo, const char* d
     strrv2d_(&ConTxt, uplo, diag, &m, &n, A, &lda, &rsrc, &csrc);
 }
 
-void SCALAPACKE_ztrrv2d(const lapack_int ConTxt, const char* uplo, const char* diag, const lapack_int m, const lapack_int n, double* A, const lapack_int lda, const lapack_int rsrc, const lapack_int csrc) {
+void SCALAPACKE_ztrrv2d(const lapack_int ConTxt, const char* uplo, const char* diag, const lapack_int m, const lapack_int n, lapack_complex_double* A, const lapack_int lda, const lapack_int rsrc, const lapack_int csrc) {
     ztrrv2d_(&ConTxt, uplo, diag, &m, &n, A, &lda, &rsrc, &csrc);
 }
 
-void SCALAPACKE_ctrsd2d(const lapack_int ConTxt, const char* uplo, const char* diag, const lapack_int m, const lapack_int n, const float* A, const lapack_int lda, const lapack_int rdest, const lapack_int cdest) {
+void SCALAPACKE_ctrsd2d(const lapack_int ConTxt, const char* uplo, const char* diag, const lapack_int m, const lapack_int n, const lapack_complex_float* A, const lapack_int lda, const lapack_int rdest, const lapack_int cdest) {
     ctrsd2d_(&ConTxt, uplo, diag, &m, &n, A, &lda, &rdest, &cdest);
 }
 
@@ -217,7 +217,7 @@ void SCALAPACKE_strsd2d(const lapack_int ConTxt, const char* uplo, const char* d
     strsd2d_(&ConTxt, uplo, diag, &m, &n, A, &lda, &rdest, &cdest);
 }
 
-void SCALAPACKE_ztrsd2d(const lapack_int ConTxt, const char* uplo, const char* diag, const lapack_int m, const lapack_int n, const double* A, const lapack_int lda, const lapack_int rdest, const lapack_int cdest) {
+void SCALAPACKE_ztrsd2d(const lapack_int ConTxt, const char* uplo, const char* diag, const lapack_int m, const lapack_int n, const lapack_complex_double* A, const lapack_int lda, const lapack_int rdest, const lapack_int cdest) {
     ztrsd2d_(&ConTxt, uplo, diag, &m, &n, A, &lda, &rdest, &cdest);
 }
 
