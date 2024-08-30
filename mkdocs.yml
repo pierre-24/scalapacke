@@ -1,6 +1,6 @@
 site_name: Documentation of scaLAPACKe
 
-site_description: "scaLAPACe -- provide a set of headers and wrappers for scaLAPACK in C"
+site_description: "scaLAPACKe -- provide a set of headers and wrappers for scaLAPACK in C"
 site_url: https://pierrebeaujean.github.io/scalapacke/
 repo_url: "https://github.com/pierre-24/scalapacke"
 edit_uri: "blob/dev/docs/"
