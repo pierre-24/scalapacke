@@ -71,9 +71,9 @@ int main(int argc, char* argv[]) {
                 &D_M_ONE, A, &I_ONE, &I_ONE, desc_A
         );
 
-        // fetch the maximum (i.e., the 1-norm)
+        // fetch the maximum (i.e., the inf-norm)
         double* work = (double*) calloc(loc_LD, sizeof(double));
-        double max = pdlange_( "1", &N, &N, A, &I_ONE, &I_ONE, desc_A, work);
+        double max = pdlange_( "I", &N, &N, A, &I_ONE, &I_ONE, desc_A, work);
 
         if(iam == 0)
             printf("%f\n", max);

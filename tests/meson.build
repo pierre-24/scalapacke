@@ -7,8 +7,11 @@ tests_to_run = [
     'hello_blacs',
 	'lowlevel_pdgemm',
 	'midlevel_pdgemm',
+	'pcgeqrf',
 	'pdgemm_residual',
 	'pdsyev',
+	'pigemr2d',
+	'psgels',
 ]
 
 mpiexec = find_program('mpiexec', required : true)

@@ -513,6 +513,13 @@ Furthermore, for an example of point-to-point communication, you can explore [on
 Now that we have one array distributed on the grid, we can finally perform some calculation.
 Of course, you can follow the same steps to distribute other arrays to compute more complex things.
 
+
+!!! warning "Local versus global arguments"
+  
+    scaLAPACK distinguishes between local and global data.
+    Indeed, local arguments may have different values on each process in the process grid. 
+    Global arguments must have the same value on each process.
+
 To finish our example, let's compute the eigenvalues of $A$, using [`PDSYEV`](https://netlib.org/scalapack/explore-html/d0/d1a/pdsyev_8f_source.html) (since $A$ is symmetric).
 The function requires an auxiliary workspace, `WORK`, for which the rules are a bit convoluted.
 We will therefore make two calls: one to request the ideal size, the second to actually do the calculation:
@@ -592,6 +599,20 @@ mpiexec -n 4 _buid/tutorial
 ```
 
 If you monitor your resource manager (e.g., `htop`) during execution (but you need to be quick!), you will notice that the application is indeed launched four times, corresponding to the four processes.
+
+The program prints the eigenvalues of $A$.
+You can check their correctness by running the following Python code:
+
+```python
+import numpy
+A = numpy.zeros((8, 8))
+
+for i in range(8):
+    for j in range(i, 8):
+        A[i, j] = A[j, i] = 1 + .5 * abs(i - j)
+
+print(numpy.linalg.eigh(A)[0])
+```
 
 ## Notes on Performance
 

@@ -32,10 +32,6 @@ int main(int argc, char* argv[]) {
     glob_nrows = (lapack_int) sqrt((double) nprocs);
     glob_ncols = nprocs / glob_nrows;
 
-    // create the grid
-    glob_nrows = (lapack_int) sqrt((double) nprocs);
-    glob_ncols = nprocs / glob_nrows;
-
     SCALAPACKE_blacs_gridinit(&ctx_sys, "R", glob_nrows, glob_ncols);
     SCALAPACKE_blacs_gridinfo(ctx_sys, &glob_nrows, &glob_ncols, &loc_row, &loc_col);
 
@@ -91,6 +87,7 @@ int main(int argc, char* argv[]) {
         }
 
         double max_residual = .0f;
+        double norm_A = SCALAPACKE_pdlange("F", N, N, A, 1, 1, desc_A, work);
 
         for(lapack_int i = 1; i <= N; i++) {
             // compute `r = A * x_i`
@@ -112,14 +109,14 @@ int main(int argc, char* argv[]) {
             norm_X = SCALAPACKE_pdlange( "F", N, 1, X, 1, i, desc_A, work);
             norm_res = SCALAPACKE_pdlange("F", N, 1, r, 1, 1, desc_r, work);
             double eps = pdlamch_(&ctx_sys, "e");
-            double residual = norm_res / (2 * fabs(w[i - 1]) * norm_X * eps); // might not be the correct residual :(
+            double residual = norm_res / (2 * norm_A * norm_X * eps); // might not be the correct residual :(
 
             if (residual > max_residual)
                 max_residual = residual;
 
             if(iam == 0) {
-                if(residual > 100) {
-                    printf("%d :: residual for eigenvalue %d is %f > 100, aborting\n", iam, i, residual);
+                if(residual > 10) {
+                    printf("%d :: residual for eigenvalue %d is %f > 10, aborting\n", iam, i, residual);
                     exit(EXIT_FAILURE);
                 }
             }

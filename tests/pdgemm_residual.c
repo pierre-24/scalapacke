@@ -50,9 +50,6 @@ int main(int argc, char* argv[]) {
     SCALAPACKE_blacs_gridinit(&ctx_sys, "R", glob_nrows, glob_ncols);
     SCALAPACKE_blacs_gridinfo(ctx_sys, &glob_nrows, &glob_ncols, &loc_row, &loc_col);
 
-    if(iam == 0)
-        printf("%d :: grid is %dx%d, matrix is %dx%d\n", iam, glob_nrows, glob_ncols, N, N);
-
     if(loc_row >= 0) { // if I'm in grid
         // compute length and create arrays
         loc_nrows = SCALAPACKE_numroc(N, blk_size, loc_row, 0, glob_nrows);
@@ -65,8 +62,6 @@ int main(int argc, char* argv[]) {
         if(A == NULL || B == NULL || C == NULL) {
             printf("%d :: cannot allocate :(\n", iam);
             exit(EXIT_FAILURE);
-        } else {
-            printf("%d :: local matrix is %dx%d\n", iam, loc_nrows, loc_ncols);
         }
 
         // fill arrays locally
@@ -110,11 +105,12 @@ int main(int argc, char* argv[]) {
         double residual = norm_res / (2 * norm_A * norm_B * eps);
 
         if(iam == 0) {
-            if(residual > 1.0) {
-                printf("%d :: r = %d > 1 :(", iam, residual);
+            if (residual > 1.f) {
+                printf("%d :: residual is %f > 1, aborting\n", iam, residual);
                 exit(EXIT_FAILURE);
-            } else
-                printf("%d :: r = %f\n", iam, residual);
+            } else {
+                printf("%d :: residual is %f\n", iam, residual);
+            }
         }
 
         // free
