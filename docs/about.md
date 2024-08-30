@@ -21,7 +21,8 @@ The third issue (documentation) remains an ongoing challenge, reflecting a broad
 
 **Note:** This project is in its early stages, and the API is not yet stable and may undergo changes.
 
-For more information on how to use scaLAPACKe in practice, including common caveats, refer to the [Quickstart Guide](dev/quickstart.md). A more beginner-friendly introduction to (sca)LAPACK(e) is also available [here](dev/tutorial.md).
+For more information on how to use scaLAPACKe in practice, including common caveats, refer to the [Quickstart Guide](dev/quickstart.md). 
+A more beginner-friendly introduction to (sca)LAPACK(e) is also available [here](dev/tutorial.md).
 
 ### Alternatives
 
