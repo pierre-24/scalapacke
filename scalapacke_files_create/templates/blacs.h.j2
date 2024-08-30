@@ -1,6 +1,10 @@
 #ifndef HEADER_BLACS_H
 #define HEADER_BLACS_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
 #include <mpi.h>
 #include "scalapack_config.h"
 
@@ -9,5 +13,9 @@
 {%- for declaration in declarations_f %}
 {{ declaration.to_extern_c_decl() }}
 {%- endfor %}
+
+#ifdef __cplusplus
+}
+#endif // __cplusplus
 
 #endif // HEADER_BLACS_H

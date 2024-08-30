@@ -8,10 +8,6 @@ from scalapacke_files_create.create_cblacs import find_c_decl
 
 SELF_NAME = __name__
 
-DEFINES = [
-    (INT_TYPE, 'int'),
-]
-
 PATTERN_ARG_DOC = re.compile(r'\s{0,3}\*\s{1,3}(?P<name>\w*)\s+\((?P<intent>.*)\)(?P<extra>.*)?')
 
 
@@ -71,7 +67,8 @@ def find_decl(path: pathlib.Path) -> Declaration:
                         if 'array' in match_arg_doc['extra'].lower():
                             arg.is_array = True
                         if 'complex' in match_arg_doc['extra'].lower():
-                            arg.is_array = True
+                            arg.is_complex = True
+                            arg.to_complex()
 
                 except KeyError:
                     pass
@@ -116,7 +113,6 @@ def create_cpblas_headers_and_wrapper(
     with output_header.open('w') as f:
         f.write(template_header.render(
             declarations_f=decls_f,
-            defines=DEFINES,
         ))
 
     with output_ml_header.open('w') as f:

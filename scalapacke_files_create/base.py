@@ -10,6 +10,8 @@ from typing import List
 
 PREFIX = 'SCALAPACKE_'
 INT_TYPE = 'lapack_int'
+COMPLEX_TYPE = 'lapack_complex_float'
+COMPLEX16_TYPE = 'lapack_complex_double'
 
 # pattern
 PATTERN_C_FUNC = re.compile(r'(?P<rtype>\w+) (?P<name>\w+)\((?P<params>.*)\)')
@@ -20,18 +22,29 @@ jinja_env = Environment(loader=FileSystemLoader(pathlib.Path(__file__).parent / 
 
 
 class DeclArgument:
-    def __init__(self, name: str, ctype: str, is_input: bool = False, is_output: bool = False, is_array: bool = False):
+    def __init__(
+        self,
+        name: str,
+        ctype: str,
+        is_input: bool = False,
+        is_output: bool = False,
+        is_array: bool = False,
+        is_complex: bool = False
+    ):
         self.name = name
         self.ctype = ctype
         self.is_input = is_input
         self.is_output = is_output
         self.is_array = is_array
+        self.is_complex = is_complex
 
     def to_c_arg(self) -> str:
         return '{}{} {}'.format('const ' if not self.is_output else '', self.ctype, self.name)
 
     def aliasable(self):
-        return not self.is_output and not self.is_array and self.ctype in ['{}*'.format(INT_TYPE), 'float*', 'double*']
+        return not self.is_output and not self.is_array and self.ctype in [
+            '{}*'.format(INT_TYPE), 'float*', 'double*', '{}*'.format(COMPLEX_TYPE), '{}*'.format(COMPLEX16_TYPE)
+        ]
 
     def aliase(self):
         ctype = self.ctype
@@ -39,12 +52,23 @@ class DeclArgument:
         if not self.is_output and not self.is_array:
             if ctype == '{}*'.format(INT_TYPE):
                 ctype = INT_TYPE
+            elif ctype == '{}*'.format(COMPLEX_TYPE):
+                ctype = COMPLEX_TYPE
+            elif ctype == '{}*'.format(COMPLEX16_TYPE):
+                ctype = COMPLEX16_TYPE
             elif ctype == 'float*':
                 ctype = 'float'
             elif ctype == 'double*':
                 ctype = 'double'
 
-        return DeclArgument(self.name, ctype, self.is_input, self.is_output, self.is_array)
+        return DeclArgument(self.name, ctype, self.is_input, self.is_output, self.is_array, self.is_complex)
+
+    def to_complex(self):
+        if self.is_complex:
+            if self.ctype == 'float*':
+                self.ctype = '{}*'.format(COMPLEX_TYPE)
+            elif self.ctype == 'double*':
+                self.ctype = '{}*'.format(COMPLEX16_TYPE)
 
 
 class Declaration:

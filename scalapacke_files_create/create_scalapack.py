@@ -3,14 +3,10 @@ import re
 from typing import List
 
 from scalapacke_files_create import SCALAPACK_REPO_URL
-from scalapacke_files_create.base import Declaration, jinja_env, DeclArgument, INT_TYPE
+from scalapacke_files_create.base import Declaration, jinja_env, DeclArgument, INT_TYPE, COMPLEX_TYPE, COMPLEX16_TYPE
 from scalapacke_files_create.fortran import Parser as FParser
 
 SELF_NAME = __name__
-
-DEFINES = [
-    (INT_TYPE, 'int'),
-]
 
 PATTERN_ARG_DOC = re.compile(r'\s{0,3}\*\s{1,6}(?P<name>\w*)\s+\((?P<intent>.*?)\)(?P<extra>.*)?')
 
@@ -150,16 +146,16 @@ def _mkargs_trmr2d(ctype: str):
 
 
 DECLS_REDIST = [
-    Declaration('pcgemr2d_', 'void', _mkargs_gemr2d('float*')),
+    Declaration('pcgemr2d_', 'void', _mkargs_gemr2d('{}*'.format(COMPLEX_TYPE))),
     Declaration('pdgemr2d_', 'void', _mkargs_gemr2d('double*')),
     Declaration('pigemr2d_', 'void', _mkargs_gemr2d('{}*'.format(INT_TYPE))),
     Declaration('psgemr2d_', 'void', _mkargs_gemr2d('float*')),
-    Declaration('pzgemr2d_', 'void', _mkargs_gemr2d('double*')),
-    Declaration('pctrmr2d_', 'void', _mkargs_trmr2d('float*')),
+    Declaration('pzgemr2d_', 'void', _mkargs_gemr2d('{}*'.format(COMPLEX16_TYPE))),
+    Declaration('pctrmr2d_', 'void', _mkargs_trmr2d('{}*'.format(COMPLEX_TYPE))),
     Declaration('pdtrmr2d_', 'void', _mkargs_trmr2d('double*')),
     Declaration('pitrmr2d_', 'void', _mkargs_trmr2d('{}*'.format(INT_TYPE))),
     Declaration('pstrmr2d_', 'void', _mkargs_trmr2d('float*')),
-    Declaration('pztrmr2d_', 'void', _mkargs_trmr2d('double*')),
+    Declaration('pztrmr2d_', 'void', _mkargs_trmr2d('{}*'.format(COMPLEX16_TYPE))),
 ]
 
 
@@ -169,6 +165,11 @@ def find_f_decl(lines: List[str]) -> Declaration:
 
     args_list = []
     for arg_ctype, arg_name, arg_is_array in args_def_list:
+
+        # I is already used by <complex.h>
+        if arg_name == 'I':
+            arg_name = 'I_'
+
         args_list.append(DeclArgument(arg_name, arg_ctype, is_array=arg_is_array))
 
     return Declaration(name.lower() + '_', rtype, args_list)
@@ -228,6 +229,10 @@ def find_decl(path: pathlib.Path) -> Declaration:
             if match_arg_doc is not None:
                 arg_name = match_arg_doc['name'].upper()
 
+                # I is already used by <complex.h>
+                if arg_name == 'I':
+                    arg_name = 'I_'
+
                 try:
                     arg = args[arg_name]
                     found_arg_doc.append(arg_name)
@@ -241,7 +246,8 @@ def find_decl(path: pathlib.Path) -> Declaration:
                         arg.is_output = True
                     if match_arg_doc['extra'] is not None:
                         if 'complex' in match_arg_doc['extra'].lower():
-                            arg.is_array = True
+                            arg.is_complex = True
+                            arg.to_complex()
                         # normally, that is useless, since the parser already recognize arrays
                         if 'array' in match_arg_doc['extra'].lower():
                             arg.is_array = True
@@ -310,7 +316,6 @@ def create_scalapack_headers_and_wrapper(
     with output_header.open('w') as f:
         f.write(template_header.render(
             declarations_f=decls_f + decls_f_tools + DECLS_REDIST,
-            defines=DEFINES,
         ))
 
     with output_ml_header.open('w') as f:

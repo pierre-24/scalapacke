@@ -7,10 +7,6 @@ from scalapacke_files_create.base import Declaration, jinja_env, DeclArgument, I
 
 SELF_NAME = __name__
 
-TO_DEFINE = [
-    (INT_TYPE, 'int'),
-]
-
 TO_REPLACE = {
     'F_VOID_FUNC': 'void',
     'F_INT_FUNC': INT_TYPE,
@@ -193,7 +189,8 @@ def find_decl(path: pathlib.Path) -> Declaration:
                         if 'array' in match_arg_doc['extra'].lower():
                             arg.is_array = True
                         if 'complex' in match_arg_doc['extra'].lower():
-                            arg.is_array = True
+                            arg.is_complex = True
+                            arg.to_complex()
 
                 except KeyError:
                     pass
@@ -244,7 +241,6 @@ def create_cblacs_headers_and_wrapper(
     with output_header.open('w') as f:
         f.write(template_header.render(
             declarations_f=decls_f + BLACS_DECLS,
-            defines=TO_DEFINE,
         ))
 
     with output_ml_header.open('w') as f:
