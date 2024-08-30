@@ -658,7 +658,7 @@
 <li>Add the extracted files to your build system (e.g., Makefile, CMake).</li>
 <li>Use <code>mpicc</code> (or an equivalent MPI compiler wrapper) to compile your project.</li>
 <li>Link against the scaLAPACK library of your choice.</li>
-<li>If using 64-bit integers (ILP64), redefine <code>lapack_int</code> with <code>-Dlapack_int='long long int'</code> in your compiler options. 
+<li>If using 64-bit integers (ILP64), use <code>-DLAPACK_ILP64</code> in your compiler options.
   Learn more about ILP64 <a href="https://en.wikipedia.org/wiki/64-bit_computing#64-bit_data_models">here</a>.</li>
 </ul>
 <h2 id="with-meson-in-your-project-recommended">With Meson, in your project (recommended)<a class="headerlink" href="#with-meson-in-your-project-recommended" title="Permanent link">¤</a></h2>
