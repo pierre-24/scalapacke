@@ -20,7 +20,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.33">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.5.33">
     
     
       
@@ -1291,6 +1291,12 @@ For a comprehensive overview, refer to <a href="https://netlib.org/blacs/BLACS/Q
 <h3 id="3-call-the-function">3. Call the function<a class="headerlink" href="#3-call-the-function" title="Permanent link">¤</a></h3>
 <p>Now that we have one array distributed on the grid, we can finally perform some calculation.
 Of course, you can follow the same steps to distribute other arrays to compute more complex things.</p>
+<div class="admonition warning">
+<p class="admonition-title">Local versus global arguments</p>
+<p>scaLAPACK distinguishes between local and global data.
+Indeed, local arguments may have different values on each process in the process grid. 
+Global arguments must have the same value on each process.</p>
+</div>
 <p>To finish our example, let's compute the eigenvalues of <span class="arithmatex">\(A\)</span>, using <a href="https://netlib.org/scalapack/explore-html/d0/d1a/pdsyev_8f_source.html"><code>PDSYEV</code></a> (since <span class="arithmatex">\(A\)</span> is symmetric).
 The function requires an auxiliary workspace, <code>WORK</code>, for which the rules are a bit convoluted.
 We will therefore make two calls: one to request the ideal size, the second to actually do the calculation:</p>
@@ -1352,6 +1358,17 @@ For example, to launch the application with 4 processes, run:</p>
 mpiexec<span class="w"> </span>-n<span class="w"> </span><span class="m">4</span><span class="w"> </span>_buid/tutorial
 </code></pre></div>
 <p>If you monitor your resource manager (e.g., <code>htop</code>) during execution (but you need to be quick!), you will notice that the application is indeed launched four times, corresponding to the four processes.</p>
+<p>The program prints the eigenvalues of <span class="arithmatex">\(A\)</span>.
+You can check their correctness by running the following Python code:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span>
+        <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">.5</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">j</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">A</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+</code></pre></div>
 <h2 id="notes-on-performance">Notes on Performance<a class="headerlink" href="#notes-on-performance" title="Permanent link">¤</a></h2>
 <p>The <a href="https://netlib.org/scalapack/slug/node106.html">ScaLAPACK documentation</a> offers several performance recommendations:</p>
 <blockquote>
