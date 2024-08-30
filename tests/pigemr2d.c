@@ -61,7 +61,7 @@ int main(int argc, char* argv[]) {
             glob_j = SCALAPACKE_indxl2g(loc_j + 1, blk_size, loc_col, 0, glob_ncols) - 1;
             for(lapack_int loc_i=0; loc_i < loc_nrows; loc_i++) {
                 glob_i = SCALAPACKE_indxl2g(loc_i + 1, blk_size, loc_row, 0, glob_nrows) - 1;
-                loc_A[loc_j * loc_nrows + loc_i] = glob_j * M + glob_i;
+                loc_A[loc_j * loc_ld + loc_i] = glob_j * M + glob_i;
             }
         }
 

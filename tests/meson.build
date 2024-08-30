@@ -11,6 +11,7 @@ tests_to_run = [
 	'pcgeqrf',
 	'pdsyev',
 	'pigemr2d',
+	'psgels',
 ]
 
 mpiexec = find_program('mpiexec', required : true)

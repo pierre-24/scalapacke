@@ -600,6 +600,20 @@ mpiexec -n 4 _buid/tutorial
 
 If you monitor your resource manager (e.g., `htop`) during execution (but you need to be quick!), you will notice that the application is indeed launched four times, corresponding to the four processes.
 
+The program prints the eigenvalues of $A$.
+You can check their correctness by running the following Python code:
+
+```python
+import numpy
+A = numpy.zeros((8, 8))
+
+for i in range(8):
+    for j in range(i, 8):
+        A[i, j] = A[j, i] = 1 + .5 * abs(i - j)
+
+print(numpy.linalg.eigh(A)[0])
+```
+
 ## Notes on Performance
 
 The [ScaLAPACK documentation](https://netlib.org/scalapack/slug/node106.html) offers several performance recommendations:
