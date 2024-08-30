@@ -3,7 +3,7 @@ import re
 from typing import List
 
 from scalapacke_files_create import SCALAPACK_REPO_URL
-from scalapacke_files_create.base import Declaration, jinja_env, INT_TYPE
+from scalapacke_files_create.base import Declaration, jinja_env
 from scalapacke_files_create.create_cblacs import find_c_decl
 
 SELF_NAME = __name__
