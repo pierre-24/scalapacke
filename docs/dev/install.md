@@ -44,7 +44,7 @@ Just grab the wrap file corresponding to the version you want to use ...
 mkdir -p subprojects
 
 # download wrap file
-wget https://github.com/pierre-24/scalapacke/releases/download/v0.2.3/scalapacke_v0.2.3.wrap -O subprojects/scalapacke.wrap
+wget https://github.com/pierre-24/scalapacke/releases/download/v0.2.4/scalapacke_v0.2.4.wrap -O subprojects/scalapacke.wrap
 ```
 
 ... and add something like this in your `meson.build`:
