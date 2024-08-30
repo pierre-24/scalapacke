@@ -513,6 +513,13 @@ Furthermore, for an example of point-to-point communication, you can explore [on
 Now that we have one array distributed on the grid, we can finally perform some calculation.
 Of course, you can follow the same steps to distribute other arrays to compute more complex things.
 
+
+!!! warning "Local versus global arguments"
+  
+    scaLAPACK distinguishes between local and global data.
+    Indeed, local arguments may have different values on each process in the process grid. 
+    Global arguments must have the same value on each process.
+
 To finish our example, let's compute the eigenvalues of $A$, using [`PDSYEV`](https://netlib.org/scalapack/explore-html/d0/d1a/pdsyev_8f_source.html) (since $A$ is symmetric).
 The function requires an auxiliary workspace, `WORK`, for which the rules are a bit convoluted.
 We will therefore make two calls: one to request the ideal size, the second to actually do the calculation:

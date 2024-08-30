@@ -8,6 +8,7 @@ tests_to_run = [
 	'lowlevel_pdgemm',
 	'midlevel_pdgemm',
 	'pdgemm_residual',
+	'pcgeqrf',
 	'pdsyev',
 ]
 
