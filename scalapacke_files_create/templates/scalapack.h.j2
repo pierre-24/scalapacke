@@ -1,13 +1,7 @@
 #ifndef HEADER_SCALAPACK_H
 #define HEADER_SCALAPACK_H
 
-/* defines
- */
-{%- for i, f in defines %}
-#ifndef {{ i }}
-#define {{ i }} {{ f }}
-#endif // {{ i }}
-{% endfor %}
+#include "scalapack_config.h"
 
 /* Declarations
  */

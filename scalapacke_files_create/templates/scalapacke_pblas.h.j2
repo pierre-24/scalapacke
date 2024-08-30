@@ -1,7 +1,7 @@
 #ifndef HEADER_SCALAPACKE_PBLAS_H
 #define HEADER_SCALAPACKE_PBLAS_H
 
-#include <pblas.h>
+#include "pblas.h"
 
 /* Declarations
  */

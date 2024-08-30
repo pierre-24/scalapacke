@@ -2,13 +2,7 @@
 #define HEADER_BLACS_H
 
 #include <mpi.h>
-
-/* defines
- */
-#ifndef lapack_int
-#define lapack_int int
-#endif // lapack_int
-
+#include "scalapack_config.h"
 
 /* Declarations
  */

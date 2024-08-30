@@ -1,12 +1,7 @@
 #ifndef HEADER_SCALAPACK_H
 #define HEADER_SCALAPACK_H
 
-/* defines
- */
-#ifndef lapack_int
-#define lapack_int int
-#endif // lapack_int
-
+#include "scalapack_config.h"
 
 /* Declarations
  */

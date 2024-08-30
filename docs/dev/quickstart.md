@@ -54,7 +54,7 @@ If you notice that a routine is missing, feel free to [open an issue](https://gi
 
 ## The low-level interface
 
-The low-level interface requires three of the [header files](https://github.com/pierre-24/scalapacke/tree/dev/include) provided by scaLAPACKe: `blacs.h`, `pblas.h`, and `scalapack.h`.
+The low-level interface requires four of the [header files](https://github.com/pierre-24/scalapacke/tree/dev/include) provided by scaLAPACKe: `scalapack_config.h` (included by the 3 others), `blacs.h`, `pblas.h`, and `scalapack.h`.
 
 ```c
 #include <blacs.h>

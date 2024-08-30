@@ -1,7 +1,7 @@
 #ifndef HEADER_SCALAPACKE_BLACS_H
 #define HEADER_SCALAPACKE_BLACS_H
 
-#include <blacs.h>
+#include "blacs.h"
 
 /* Declarations
  */

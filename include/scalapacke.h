@@ -1,7 +1,7 @@
 #ifndef HEADER_SCALAPACKE_H
 #define HEADER_SCALAPACKE_H
 
-#include <scalapack.h>
+#include "scalapack.h"
 
 /* Declarations
  */

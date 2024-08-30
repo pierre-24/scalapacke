@@ -2,14 +2,7 @@
 #define HEADER_BLACS_H
 
 #include <mpi.h>
-
-/* defines
- */
-{%- for i, f in defines %}
-#ifndef {{ i }}
-#define {{ i }} {{ f }}
-#endif // {{ i }}
-{% endfor %}
+#include "scalapack_config.h"
 
 /* Declarations
  */
