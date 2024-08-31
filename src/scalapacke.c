@@ -205,7 +205,7 @@ lapack_int SCALAPACKE_pcdttrf(const lapack_int N, lapack_complex_float* DL, lapa
     return INFO;
 }
 
-lapack_int SCALAPACKE_ddttrf(const lapack_int N, lapack_complex_double* DL, lapack_complex_double* D, lapack_complex_double* DU) {
+lapack_int SCALAPACKE_ddttrf(const lapack_int N, double* DL, double* D, double* DU) {
     lapack_int INFO = 0;
     ddttrf_(&N, DL, D, DU, &INFO);
     return INFO;
@@ -223,7 +223,7 @@ lapack_int SCALAPACKE_psdttrf(const lapack_int N, float* DL, float* D, float* DU
     return INFO;
 }
 
-lapack_int SCALAPACKE_sdttrf(const lapack_int N, lapack_complex_float* DL, lapack_complex_float* D, lapack_complex_float* DU) {
+lapack_int SCALAPACKE_sdttrf(const lapack_int N, float* DL, float* D, float* DU) {
     lapack_int INFO = 0;
     sdttrf_(&N, DL, D, DU, &INFO);
     return INFO;
@@ -277,7 +277,7 @@ lapack_int SCALAPACKE_pddttrsv(const char* UPLO, const char* TRANS, const lapack
     return INFO;
 }
 
-lapack_int SCALAPACKE_ddttrsv(const char* UPLO, const char* TRANS, const lapack_int N, const lapack_int NRHS, const lapack_complex_double* DL, const lapack_complex_double* D, const lapack_complex_double* DU, lapack_complex_double* B, const lapack_int LDB) {
+lapack_int SCALAPACKE_ddttrsv(const char* UPLO, const char* TRANS, const lapack_int N, const lapack_int NRHS, const double* DL, const double* D, const double* DU, double* B, const lapack_int LDB) {
     lapack_int INFO = 0;
     ddttrsv_(UPLO, TRANS, &N, &NRHS, DL, D, DU, B, &LDB, &INFO);
     return INFO;
@@ -289,7 +289,7 @@ lapack_int SCALAPACKE_psdttrsv(const char* UPLO, const char* TRANS, const lapack
     return INFO;
 }
 
-lapack_int SCALAPACKE_sdttrsv(const char* UPLO, const char* TRANS, const lapack_int N, const lapack_int NRHS, const lapack_complex_float* DL, const lapack_complex_float* D, const lapack_complex_float* DU, lapack_complex_float* B, const lapack_int LDB) {
+lapack_int SCALAPACKE_sdttrsv(const char* UPLO, const char* TRANS, const lapack_int N, const lapack_int NRHS, const float* DL, const float* D, const float* DU, float* B, const lapack_int LDB) {
     lapack_int INFO = 0;
     sdttrsv_(UPLO, TRANS, &N, &NRHS, DL, D, DU, B, &LDB, &INFO);
     return INFO;
@@ -1021,7 +1021,7 @@ lapack_int SCALAPACKE_pzggrqf(const lapack_int M, const lapack_int P, const lapa
     return INFO;
 }
 
-lapack_int SCALAPACKE_pcheev(const char* JOBZ, const char* UPLO, const lapack_int N, lapack_complex_float* A, const lapack_int IA, const lapack_int JA, const lapack_int* DESCA, float* W, lapack_complex_float* Z, const lapack_int IZ, const lapack_int JZ, const lapack_int* DESCZ, lapack_complex_float* WORK, const lapack_int LWORK, lapack_complex_float* RWORK, const lapack_int LRWORK) {
+lapack_int SCALAPACKE_pcheev(const char* JOBZ, const char* UPLO, const lapack_int N, lapack_complex_float* A, const lapack_int IA, const lapack_int JA, const lapack_int* DESCA, float* W, lapack_complex_float* Z, const lapack_int IZ, const lapack_int JZ, const lapack_int* DESCZ, lapack_complex_float* WORK, const lapack_int LWORK, float* RWORK, const lapack_int LRWORK) {
     lapack_int INFO = 0;
     pcheev_(JOBZ, UPLO, &N, A, &IA, &JA, DESCA, W, Z, &IZ, &JZ, DESCZ, WORK, &LWORK, RWORK, &LRWORK, &INFO);
     return INFO;
@@ -1063,7 +1063,7 @@ lapack_int SCALAPACKE_pzheevx(const char* JOBZ, const char* RANGE, const char* U
     return INFO;
 }
 
-lapack_int SCALAPACKE_pzheev(const char* JOBZ, const char* UPLO, const lapack_int N, lapack_complex_double* A, const lapack_int IA, const lapack_int JA, const lapack_int* DESCA, double* W, lapack_complex_double* Z, const lapack_int IZ, const lapack_int JZ, const lapack_int* DESCZ, lapack_complex_double* WORK, const lapack_int LWORK, lapack_complex_double* RWORK, const lapack_int LRWORK) {
+lapack_int SCALAPACKE_pzheev(const char* JOBZ, const char* UPLO, const lapack_int N, lapack_complex_double* A, const lapack_int IA, const lapack_int JA, const lapack_int* DESCA, double* W, lapack_complex_double* Z, const lapack_int IZ, const lapack_int JZ, const lapack_int* DESCZ, lapack_complex_double* WORK, const lapack_int LWORK, double* RWORK, const lapack_int LRWORK) {
     lapack_int INFO = 0;
     pzheev_(JOBZ, UPLO, &N, A, &IA, &JA, DESCA, W, Z, &IZ, &JZ, DESCZ, WORK, &LWORK, RWORK, &LRWORK, &INFO);
     return INFO;
@@ -1117,13 +1117,13 @@ lapack_int SCALAPACKE_pzhengst(const lapack_int IBTYPE, const char* UPLO, const 
     return INFO;
 }
 
-lapack_int SCALAPACKE_pchentrd(const char* UPLO, const lapack_int N, lapack_complex_float* A, const lapack_int IA, const lapack_int JA, const lapack_int* DESCA, float* D, float* E, lapack_complex_float* TAU, lapack_complex_float* WORK, const lapack_int LWORK, lapack_complex_float* RWORK, const lapack_int LRWORK) {
+lapack_int SCALAPACKE_pchentrd(const char* UPLO, const lapack_int N, lapack_complex_float* A, const lapack_int IA, const lapack_int JA, const lapack_int* DESCA, float* D, float* E, lapack_complex_float* TAU, lapack_complex_float* WORK, const lapack_int LWORK, float* RWORK, const lapack_int LRWORK) {
     lapack_int INFO = 0;
     pchentrd_(UPLO, &N, A, &IA, &JA, DESCA, D, E, TAU, WORK, &LWORK, RWORK, &LRWORK, &INFO);
     return INFO;
 }
 
-lapack_int SCALAPACKE_pzhentrd(const char* UPLO, const lapack_int N, lapack_complex_double* A, const lapack_int IA, const lapack_int JA, const lapack_int* DESCA, double* D, double* E, lapack_complex_double* TAU, lapack_complex_double* WORK, const lapack_int LWORK, lapack_complex_double* RWORK, const lapack_int LRWORK) {
+lapack_int SCALAPACKE_pzhentrd(const char* UPLO, const lapack_int N, lapack_complex_double* A, const lapack_int IA, const lapack_int JA, const lapack_int* DESCA, double* D, double* E, lapack_complex_double* TAU, lapack_complex_double* WORK, const lapack_int LWORK, double* RWORK, const lapack_int LRWORK) {
     lapack_int INFO = 0;
     pzhentrd_(UPLO, &N, A, &IA, &JA, DESCA, D, E, TAU, WORK, &LWORK, RWORK, &LRWORK, &INFO);
     return INFO;
@@ -1421,11 +1421,11 @@ void SCALAPACKE_pclamr1d(const lapack_int N, lapack_complex_float* A, const lapa
     pclamr1d_(&N, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB);
 }
 
-void SCALAPACKE_pdlamr1d(const lapack_int N, lapack_complex_double* A, const lapack_int IA, const lapack_int JA, const lapack_int* DESCA, lapack_complex_double* B, const lapack_int IB, const lapack_int JB, const lapack_int* DESCB) {
+void SCALAPACKE_pdlamr1d(const lapack_int N, double* A, const lapack_int IA, const lapack_int JA, const lapack_int* DESCA, double* B, const lapack_int IB, const lapack_int JB, const lapack_int* DESCB) {
     pdlamr1d_(&N, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB);
 }
 
-void SCALAPACKE_pslamr1d(const lapack_int N, lapack_complex_float* A, const lapack_int IA, const lapack_int JA, const lapack_int* DESCA, lapack_complex_float* B, const lapack_int IB, const lapack_int JB, const lapack_int* DESCB) {
+void SCALAPACKE_pslamr1d(const lapack_int N, float* A, const lapack_int IA, const lapack_int JA, const lapack_int* DESCA, float* B, const lapack_int IB, const lapack_int JB, const lapack_int* DESCB) {
     pslamr1d_(&N, A, &IA, &JA, DESCA, B, &IB, &JB, DESCB);
 }
 
@@ -1685,20 +1685,20 @@ void SCALAPACKE_slar1va(const lapack_int N, const lapack_int B1, const lapack_in
     slar1va_(&N, &B1, &BN, &LAMBDA, D, L, LD, LLD, &PIVMIN, &GAPTOL, Z, &WANTNC, NEGCNT, ZTZ, MINGMA, R, ISUPPZ, NRMINV, RESID, RQCORR, WORK);
 }
 
-void SCALAPACKE_pdlared1d(const lapack_int N, const lapack_int IA, const lapack_int JA, const lapack_int* DESC, const double* BYCOL, double* BYALL, double* WORK, const lapack_int* LWORK) {
-    pdlared1d_(&N, &IA, &JA, DESC, BYCOL, BYALL, WORK, LWORK);
+void SCALAPACKE_pdlared1d(const lapack_int N, const lapack_int IA, const lapack_int JA, const lapack_int* DESC, const double* BYCOL, double* BYALL, double* WORK, const lapack_int LWORK) {
+    pdlared1d_(&N, &IA, &JA, DESC, BYCOL, BYALL, WORK, &LWORK);
 }
 
-void SCALAPACKE_pslared1d(const lapack_int N, const lapack_int IA, const lapack_int JA, const lapack_int* DESC, const float* BYCOL, float* BYALL, float* WORK, const lapack_int* LWORK) {
-    pslared1d_(&N, &IA, &JA, DESC, BYCOL, BYALL, WORK, LWORK);
+void SCALAPACKE_pslared1d(const lapack_int N, const lapack_int IA, const lapack_int JA, const lapack_int* DESC, const float* BYCOL, float* BYALL, float* WORK, const lapack_int LWORK) {
+    pslared1d_(&N, &IA, &JA, DESC, BYCOL, BYALL, WORK, &LWORK);
 }
 
-void SCALAPACKE_pdlared2d(const lapack_int N, const lapack_int IA, const lapack_int JA, const lapack_int* DESC, const double* BYROW, double* BYALL, double* WORK, const lapack_int* LWORK) {
-    pdlared2d_(&N, &IA, &JA, DESC, BYROW, BYALL, WORK, LWORK);
+void SCALAPACKE_pdlared2d(const lapack_int N, const lapack_int IA, const lapack_int JA, const lapack_int* DESC, const double* BYROW, double* BYALL, double* WORK, const lapack_int LWORK) {
+    pdlared2d_(&N, &IA, &JA, DESC, BYROW, BYALL, WORK, &LWORK);
 }
 
-void SCALAPACKE_pslared2d(const lapack_int N, const lapack_int IA, const lapack_int JA, const lapack_int* DESC, const float* BYROW, float* BYALL, float* WORK, const lapack_int* LWORK) {
-    pslared2d_(&N, &IA, &JA, DESC, BYROW, BYALL, WORK, LWORK);
+void SCALAPACKE_pslared2d(const lapack_int N, const lapack_int IA, const lapack_int JA, const lapack_int* DESC, const float* BYROW, float* BYALL, float* WORK, const lapack_int LWORK) {
+    pslared2d_(&N, &IA, &JA, DESC, BYROW, BYALL, WORK, &LWORK);
 }
 
 void SCALAPACKE_claref(const char* TYPE, lapack_complex_float* A, const lapack_int LDA, const lapack_int WANTZ, lapack_complex_float* Z, const lapack_int LDZ, const lapack_int BLOCK, lapack_int* IROW1, lapack_int* ICOL1, const lapack_int ISTART, const lapack_int ISTOP, const lapack_int ITMP1, const lapack_int ITMP2, const lapack_int LILOZ, const lapack_int LIHIZ, const lapack_complex_float* VECS, lapack_complex_float* V2, lapack_complex_float* V3, lapack_complex_float* T1, lapack_complex_float* T2, lapack_complex_float* T3) {
@@ -2607,7 +2607,7 @@ lapack_int SCALAPACKE_psposv(const char* UPLO, const lapack_int N, const lapack_
     return INFO;
 }
 
-lapack_int SCALAPACKE_pcposvx(const char* FACT, const char* UPLO, const lapack_int N, const lapack_int NRHS, lapack_complex_float* A, const lapack_int IA, const lapack_int JA, const lapack_int* DESCA, lapack_complex_float* AF, const lapack_int IAF, const lapack_int JAF, const lapack_int* DESCAF, char* EQUED, lapack_complex_float* SR, lapack_complex_float* SC, lapack_complex_float* B, const lapack_int IB, const lapack_int JB, const lapack_int* DESCB, lapack_complex_float* X, const lapack_int IX, const lapack_int JX, const lapack_int* DESCX, float* RCOND, float* FERR, float* BERR, lapack_complex_float* WORK, const lapack_int LWORK, float* RWORK, const lapack_int LRWORK) {
+lapack_int SCALAPACKE_pcposvx(const char* FACT, const char* UPLO, const lapack_int N, const lapack_int NRHS, lapack_complex_float* A, const lapack_int IA, const lapack_int JA, const lapack_int* DESCA, lapack_complex_float* AF, const lapack_int IAF, const lapack_int JAF, const lapack_int* DESCAF, char* EQUED, float* SR, float* SC, lapack_complex_float* B, const lapack_int IB, const lapack_int JB, const lapack_int* DESCB, lapack_complex_float* X, const lapack_int IX, const lapack_int JX, const lapack_int* DESCX, float* RCOND, float* FERR, float* BERR, lapack_complex_float* WORK, const lapack_int LWORK, float* RWORK, const lapack_int LRWORK) {
     lapack_int INFO = 0;
     pcposvx_(FACT, UPLO, &N, &NRHS, A, &IA, &JA, DESCA, AF, &IAF, &JAF, DESCAF, EQUED, SR, SC, B, &IB, &JB, DESCB, X, &IX, &JX, DESCX, RCOND, FERR, BERR, WORK, &LWORK, RWORK, &LRWORK, &INFO);
     return INFO;
@@ -2625,7 +2625,7 @@ lapack_int SCALAPACKE_psposvx(const char* FACT, const char* UPLO, const lapack_i
     return INFO;
 }
 
-lapack_int SCALAPACKE_pzposvx(const char* FACT, const char* UPLO, const lapack_int N, const lapack_int NRHS, lapack_complex_double* A, const lapack_int IA, const lapack_int JA, const lapack_int* DESCA, lapack_complex_double* AF, const lapack_int IAF, const lapack_int JAF, const lapack_int* DESCAF, char* EQUED, lapack_complex_double* SR, lapack_complex_double* SC, lapack_complex_double* B, const lapack_int IB, const lapack_int JB, const lapack_int* DESCB, lapack_complex_double* X, const lapack_int IX, const lapack_int JX, const lapack_int* DESCX, double* RCOND, double* FERR, double* BERR, lapack_complex_double* WORK, const lapack_int LWORK, double* RWORK, const lapack_int LRWORK) {
+lapack_int SCALAPACKE_pzposvx(const char* FACT, const char* UPLO, const lapack_int N, const lapack_int NRHS, lapack_complex_double* A, const lapack_int IA, const lapack_int JA, const lapack_int* DESCA, lapack_complex_double* AF, const lapack_int IAF, const lapack_int JAF, const lapack_int* DESCAF, char* EQUED, double* SR, double* SC, lapack_complex_double* B, const lapack_int IB, const lapack_int JB, const lapack_int* DESCB, lapack_complex_double* X, const lapack_int IX, const lapack_int JX, const lapack_int* DESCX, double* RCOND, double* FERR, double* BERR, lapack_complex_double* WORK, const lapack_int LWORK, double* RWORK, const lapack_int LRWORK) {
     lapack_int INFO = 0;
     pzposvx_(FACT, UPLO, &N, &NRHS, A, &IA, &JA, DESCA, AF, &IAF, &JAF, DESCAF, EQUED, SR, SC, B, &IB, &JB, DESCB, X, &IX, &JX, DESCX, RCOND, FERR, BERR, WORK, &LWORK, RWORK, &LRWORK, &INFO);
     return INFO;
@@ -2733,7 +2733,7 @@ lapack_int SCALAPACKE_pzpotrs(const char* UPLO, const lapack_int N, const lapack
     return INFO;
 }
 
-lapack_int SCALAPACKE_pcptsv(const char* UPLO, const lapack_int N, const lapack_int NRHS, lapack_complex_float* D, lapack_complex_float* E, const lapack_int JA, const lapack_int* DESCA, lapack_complex_float* B, const lapack_int IB, const lapack_int* DESCB, lapack_complex_float* WORK, const lapack_int LWORK) {
+lapack_int SCALAPACKE_pcptsv(const char* UPLO, const lapack_int N, const lapack_int NRHS, float* D, lapack_complex_float* E, const lapack_int JA, const lapack_int* DESCA, lapack_complex_float* B, const lapack_int IB, const lapack_int* DESCB, lapack_complex_float* WORK, const lapack_int LWORK) {
     lapack_int INFO = 0;
     pcptsv_(UPLO, &N, &NRHS, D, E, &JA, DESCA, B, &IB, DESCB, WORK, &LWORK, &INFO);
     return INFO;
@@ -2751,13 +2751,13 @@ lapack_int SCALAPACKE_psptsv(const lapack_int N, const lapack_int NRHS, float* D
     return INFO;
 }
 
-lapack_int SCALAPACKE_pzptsv(const char* UPLO, const lapack_int N, const lapack_int NRHS, lapack_complex_double* D, lapack_complex_double* E, const lapack_int JA, const lapack_int* DESCA, lapack_complex_double* B, const lapack_int IB, const lapack_int* DESCB, lapack_complex_double* WORK, const lapack_int LWORK) {
+lapack_int SCALAPACKE_pzptsv(const char* UPLO, const lapack_int N, const lapack_int NRHS, double* D, lapack_complex_double* E, const lapack_int JA, const lapack_int* DESCA, lapack_complex_double* B, const lapack_int IB, const lapack_int* DESCB, lapack_complex_double* WORK, const lapack_int LWORK) {
     lapack_int INFO = 0;
     pzptsv_(UPLO, &N, &NRHS, D, E, &JA, DESCA, B, &IB, DESCB, WORK, &LWORK, &INFO);
     return INFO;
 }
 
-lapack_int SCALAPACKE_pcpttrf(const lapack_int N, lapack_complex_float* D, lapack_complex_float* E, const lapack_int JA, const lapack_int* DESCA, lapack_complex_float* AF, const lapack_int LAF, lapack_complex_float* WORK, const lapack_int LWORK) {
+lapack_int SCALAPACKE_pcpttrf(const lapack_int N, float* D, lapack_complex_float* E, const lapack_int JA, const lapack_int* DESCA, lapack_complex_float* AF, const lapack_int LAF, lapack_complex_float* WORK, const lapack_int LWORK) {
     lapack_int INFO = 0;
     pcpttrf_(&N, D, E, &JA, DESCA, AF, &LAF, WORK, &LWORK, &INFO);
     return INFO;
@@ -2775,13 +2775,13 @@ lapack_int SCALAPACKE_pspttrf(const lapack_int N, float* D, float* E, const lapa
     return INFO;
 }
 
-lapack_int SCALAPACKE_pzpttrf(const lapack_int N, lapack_complex_double* D, lapack_complex_double* E, const lapack_int JA, const lapack_int* DESCA, lapack_complex_double* AF, const lapack_int LAF, lapack_complex_double* WORK, const lapack_int LWORK) {
+lapack_int SCALAPACKE_pzpttrf(const lapack_int N, double* D, lapack_complex_double* E, const lapack_int JA, const lapack_int* DESCA, lapack_complex_double* AF, const lapack_int LAF, lapack_complex_double* WORK, const lapack_int LWORK) {
     lapack_int INFO = 0;
     pzpttrf_(&N, D, E, &JA, DESCA, AF, &LAF, WORK, &LWORK, &INFO);
     return INFO;
 }
 
-lapack_int SCALAPACKE_pcpttrs(const char* UPLO, const lapack_int N, const lapack_int NRHS, lapack_complex_float* D, lapack_complex_float* E, const lapack_int JA, const lapack_int* DESCA, lapack_complex_float* B, const lapack_int IB, const lapack_int* DESCB, lapack_complex_float* AF, const lapack_int LAF, lapack_complex_float* WORK, const lapack_int LWORK) {
+lapack_int SCALAPACKE_pcpttrs(const char* UPLO, const lapack_int N, const lapack_int NRHS, float* D, lapack_complex_float* E, const lapack_int JA, const lapack_int* DESCA, lapack_complex_float* B, const lapack_int IB, const lapack_int* DESCB, lapack_complex_float* AF, const lapack_int LAF, lapack_complex_float* WORK, const lapack_int LWORK) {
     lapack_int INFO = 0;
     pcpttrs_(UPLO, &N, &NRHS, D, E, &JA, DESCA, B, &IB, DESCB, AF, &LAF, WORK, &LWORK, &INFO);
     return INFO;
@@ -2805,13 +2805,13 @@ lapack_int SCALAPACKE_cpttrsv(const char* UPLO, const char* TRANS, const lapack_
     return INFO;
 }
 
-lapack_int SCALAPACKE_pcpttrsv(const char* UPLO, const char* TRANS, const lapack_int N, const lapack_int NRHS, lapack_complex_float* D, lapack_complex_float* E, const lapack_int JA, const lapack_int* DESCA, lapack_complex_float* B, const lapack_int IB, const lapack_int* DESCB, lapack_complex_float* AF, const lapack_int LAF, lapack_complex_float* WORK, const lapack_int LWORK) {
+lapack_int SCALAPACKE_pcpttrsv(const char* UPLO, const char* TRANS, const lapack_int N, const lapack_int NRHS, float* D, lapack_complex_float* E, const lapack_int JA, const lapack_int* DESCA, lapack_complex_float* B, const lapack_int IB, const lapack_int* DESCB, lapack_complex_float* AF, const lapack_int LAF, lapack_complex_float* WORK, const lapack_int LWORK) {
     lapack_int INFO = 0;
     pcpttrsv_(UPLO, TRANS, &N, &NRHS, D, E, &JA, DESCA, B, &IB, DESCB, AF, &LAF, WORK, &LWORK, &INFO);
     return INFO;
 }
 
-lapack_int SCALAPACKE_dpttrsv(const char* TRANS, const lapack_int N, const lapack_int NRHS, const double* D, const lapack_complex_double* E, lapack_complex_double* B, const lapack_int LDB) {
+lapack_int SCALAPACKE_dpttrsv(const char* TRANS, const lapack_int N, const lapack_int NRHS, const double* D, const double* E, double* B, const lapack_int LDB) {
     lapack_int INFO = 0;
     dpttrsv_(TRANS, &N, &NRHS, D, E, B, &LDB, &INFO);
     return INFO;
@@ -2829,7 +2829,7 @@ lapack_int SCALAPACKE_pspttrsv(const char* UPLO, const lapack_int N, const lapac
     return INFO;
 }
 
-lapack_int SCALAPACKE_spttrsv(const char* TRANS, const lapack_int N, const lapack_int NRHS, const float* D, const lapack_complex_float* E, lapack_complex_float* B, const lapack_int LDB) {
+lapack_int SCALAPACKE_spttrsv(const char* TRANS, const lapack_int N, const lapack_int NRHS, const float* D, const float* E, float* B, const lapack_int LDB) {
     lapack_int INFO = 0;
     spttrsv_(TRANS, &N, &NRHS, D, E, B, &LDB, &INFO);
     return INFO;
@@ -2841,13 +2841,13 @@ lapack_int SCALAPACKE_zpttrsv(const char* UPLO, const char* TRANS, const lapack_
     return INFO;
 }
 
-lapack_int SCALAPACKE_pzpttrsv(const char* UPLO, const char* TRANS, const lapack_int N, const lapack_int NRHS, lapack_complex_double* D, lapack_complex_double* E, const lapack_int JA, const lapack_int* DESCA, lapack_complex_double* B, const lapack_int IB, const lapack_int* DESCB, lapack_complex_double* AF, const lapack_int LAF, lapack_complex_double* WORK, const lapack_int LWORK) {
+lapack_int SCALAPACKE_pzpttrsv(const char* UPLO, const char* TRANS, const lapack_int N, const lapack_int NRHS, double* D, lapack_complex_double* E, const lapack_int JA, const lapack_int* DESCA, lapack_complex_double* B, const lapack_int IB, const lapack_int* DESCB, lapack_complex_double* AF, const lapack_int LAF, lapack_complex_double* WORK, const lapack_int LWORK) {
     lapack_int INFO = 0;
     pzpttrsv_(UPLO, TRANS, &N, &NRHS, D, E, &JA, DESCA, B, &IB, DESCB, AF, &LAF, WORK, &LWORK, &INFO);
     return INFO;
 }
 
-lapack_int SCALAPACKE_pzpttrs(const char* UPLO, const lapack_int N, const lapack_int NRHS, lapack_complex_double* D, lapack_complex_double* E, const lapack_int JA, const lapack_int* DESCA, lapack_complex_double* B, const lapack_int IB, const lapack_int* DESCB, lapack_complex_double* AF, const lapack_int LAF, lapack_complex_double* WORK, const lapack_int LWORK) {
+lapack_int SCALAPACKE_pzpttrs(const char* UPLO, const lapack_int N, const lapack_int NRHS, double* D, lapack_complex_double* E, const lapack_int JA, const lapack_int* DESCA, lapack_complex_double* B, const lapack_int IB, const lapack_int* DESCB, lapack_complex_double* AF, const lapack_int LAF, lapack_complex_double* WORK, const lapack_int LWORK) {
     lapack_int INFO = 0;
     pzpttrs_(UPLO, &N, &NRHS, D, E, &JA, DESCA, B, &IB, DESCB, AF, &LAF, WORK, &LWORK, &INFO);
     return INFO;

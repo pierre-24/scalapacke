@@ -244,17 +244,6 @@ def find_decl(path: pathlib.Path) -> Declaration:
                     if 'workspace' in match_arg_doc['intent'].lower():
                         # `WORK`
                         arg.is_output = True
-                    if match_arg_doc['extra'] is not None:
-                        # normally, that is useless, since the parser already recognize arrays
-                        if 'complex' in match_arg_doc['extra'].lower():
-                            arg.is_complex = True
-                            arg.to_complex()
-                        if 'array' in match_arg_doc['extra'].lower():
-                            arg.is_array = True
-                        if 'pointer into the local' in match_arg_doc['extra'].lower():
-                            arg.is_array = True
-                        if 'pointer into local' in match_arg_doc['extra'].lower():
-                            arg.is_array = True
 
                     try:
                         for a in ARG_FOLLOW[path.name][arg_name]:
