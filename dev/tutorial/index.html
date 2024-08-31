@@ -1302,7 +1302,7 @@ The function requires an auxiliary workspace, <code>WORK</code>, for which the r
 We will therefore make two calls: one to request the ideal size, the second to actually do the calculation:</p>
 <div class="highlight"><pre><span></span><code><span class="c1">// request the size of `WORK` by setting `LWORK` to -1</span>
 <span class="kt">double</span><span class="w"> </span><span class="n">tmpw</span><span class="p">;</span>
-<span class="n">SCALAPACKE_pdsyev</span><span class="p">(</span>
+<span class="n">SCALAPACKE_pdsyev_work</span><span class="p">(</span>
 <span class="w">  </span><span class="s">&quot;N&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;U&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span>
 <span class="w">  </span><span class="n">loc_A</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span><span class="w"> </span>
 <span class="w">  </span><span class="n">w</span><span class="p">,</span><span class="w"> </span>
@@ -1314,13 +1314,18 @@ We will therefore make two calls: one to request the ideal size, the second to a
 <span class="c1">// compute the eigenvalues, stored in `w`</span>
 <span class="kt">double</span><span class="o">*</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calloc</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="p">));</span>
 <span class="kt">double</span><span class="o">*</span><span class="w"> </span><span class="n">work</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">calloc</span><span class="p">(</span><span class="n">lwork</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="p">));</span>
-<span class="n">SCALAPACKE_pdsyev</span><span class="p">(</span>
+<span class="n">SCALAPACKE_pdsyev_work</span><span class="p">(</span>
 <span class="w">  </span><span class="s">&quot;N&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;U&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="p">,</span><span class="w"> </span>
 <span class="w">  </span><span class="n">loc_A</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span><span class="w"> </span><span class="c1">// input matrix</span>
 <span class="w">  </span><span class="n">w</span><span class="p">,</span><span class="w"> </span>
 <span class="w">  </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">desc_A</span><span class="p">,</span><span class="w">  </span><span class="c1">// eigenvectors</span>
 <span class="w">  </span><span class="n">work</span><span class="p">,</span><span class="w"> </span><span class="n">lwork</span><span class="p">);</span>
 </code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Info</p>
+<p>The <code>_work</code> suffix indicates that the workspace should be explicitly created.
+In the future, there might be a version that automatically allocate and free the workspace(s), following <a href="https://netlib.org/lapack/lapacke.html">LAPACKe</a>.</p>
+</div>
 <h3 id="4-release">4. Release!<a class="headerlink" href="#4-release" title="Permanent link">¤</a></h3>
 <p><img alt="" src="https://media1.tenor.com/m/rFwzdbMTeAoAAAAd/card-captor-sakura-anime.gif" /></p>
 <p><em>"Release" is the final word in <a href="https://en.wikipedia.org/wiki/Cardcaptor_Sakura">Sakura</a>'s spell to activate her scepter, so she shouts it in every episode. Couldn't resist the reference! 😉</em></p>
