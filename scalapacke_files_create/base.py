@@ -75,12 +75,19 @@ class DeclArgument:
 
 
 class Declaration:
+    """
+    Store a declaration.
+    Its arguments are all pointers.
+    """
+
     def __init__(self, name: str, return_type: str, arguments: List[DeclArgument]):
         self.name = name
         self.return_type = return_type
         self.arguments = arguments
 
-    def to_extern_c_decl(self) -> str:
+        self.has_work = any('WORK' in a.name for a in self.arguments)
+
+    def to_low_level_decl(self) -> str:
         """Low-level API
         """
         return 'extern {} {}({});'.format(
@@ -89,7 +96,7 @@ class Declaration:
             ', '.join(a.to_c_arg() for a in self.arguments)
         )
 
-    def to_aliased_decl(self, api_level: str = 'mid') -> str:
+    def to_mid_level_decl(self) -> str:
         """Mid-level API
         """
 
@@ -106,11 +113,11 @@ class Declaration:
         return '{} {}{}({});'.format(
             return_type,
             PREFIX,
-            self.name,
+            self.name + (MIDLEVEL_WRK_SUFFIX if self.has_work else ''),
             ', '.join(a.aliase().to_c_arg() for a in arguments)
         )
 
-    def to_aliased_wrapper(self) -> str:
+    def to_mid_level_wrapper(self) -> str:
         """Mid-level API
         """
         name = self.name
@@ -127,7 +134,7 @@ class Declaration:
         r = '{} {}{}({}) {{\n'.format(
             return_type,
             PREFIX,
-            name,
+            name + (MIDLEVEL_WRK_SUFFIX if self.has_work else ''),
             ', '.join(a.aliase().to_c_arg() for a in arguments),
         )
 

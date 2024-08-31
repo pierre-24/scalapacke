@@ -82,8 +82,8 @@ int main(int argc, char* argv[]) {
 
         // compute norm of A and B
         work = (double*) calloc(loc_lld, sizeof(double));
-        norm_A = SCALAPACKE_pdlange("F", N, N, A, 1, 1, desc_distributed, work);
-        norm_B = SCALAPACKE_pdlange("F", N, N, B, 1, 1, desc_distributed, work);
+        norm_A = SCALAPACKE_pdlange_work("F", N, N, A, 1, 1, desc_distributed, work);
+        norm_B = SCALAPACKE_pdlange_work("F", N, N, B, 1, 1, desc_distributed, work);
 
         // compute C = A * B
         SCALAPACKE_pdgemm("N", "N", N, N, N,
@@ -100,7 +100,7 @@ int main(int argc, char* argv[]) {
         );
 
         // compute the norm of B & residual
-        norm_res = SCALAPACKE_pdlange("F", N, N, B, 1, 1, desc_distributed, work);
+        norm_res = SCALAPACKE_pdlange_work("F", N, N, B, 1, 1, desc_distributed, work);
         double eps = SCALAPACKE_pdlamch(ctx_sys, "e");
         double residual = norm_res / (2 * norm_A * norm_B * eps);
 

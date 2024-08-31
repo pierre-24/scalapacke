@@ -118,7 +118,7 @@ int main(int argc, char* argv[]) {
 
         // request lwork
         float request;
-        SCALAPACKE_psgels(
+        SCALAPACKE_psgels_work(
                 "N", M, N, 1,
                 loc_A, 1, 1, desc_A,
                 loc_y, 1, 1, desc_y,
@@ -127,7 +127,7 @@ int main(int argc, char* argv[]) {
         // compute
         lapack_int lwork = (lapack_int) request;
         float* work = calloc(lwork, sizeof(float ));
-        SCALAPACKE_psgels(
+        SCALAPACKE_psgels_work(
                 "N", M, N, 1,
                 loc_A, 1, 1, desc_A,
                 loc_y, 1, 1, desc_y,
