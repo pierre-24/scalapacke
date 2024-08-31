@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
 
         // fetch the maximum (i.e., the inf-norm)
         double* work = (double*) calloc(loc_LD, sizeof(double));
-        double max = SCALAPACKE_pdlange("I", N, N, loc_A, 1, 1, desc_A, work);
+        double max = SCALAPACKE_pdlange_work("I", N, N, loc_A, 1, 1, desc_A, work);
 
         if(iam == 0)
             printf("%f\n", max);

@@ -11,7 +11,7 @@ extern "C" {
 /* Declarations
  */
 {%- for declaration in declarations_f %}
-{{ declaration.to_extern_c_decl() }}
+{{ declaration.to_low_level_decl() }}
 {%- endfor %}
 
 #ifdef __cplusplus

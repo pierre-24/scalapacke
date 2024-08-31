@@ -73,13 +73,13 @@ int main(int argc, char* argv[]) {
 
         // request lwork
         double tmpw;
-        SCALAPACKE_pdsyev("V", "U", N, Ap, 1, 1, desc_A, w, X, 1, 1, desc_A, &tmpw, -1);
+        SCALAPACKE_pdsyev_work("V", "U", N, Ap, 1, 1, desc_A, w, X, 1, 1, desc_A, &tmpw, -1);
         lwork = (lapack_int) tmpw;
 
         // compute the eigenvalues and vectors
         // NOTE: like dsyev(), the content of A is irremediably destroyed in the process :(
         work = calloc(lwork, sizeof(double ));
-        info = SCALAPACKE_pdsyev("V", "U", N, Ap, 1, 1, desc_A, w, X, 1, 1, desc_A, work, lwork);
+        info = SCALAPACKE_pdsyev_work("V", "U", N, Ap, 1, 1, desc_A, w, X, 1, 1, desc_A, work, lwork);
 
         if(info != 0) {
             printf("%d :: error: info is %d\n", iam, info);
@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
         }
 
         double max_residual = .0f;
-        double norm_A = SCALAPACKE_pdlange("F", N, N, A, 1, 1, desc_A, work);
+        double norm_A = SCALAPACKE_pdlange_work("F", N, N, A, 1, 1, desc_A, work);
 
         for(lapack_int i = 1; i <= N; i++) {
             // compute `r = A * x_i`
@@ -106,9 +106,9 @@ int main(int argc, char* argv[]) {
             );
 
             // compute norm of x_i and r
-            norm_X = SCALAPACKE_pdlange( "F", N, 1, X, 1, i, desc_A, work);
-            norm_res = SCALAPACKE_pdlange("F", N, 1, r, 1, 1, desc_r, work);
-            double eps = pdlamch_(&ctx_sys, "e");
+            norm_X = SCALAPACKE_pdlange_work( "F", N, 1, X, 1, i, desc_A, work);
+            norm_res = SCALAPACKE_pdlange_work("F", N, 1, r, 1, 1, desc_r, work);
+            double eps = SCALAPACKE_pdlamch(ctx_sys, "e");
             double residual = norm_res / (2 * norm_A * norm_X * eps); // might not be the correct residual :(
 
             if (residual > max_residual)

@@ -27,7 +27,7 @@ TO_EXCLUDE = [
 ]
 
 # pattern
-PATTERN_C_FUNC = re.compile(r'(?P<rtype>\w+) (?P<name>\w+)\((?P<args>.*)\)')
+PATTERN_C_FUNC = re.compile(r'(?P<rtype>\w+) (?P<name>\w+)_\((?P<args>.*)\)')
 PATTERN_C_ARG = re.compile(r'(?P<type>\w+) ?(?P<ptr>\*)? ?(?P<name>\w+)')
 PATTERN_ARG_DOC = re.compile(r'\s{1,3}\*\s{1,3}(?P<name>\w*)\s+\((?P<intent>.*)\)(?P<extra>.*)?')
 
@@ -39,64 +39,64 @@ def _p(inp: str, r: int = 0) -> DeclArgument:
 
 BLACS_DECLS = [
     # blacs*() functions do not come with a documentation, so manually handle them
-    Declaration('blacs_abort_', 'void', [_p('{}* ConTxt'.format(INT_TYPE)), _p('{}* ErrNo'.format(INT_TYPE))]),
-    Declaration('blacs_barrier_', 'void', [_p('{}* ConTxt'.format(INT_TYPE)), _p('char* scope')]),
-    Declaration('blacs_exit_', 'void', [_p('{}* NotDone'.format(INT_TYPE))]),
-    Declaration('blacs_freebuff_', 'void', [_p('{}* ConTxt'.format(INT_TYPE)), _p('{}* wait'.format(INT_TYPE))]),
-    Declaration('blacs_get_', 'void', [
+    Declaration('blacs_abort', 'void', [_p('{}* ConTxt'.format(INT_TYPE)), _p('{}* ErrNo'.format(INT_TYPE))]),
+    Declaration('blacs_barrier', 'void', [_p('{}* ConTxt'.format(INT_TYPE)), _p('char* scope')]),
+    Declaration('blacs_exit', 'void', [_p('{}* NotDone'.format(INT_TYPE))]),
+    Declaration('blacs_freebuff', 'void', [_p('{}* ConTxt'.format(INT_TYPE)), _p('{}* wait'.format(INT_TYPE))]),
+    Declaration('blacs_get', 'void', [
         _p('{}* ConTxt'.format(INT_TYPE), ),
         _p('{}* what'.format(INT_TYPE)),
         _p('{}* val'.format(INT_TYPE), 1)
     ]),
-    Declaration('blacs_gridexit_', 'void', [_p('{}* ConTxt'.format(INT_TYPE))]),
-    Declaration('blacs_gridinfo_', 'void', [
+    Declaration('blacs_gridexit', 'void', [_p('{}* ConTxt'.format(INT_TYPE))]),
+    Declaration('blacs_gridinfo', 'void', [
         _p('{}* ConTxt'.format(INT_TYPE)),
         _p('{}* nprow'.format(INT_TYPE), 1),
         _p('{}* npcol'.format(INT_TYPE), 1),
         _p('{}* myrow'.format(INT_TYPE), 1),
         _p('{}* mycol'.format(INT_TYPE), 1)
     ]),
-    Declaration('blacs_gridinit_', 'void', [
+    Declaration('blacs_gridinit', 'void', [
         _p('{}* ConTxt'.format(INT_TYPE), 1),
         _p('char* order'),
         _p('{}* nprow'.format(INT_TYPE),),
         _p('{}* npcol'.format(INT_TYPE)),
     ]),
-    Declaration('blacs_gridmap_', 'void', [
+    Declaration('blacs_gridmap', 'void', [
         _p('{}* ConTxt'.format(INT_TYPE), 1),
         _p('{}* usermap'.format(INT_TYPE), 1),
         _p('{}* ldup'.format(INT_TYPE)),
         _p('{}* nprow0'.format(INT_TYPE)),
         _p('{}* npcol0'.format(INT_TYPE)),
     ]),
-    Declaration('blacs_pcoord_', 'void', [
+    Declaration('blacs_pcoord', 'void', [
         _p('{}* ConTxt'.format(INT_TYPE)),
         _p('{}* nodenum'.format(INT_TYPE)),
         _p('{}* prow'.format(INT_TYPE), 1),
         _p('{}* pcol'.format(INT_TYPE), 1)
     ]),
-    Declaration('blacs_pinfo_', 'void', [
+    Declaration('blacs_pinfo', 'void', [
         _p('{}* mypnum'.format(INT_TYPE), 1),
         _p('{}* nprocs'.format(INT_TYPE), 1),
     ]),
-    Declaration('blacs_pnum_', 'lapack_int', [
+    Declaration('blacs_pnum', 'lapack_int', [
         _p('{}* ConTxt'.format(INT_TYPE)),
         _p('{}* prow'.format(INT_TYPE)),
         _p('{}* pcol'.format(INT_TYPE))
     ]),
-    Declaration('blacs_set_', 'void', [
+    Declaration('blacs_set', 'void', [
         _p('{}* ConTxt'.format(INT_TYPE)),
         _p('{}* what'.format(INT_TYPE)),
         _p('{}* val'.format(INT_TYPE), 1)
     ]),
-    Declaration('blacs_setup_', 'void', [
+    Declaration('blacs_setup', 'void', [
         _p('{}* mypnum'.format(INT_TYPE), 1),
         _p('{}* nprocs'.format(INT_TYPE), 1),
     ]),
-    Declaration('blacs2sys_handle_', 'MPI_Comm', [
+    Declaration('blacs2sys_handle', 'MPI_Comm', [
         _p('{}* BlacsCtxt'.format(INT_TYPE))
     ]),
-    Declaration('sys2blacs_handle_', INT_TYPE, [
+    Declaration('sys2blacs_handle', INT_TYPE, [
         _p('MPI_Comm* SysCtxt')
     ]),
 ]

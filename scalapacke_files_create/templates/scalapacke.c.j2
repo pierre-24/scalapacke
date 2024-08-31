@@ -1,5 +1,5 @@
 #include "scalapacke.h"
 
 {% for declaration in declarations_f %}
-{{ declaration.to_aliased_wrapper() }}
+{{ declaration.to_mid_level_wrapper() }}
 {% endfor %}

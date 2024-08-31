@@ -105,15 +105,15 @@ int main(int argc, char* argv[]) {
 
         // request lwork
         lapack_complex_float query;
-        SCALAPACKE_pcgeqrf(M, N, loc_A, 1, 1, loc_A_info.desc, tau, &query, -1);
+        SCALAPACKE_pcgeqrf_work(M, N, loc_A, 1, 1, loc_A_info.desc, tau, &query, -1);
         lapack_int lwork = (lapack_int) lapack_complex_double_real(query);
-        SCALAPACKE_pcungqr(M, N, N, loc_A, 1, 1, loc_A_info.desc, tau, &query, -1);
+        SCALAPACKE_pcungqr_work(M, N, N, loc_A, 1, 1, loc_A_info.desc, tau, &query, -1);
         lwork = MAX(lwork, (lapack_int) lapack_complex_double_real(query));
 
         // make Q
         lapack_complex_float* work = calloc(lwork, sizeof(lapack_complex_float));
-        SCALAPACKE_pcgeqrf(M, N, loc_A, 1, 1, loc_A_info.desc, tau, work, lwork);
-        SCALAPACKE_pcungqr(M, N, N, loc_A, 1, 1, loc_A_info.desc, tau, work, lwork);
+        SCALAPACKE_pcgeqrf_work(M, N, loc_A, 1, 1, loc_A_info.desc, tau, work, lwork);
+        SCALAPACKE_pcungqr_work(M, N, N, loc_A, 1, 1, loc_A_info.desc, tau, work, lwork);
 
         // create loc_R
         scalapack_LA_info loc_R_info;
@@ -149,8 +149,8 @@ int main(int argc, char* argv[]) {
 
         // compute residual
         float* rwork = calloc(loc_A_info.ld, sizeof(float ));
-        float norm_A = SCALAPACKE_pclange("F", M, N, loc_A, 1, 1, loc_A_info.desc, rwork);
-        float norm_res = SCALAPACKE_pclange("F", N, N, loc_R, 1, 1, loc_R_info.desc, rwork);
+        float norm_A = SCALAPACKE_pclange_work("F", M, N, loc_A, 1, 1, loc_A_info.desc, rwork);
+        float norm_res = SCALAPACKE_pclange_work("F", N, N, loc_R, 1, 1, loc_R_info.desc, rwork);
         float eps = SCALAPACKE_pslamch(pinfo.grid_ctx, "e");
         float residual = norm_res / (2 * norm_A * norm_A * eps);
 
