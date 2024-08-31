@@ -1,6 +1,6 @@
 # ScaLAPACKe: C headers and wrappers for scaLAPACK
 
-Lastest version: [v0.2.4](https://github.com/pierre-24/scalapacke/releases/tag/v0.2.4), corresponding to [scaLAPACK v2.2.0](https://github.com/Reference-ScaLAPACK/scalapack/releases/tag/v2.2.0).
+Lastest version: [v0.3.0](https://github.com/pierre-24/scalapacke/releases/tag/v0.3.0), corresponding to [scaLAPACK v2.2.0](https://github.com/Reference-ScaLAPACK/scalapack/releases/tag/v2.2.0).
 
 Like [LAPACKe](https://netlib.org/lapack/lapacke.html), it provides a set of headers and wrappers in order to easily use [scaLAPACK](https://www.netlib.org/scalapack/) (and its components, [PBLAS](https://netlib.org/scalapack/pblas_qref.html) and [BLACS](https://netlib.org/blacs/)) in C.
 
