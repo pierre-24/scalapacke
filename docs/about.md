@@ -4,6 +4,8 @@
 
 ## Overview
 
+**Note:** This project is in its early stages, and the API is not yet stable and may undergo changes.
+
 ### Motivation
 
 Using scaLAPACK directly in C presents several challenges:
@@ -18,8 +20,6 @@ This project addresses the first two issues by providing:
 - A low- and middle-level interface to [PBLAS](https://netlib.org/scalapack/pblas_qref.html), [BLACS](https://netlib.org/blacs/), and nearly all scaLAPACK functions.
 
 The third issue (documentation) remains an ongoing challenge, reflecting a broader trend in netlib's projects that rely heavily on aging user guides and systematic function design.
-
-**Note:** This project is in its early stages, and the API is not yet stable and may undergo changes.
 
 For more information on how to use scaLAPACKe in practice, including common caveats, refer to the [Quickstart Guide](dev/quickstart.md). 
 A more beginner-friendly introduction to (sca)LAPACK(e) is also available [here](dev/tutorial.md).

@@ -12,6 +12,9 @@ PREFIX = 'SCALAPACKE_'
 INT_TYPE = 'lapack_int'
 COMPLEX_TYPE = 'lapack_complex_float'
 COMPLEX16_TYPE = 'lapack_complex_double'
+LOWLEVEL_SUFFIX = '_'
+MIDLEVEL_WRK_SUFFIX = '_work'
+
 
 # pattern
 PATTERN_C_FUNC = re.compile(r'(?P<rtype>\w+) (?P<name>\w+)\((?P<params>.*)\)')
@@ -78,13 +81,18 @@ class Declaration:
         self.arguments = arguments
 
     def to_extern_c_decl(self) -> str:
+        """Low-level API
+        """
         return 'extern {} {}({});'.format(
             self.return_type,
-            self.name,
+            self.name + LOWLEVEL_SUFFIX,
             ', '.join(a.to_c_arg() for a in self.arguments)
         )
 
-    def to_aliased_decl(self) -> str:
+    def to_aliased_decl(self, api_level: str = 'mid') -> str:
+        """Mid-level API
+        """
+
         arguments = self.arguments
         return_type = self.return_type
 
@@ -98,11 +106,13 @@ class Declaration:
         return '{} {}{}({});'.format(
             return_type,
             PREFIX,
-            self.name[:-1],
+            self.name,
             ', '.join(a.aliase().to_c_arg() for a in arguments)
         )
 
     def to_aliased_wrapper(self) -> str:
+        """Mid-level API
+        """
         name = self.name
         has_info = False
         arguments = self.arguments
@@ -117,7 +127,7 @@ class Declaration:
         r = '{} {}{}({}) {{\n'.format(
             return_type,
             PREFIX,
-            name[:-1],
+            name,
             ', '.join(a.aliase().to_c_arg() for a in arguments),
         )
 
@@ -126,7 +136,7 @@ class Declaration:
 
         r += '    {}{}({}{});\n'.format(
             'return ' if self.return_type != 'void' else '',
-            name,
+            name + LOWLEVEL_SUFFIX,
             ', '.join('{}{}'.format('&' if x.aliasable() else '', x.name) for x in arguments),
             ', &INFO' if has_info else ''
         )

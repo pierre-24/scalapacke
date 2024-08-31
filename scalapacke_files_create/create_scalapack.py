@@ -146,16 +146,16 @@ def _mkargs_trmr2d(ctype: str):
 
 
 DECLS_REDIST = [
-    Declaration('pcgemr2d_', 'void', _mkargs_gemr2d('{}*'.format(COMPLEX_TYPE))),
-    Declaration('pdgemr2d_', 'void', _mkargs_gemr2d('double*')),
-    Declaration('pigemr2d_', 'void', _mkargs_gemr2d('{}*'.format(INT_TYPE))),
-    Declaration('psgemr2d_', 'void', _mkargs_gemr2d('float*')),
-    Declaration('pzgemr2d_', 'void', _mkargs_gemr2d('{}*'.format(COMPLEX16_TYPE))),
-    Declaration('pctrmr2d_', 'void', _mkargs_trmr2d('{}*'.format(COMPLEX_TYPE))),
-    Declaration('pdtrmr2d_', 'void', _mkargs_trmr2d('double*')),
-    Declaration('pitrmr2d_', 'void', _mkargs_trmr2d('{}*'.format(INT_TYPE))),
-    Declaration('pstrmr2d_', 'void', _mkargs_trmr2d('float*')),
-    Declaration('pztrmr2d_', 'void', _mkargs_trmr2d('{}*'.format(COMPLEX16_TYPE))),
+    Declaration('pcgemr2d', 'void', _mkargs_gemr2d('{}*'.format(COMPLEX_TYPE))),
+    Declaration('pdgemr2d', 'void', _mkargs_gemr2d('double*')),
+    Declaration('pigemr2d', 'void', _mkargs_gemr2d('{}*'.format(INT_TYPE))),
+    Declaration('psgemr2d', 'void', _mkargs_gemr2d('float*')),
+    Declaration('pzgemr2d', 'void', _mkargs_gemr2d('{}*'.format(COMPLEX16_TYPE))),
+    Declaration('pctrmr2d', 'void', _mkargs_trmr2d('{}*'.format(COMPLEX_TYPE))),
+    Declaration('pdtrmr2d', 'void', _mkargs_trmr2d('double*')),
+    Declaration('pitrmr2d', 'void', _mkargs_trmr2d('{}*'.format(INT_TYPE))),
+    Declaration('pstrmr2d', 'void', _mkargs_trmr2d('float*')),
+    Declaration('pztrmr2d', 'void', _mkargs_trmr2d('{}*'.format(COMPLEX16_TYPE))),
 ]
 
 
@@ -172,7 +172,7 @@ def find_f_decl(lines: List[str]) -> Declaration:
 
         args_list.append(DeclArgument(arg_name, arg_ctype, is_array=arg_is_array))
 
-    return Declaration(name.lower() + '_', rtype, args_list)
+    return Declaration(name.lower(), rtype, args_list)
 
 
 def find_decl(path: pathlib.Path) -> Declaration:
@@ -245,10 +245,10 @@ def find_decl(path: pathlib.Path) -> Declaration:
                         # `WORK`
                         arg.is_output = True
                     if match_arg_doc['extra'] is not None:
+                        # normally, that is useless, since the parser already recognize arrays
                         if 'complex' in match_arg_doc['extra'].lower():
                             arg.is_complex = True
                             arg.to_complex()
-                        # normally, that is useless, since the parser already recognize arrays
                         if 'array' in match_arg_doc['extra'].lower():
                             arg.is_array = True
                         if 'pointer into the local' in match_arg_doc['extra'].lower():
