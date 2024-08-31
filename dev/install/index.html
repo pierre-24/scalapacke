@@ -670,7 +670,7 @@ Just grab the wrap file corresponding to the version you want to use ...</p>
 mkdir<span class="w"> </span>-p<span class="w"> </span>subprojects
 
 <span class="c1"># download wrap file</span>
-wget<span class="w"> </span>https://github.com/pierre-24/scalapacke/releases/download/v0.2.4/scalapacke_v0.2.4.wrap<span class="w"> </span>-O<span class="w"> </span>subprojects/scalapacke.wrap
+wget<span class="w"> </span>https://github.com/pierre-24/scalapacke/releases/download/v0.3.0/scalapacke_v0.3.0.wrap<span class="w"> </span>-O<span class="w"> </span>subprojects/scalapacke.wrap
 </code></pre></div>
 <p>... and add something like this in your <code>meson.build</code>:</p>
 <div class="highlight"><pre><span></span><code><span class="n">scalapacke_dep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cc</span><span class="p">.</span><span class="n">find_library</span><span class="p">(</span><span class="s">&#39;scalapacke&#39;</span><span class="p">,</span><span class="w"> </span><span class="n">required</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
