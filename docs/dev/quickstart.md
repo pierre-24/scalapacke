@@ -96,7 +96,8 @@ The middle-level interface requires all the headers and wrappers files provided 
 ```
 
 The naming convention for this interface is as follows: take the Fortran routine name, convert it to lowercase, and prepend it with `SCALAPACKE_`. 
-For example, the Fortran routine `PDGEMM` becomes `SCALAPACKE_pdgemm`.
+If the routine requires an auxiliary workspace (`WORK`, `RWORK`, `IWORK`, etc), the suffix `_work` should be added.
+For example, the Fortran routine [`PDGEMM`](https://netlib.org/scalapack/explore-html/d6/da2/pdgemm___8c_source.html) becomes `SCALAPACKE_pdgemm`, and [`PDSYEV`](https://netlib.org/scalapack/explore-html/d0/d1a/pdsyev_8f_source.html) becomes `SCALAPACKE_pdsyev_work`.
 
 The `INFO` parameter found in the Fortran subroutine is omitted in scaLAPACKe. 
 Instead, the `lapack_int` return value of the function is set to the value that `INFO` would have returned.

@@ -527,7 +527,7 @@ We will therefore make two calls: one to request the ideal size, the second to a
 ```c
 // request the size of `WORK` by setting `LWORK` to -1
 double tmpw;
-SCALAPACKE_pdsyev(
+SCALAPACKE_pdsyev_work(
   "N", "U", N, 
   loc_A, 1, 1, desc_A, 
   w, 
@@ -539,13 +539,18 @@ lapack_int lwork = (lapack_int) tmpw;
 // compute the eigenvalues, stored in `w`
 double* w = calloc(N, sizeof(double ));
 double* work = calloc(lwork, sizeof(double ));
-SCALAPACKE_pdsyev(
+SCALAPACKE_pdsyev_work(
   "N", "U", N, 
   loc_A, 1, 1, desc_A, // input matrix
   w, 
   NULL, 1, 1, desc_A,  // eigenvectors
   work, lwork);
 ```
+
+!!! info
+    
+    The `_work` suffix indicates that the workspace should be explicitly created.
+    In the future, there might be a version that automatically allocate and free the workspace(s), following [LAPACKe](https://netlib.org/lapack/lapacke.html).
 
 ### 4. Release!
 
